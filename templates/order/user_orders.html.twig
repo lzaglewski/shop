@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1>My Orders</h1>
+        
+        {% if orders is empty %}
+            <div class="alert alert-info">
+                You haven't placed any orders yet. <a href="{{ path('product_list') }}">Start shopping</a>
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.orderNumber }}</td>
+                                <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
+                                <td>
+                                    <span class="badge {% if order.status.value == 'new' %}bg-primary
+                                        {% elseif order.status.value == 'processing' %}bg-info
+                                        {% elseif order.status.value == 'shipped' %}bg-warning
+                                        {% elseif order.status.value == 'delivered' %}bg-success
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ order.status.value|capitalize }}
+                                    </span>
+                                </td>
+                                <td>{{ order.totalAmount|number_format(2) }}</td>
+                                <td>
+                                    <a href="{{ path('user_order_details', {'orderNumber': order.orderNumber}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

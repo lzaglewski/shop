@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Admin Dashboard</h1>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-box-seam"></i> Orders Management
+                        </h5>
+                        <p class="card-text">View and manage all customer orders. Update order statuses and track order details.</p>
+                        <a href="{{ path('admin_order_list') }}" class="btn btn-primary">Manage Orders</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-people"></i> User Management
+                        </h5>
+                        <p class="card-text">Manage user accounts, view user details, and control user access.</p>
+                        <a href="{{ path('user_index') }}" class="btn btn-primary">Manage Users</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-currency-euro"></i> Client Prices
+                        </h5>
+                        <p class="card-text">Manage special pricing for clients, set custom prices and discounts.</p>
+                        <a href="{{ path('client_price_index') }}" class="btn btn-primary">Manage Prices</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-box"></i> Products
+                        </h5>
+                        <p class="card-text">Manage product catalog, add new products, update inventory.</p>
+                        <a href="{{ path('product_list') }}" class="btn btn-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
