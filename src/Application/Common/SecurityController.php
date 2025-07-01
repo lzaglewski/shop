@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller;
+namespace App\Application\Common;
 
 use App\Application\Form\ChangePasswordType;
 use App\Application\Form\ProfileType;

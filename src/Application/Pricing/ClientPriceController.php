@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller;
+namespace App\Application\Pricing;
 
 use App\Application\Form\ClientPriceType;
 use App\Application\Service\ClientPriceService;

@@ -63,6 +63,22 @@
                         <p class="text-success">
                             <i class="bi bi-check-circle-fill"></i> In Stock ({{ product.stock }} available)
                         </p>
+                        
+                        <form action="{{ path('cart_add', {'id': product.id}) }}" method="post" class="mt-3">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="quantity" class="col-form-label">Quantity:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}" style="width: 80px;">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     {% else %}
                         <p class="text-danger">
                             <i class="bi bi-x-circle-fill"></i> Out of Stock
