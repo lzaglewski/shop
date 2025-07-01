@@ -1,0 +1,32 @@
+services:
+  nginx:
+    container_name: kakawa_nginx
+    build: config/docker/nginx
+    ports:
+      - '8921:80'
+    volumes:
+      - './:/var/www/html/'
+      - './config/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+  php:
+    container_name: kakawa_php
+    build: config/docker/php
+    volumes:
+      - './:/var/www/html/'
+      - './config/docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
+  mysql:
+    container_name: kakawa_mysql
+    image: mariadb
+    volumes:
+      - './:/var/app/'
+    ports:
+      - '8922:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: kakawa
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12345678
+  mail:
+    container_name: kakawa_mail
+    image: registry.hub.docker.com/mailhog/mailhog
+    ports:
+      - '8923:8025'
