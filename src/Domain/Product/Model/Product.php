@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Model\Product;
+namespace App\Domain\Product\Model;
 
-use App\Domain\Model\Pricing\ClientPrice;
+use App\Domain\Pricing\Model\ClientPrice;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 

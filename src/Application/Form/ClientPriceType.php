@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Form;
 
-use App\Domain\Model\Pricing\ClientPrice;
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
+use App\Domain\Pricing\Model\ClientPrice;
+use App\Domain\Product\Model\Product;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -75,7 +75,7 @@ class ClientPriceType extends AbstractType
         if (isset($options['client_id']) && $options['client_id']) {
             $builder->get('client')->setDisabled(true);
         }
-        
+
         // If product ID is provided in options, set the product field as disabled
         if (isset($options['product_id']) && $options['product_id']) {
             $builder->get('product')->setDisabled(true);
@@ -89,7 +89,7 @@ class ClientPriceType extends AbstractType
             'client_id' => null,
             'product_id' => null,
         ]);
-        
+
         $resolver->setAllowedTypes('client_id', ['null', 'int']);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
     }

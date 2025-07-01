@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Model\User;
+namespace App\Domain\User\Model;
 
-use App\Domain\Model\Pricing\ClientPrice;
+use App\Domain\Pricing\Model\ClientPrice;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->role === UserRole::ADMIN;
     }
-    
+
     /**
      * @return string[]
      */
@@ -136,12 +136,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return [$this->role->value];
     }
-    
+
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
     }
-    
+
     public function getUserIdentifier(): string
     {
         return $this->email;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Model\Pricing\ClientPrice;
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\User\User;
-use App\Domain\Repository\ClientPriceRepositoryInterface;
+use App\Domain\Pricing\Model\ClientPrice;
+use App\Domain\Pricing\Repository\ClientPriceRepositoryInterface;
+use App\Domain\Product\Model\Product;
+use App\Domain\User\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -64,7 +64,7 @@ class DoctrineClientPriceRepository implements ClientPriceRepositoryInterface
             'isActive' => true
         ]);
     }
-    
+
     public function remove(ClientPrice $clientPrice): void
     {
         $this->entityManager->remove($clientPrice);

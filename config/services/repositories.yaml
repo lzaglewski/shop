@@ -1,12 +1,15 @@
 services:
   # Repository interfaces
-  App\Domain\Repository\UserRepositoryInterface:
+  App\Domain\User\Repository\UserRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineUserRepository
 
-  App\Domain\Repository\ProductRepositoryInterface:
+  App\Domain\Product\Repository\ProductRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineProductRepository
 
-  App\Domain\Repository\ClientPriceRepositoryInterface:
+  App\Domain\Product\Repository\ProductCategoryRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineProductCategoryRepository
+
+  App\Domain\Pricing\Repository\ClientPriceRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineClientPriceRepository
 
   # Repository implementations

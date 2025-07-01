@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Form;
 
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\Product\ProductCategory;
+use App\Domain\Product\Model\Product;
+use App\Domain\Product\Model\ProductCategory;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Service;
 
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
+use App\Domain\User\Repository\UserRepositoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
@@ -36,9 +36,9 @@ class UserService
             $taxId,
             $role
         );
-        
+
         $this->userRepository->save($user);
-        
+
         return $user;
     }
 
@@ -51,9 +51,9 @@ class UserService
         $user->setEmail($email);
         $user->setCompanyName($companyName);
         $user->setTaxId($taxId);
-        
+
         $this->userRepository->save($user);
-        
+
         return $user;
     }
 
@@ -94,7 +94,7 @@ class UserService
     {
         return $this->userRepository->findActiveClients();
     }
-    
+
     public function saveUser(User $user): void
     {
         $this->userRepository->save($user);

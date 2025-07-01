@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Service;
 
-use App\Domain\Model\Pricing\ClientPrice;
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\User\User;
-use App\Domain\Repository\ClientPriceRepositoryInterface;
-use App\Domain\Service\PricingService;
+use App\Domain\Pricing\Model\ClientPrice;
+use App\Domain\Pricing\Repository\ClientPriceRepositoryInterface;
+use App\Domain\Pricing\Service\PricingService;
+use App\Domain\Product\Model\Product;
+use App\Domain\User\Model\User;
 
 class ClientPriceService
 {
@@ -53,28 +53,28 @@ class ClientPriceService
         foreach ($productPrices as $productId => $price) {
             $product = $productPrices[$productId]['product'] ?? null;
             $priceValue = $productPrices[$productId]['price'] ?? null;
-            
+
             if ($product instanceof Product && is_numeric($priceValue)) {
                 $this->setClientPrice($client, $product, (float)$priceValue);
             }
         }
     }
-    
+
     public function getAllClientPrices(): array
     {
         return $this->clientPriceRepository->findAll();
     }
-    
+
     public function getClientPriceById(int $id): ?ClientPrice
     {
         return $this->clientPriceRepository->findById($id);
     }
-    
+
     public function saveClientPrice(ClientPrice $clientPrice): void
     {
         $this->clientPriceRepository->save($clientPrice);
     }
-    
+
     public function deleteClientPrice(ClientPrice $clientPrice): void
     {
         $this->clientPriceRepository->remove($clientPrice);

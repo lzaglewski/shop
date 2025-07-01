@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Model\Pricing;
+namespace App\Domain\Pricing\Model;
 
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\User\User;
+use App\Domain\Product\Model\Product;
+use App\Domain\User\Model\User;
 
 class ClientPrice
 {

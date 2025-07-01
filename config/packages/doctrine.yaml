@@ -22,19 +22,19 @@ doctrine:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Infrastructure/Persistence/User'
-                prefix: 'App\Domain\Model\User'
+                prefix: 'App\Domain\User\Model'
                 alias: User
             Product:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Product'
-                prefix: 'App\Domain\Model\Product'
+                prefix: 'App\Domain\Product\Model'
                 alias: Product
             Pricing:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Pricing'
-                prefix: 'App\Domain\Model\Pricing'
+                prefix: 'App\Domain\Pricing\Model'
                 alias: Pricing
 
 when@test:

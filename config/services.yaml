@@ -21,16 +21,18 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/Domain/Model/'
+            - '../src/Domain/*/Model/'
             - '../src/Kernel.php'
 
     # Add repository interface tagging for specific repository interfaces
     _instanceof:
-        App\Domain\Repository\ClientPriceRepositoryInterface:
+        App\Domain\Pricing\Repository\ClientPriceRepositoryInterface:
             tags: ['app.repository']
-        App\Domain\Repository\ProductRepositoryInterface:
+        App\Domain\Product\Repository\ProductRepositoryInterface:
             tags: ['app.repository']
-        App\Domain\Repository\UserRepositoryInterface:
+        App\Domain\Product\Repository\ProductCategoryRepositoryInterface:
+            tags: ['app.repository']
+        App\Domain\User\Repository\UserRepositoryInterface:
             tags: ['app.repository']
 
     # add more service definitions when explicit configuration is needed

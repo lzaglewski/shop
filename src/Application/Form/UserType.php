@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Form;
 
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -91,7 +91,7 @@ class UserType extends AbstractType
             'data_class' => User::class,
             'require_password' => true,
         ]);
-        
+
         $resolver->setAllowedTypes('require_password', 'bool');
     }
 }

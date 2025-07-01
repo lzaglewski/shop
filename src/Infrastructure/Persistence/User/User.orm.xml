@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Domain\Model\User\User" table="users">
+    <entity name="App\Domain\User\Model\User" table="users">
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
@@ -13,10 +13,10 @@
         <field name="password" type="string" />
         <field name="companyName" type="string" length="255" />
         <field name="taxId" type="string" length="50" nullable="true" />
-        <field name="role" type="string" enum-type="App\Domain\Model\User\UserRole" />
+        <field name="role" type="string" enum-type="App\Domain\User\Model\UserRole" />
         <field name="isActive" type="boolean" />
 
-        <one-to-many field="clientPrices" target-entity="App\Domain\Model\Pricing\ClientPrice" mapped-by="client">
+        <one-to-many field="clientPrices" target-entity="App\Domain\Pricing\Model\ClientPrice" mapped-by="client">
             <cascade>
                 <cascade-persist/>
             </cascade>

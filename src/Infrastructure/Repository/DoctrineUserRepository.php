@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
+use App\Domain\User\Repository\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 

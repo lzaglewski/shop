@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Security;
 
-use App\Domain\Model\User\User;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\User\Model\User;
+use App\Domain\User\Repository\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;

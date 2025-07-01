@@ -7,8 +7,8 @@ namespace App\Application\Controller;
 use App\Application\Form\UserType;
 use App\Application\Service\ClientPriceService;
 use App\Application\Service\UserService;
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,33 +38,33 @@ class UserController extends AbstractController
     public function index(Request $request): Response
     {
         $users = $this->userService->getAllUsers();
-        
+
         // Filter parameters
         $role = $request->query->get('role');
         $search = $request->query->get('search');
         $status = $request->query->get('status');
-        
+
         // Apply filters if provided
         if ($role || $search || $status !== null) {
             $filteredUsers = [];
-            
+
             foreach ($users as $user) {
                 $matchesRole = !$role || $user->getRole()->value === $role;
-                $matchesSearch = !$search || 
-                    str_contains(strtolower($user->getEmail()), strtolower($search)) || 
+                $matchesSearch = !$search ||
+                    str_contains(strtolower($user->getEmail()), strtolower($search)) ||
                     str_contains(strtolower($user->getCompanyName()), strtolower($search));
-                $matchesStatus = $status === null || 
-                    ($status === '1' && $user->isActive()) || 
+                $matchesStatus = $status === null ||
+                    ($status === '1' && $user->isActive()) ||
                     ($status === '0' && !$user->isActive());
-                
+
                 if ($matchesRole && $matchesSearch && $matchesStatus) {
                     $filteredUsers[] = $user;
                 }
             }
-            
+
             $users = $filteredUsers;
         }
-        
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
             'roles' => UserRole::cases(),
@@ -88,7 +88,7 @@ class UserController extends AbstractController
         );
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash the password
             $hashedPassword = $this->passwordHasher->hashPassword(
@@ -96,15 +96,15 @@ class UserController extends AbstractController
                 $form->get('plainPassword')->getData()
             );
             $user->setPassword($hashedPassword);
-            
+
             // Save the user
             $this->userService->saveUser($user);
-            
+
             $this->addFlash('success', 'User created successfully.');
-            
+
             return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
         }
-        
+
         return $this->render('user/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -114,17 +114,17 @@ class UserController extends AbstractController
     public function show(int $id): Response
     {
         $user = $this->userService->getUserById($id);
-        
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-        
+
         // If user is a client, get their client prices
         $clientPrices = [];
         if ($user->getRole() === UserRole::CLIENT) {
             $clientPrices = $this->clientPriceService->getClientPricesForClient($user);
         }
-        
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'clientPrices' => $clientPrices,
@@ -135,25 +135,25 @@ class UserController extends AbstractController
     public function edit(int $id, Request $request): Response
     {
         $user = $this->userService->getUserById($id);
-        
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-        
+
         $form = $this->createForm(UserType::class, $user, [
             'require_password' => false,
         ]);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Save the user
             $this->userService->saveUser($user);
-            
+
             $this->addFlash('success', 'User updated successfully.');
-            
+
             return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
         }
-        
+
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
@@ -164,13 +164,13 @@ class UserController extends AbstractController
     public function activate(int $id): Response
     {
         $user = $this->userService->getUserById($id);
-        
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-        
+
         $this->userService->activateUser($user);
-        
+
         $this->addFlash('success', 'User has been activated successfully.');
         return $this->redirectToRoute('user_index');
     }
@@ -179,41 +179,41 @@ class UserController extends AbstractController
     public function deactivate(int $id): Response
     {
         $user = $this->userService->getUserById($id);
-        
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-        
+
         $this->userService->deactivateUser($user);
-        
+
         $this->addFlash('success', 'User has been deactivated successfully.');
         return $this->redirectToRoute('user_index');
     }
-    
+
     #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
     public function delete(int $id, Request $request): Response
     {
         $user = $this->userService->getUserById($id);
-        
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-        
+
         // Check CSRF token
         if (!$this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $this->addFlash('danger', 'Invalid CSRF token');
             return $this->redirectToRoute('user_show', ['id' => $id]);
         }
-        
+
         // Don't allow deleting your own account
         if ($this->getUser() && $user->getId() === $this->getUser()->getId()) {
             $this->addFlash('danger', 'You cannot delete your own account.');
             return $this->redirectToRoute('user_show', ['id' => $id]);
         }
-        
+
         // Delete the user
         $this->userService->deleteUser($user);
-        
+
         $this->addFlash('success', 'User has been deleted successfully.');
         return $this->redirectToRoute('user_index');
     }
