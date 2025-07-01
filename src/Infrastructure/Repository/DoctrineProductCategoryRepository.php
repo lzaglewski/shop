@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Model\Product\ProductCategory;
-use App\Domain\Repository\ProductCategoryRepositoryInterface;
+use App\Domain\Product\Model\ProductCategory;
+use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\Product\ProductCategory;
-use App\Domain\Repository\ProductRepositoryInterface;
+use App\Domain\Product\Model\Product;
+use App\Domain\Product\Model\ProductCategory;
+use App\Domain\Product\Repository\ProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -58,7 +58,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         $this->entityManager->remove($product);
         $this->entityManager->flush();
     }
-    
+
     public function createActiveProductsQueryBuilder(): QueryBuilder
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
@@ -68,10 +68,10 @@ class DoctrineProductRepository implements ProductRepositoryInterface
             ->where('p.isActive = :active')
             ->setParameter('active', true)
             ->orderBy('p.name', 'ASC');
-            
+
         return $queryBuilder;
     }
-    
+
     public function addCategoryFilter(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder
     {
         if (!empty($categoryId)) {
@@ -79,10 +79,10 @@ class DoctrineProductRepository implements ProductRepositoryInterface
                 ->andWhere('p.category = :categoryId')
                 ->setParameter('categoryId', $categoryId);
         }
-        
+
         return $queryBuilder;
     }
-    
+
     public function addSearchFilter(QueryBuilder $queryBuilder, string $search): QueryBuilder
     {
         if (!empty($search)) {
@@ -90,7 +90,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
                 ->andWhere('p.name LIKE :search OR p.description LIKE :search OR p.sku LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
-        
+
         return $queryBuilder;
     }
 }

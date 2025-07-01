@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Service;
 
-use App\Domain\Model\Product\Product;
-use App\Domain\Model\Product\ProductCategory;
-use App\Domain\Repository\ProductCategoryRepositoryInterface;
-use App\Domain\Repository\ProductRepositoryInterface;
+use App\Domain\Product\Model\Product;
+use App\Domain\Product\Model\ProductCategory;
+use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
+use App\Domain\Product\Repository\ProductRepositoryInterface;
 use Doctrine\ORM\QueryBuilder;
 
 class ProductService
@@ -41,9 +41,9 @@ class ProductService
             $category,
             $imageFilename
         );
-        
+
         $this->productRepository->save($product);
-        
+
         return $product;
     }
 
@@ -61,13 +61,13 @@ class ProductService
         $product->setBasePrice($basePrice);
         $product->setStock($stock);
         $product->setCategory($category);
-        
+
         if ($imageFilename !== null) {
             $product->setImageFilename($imageFilename);
         }
-        
+
         $this->productRepository->save($product);
-        
+
         return $product;
     }
 
@@ -107,27 +107,27 @@ class ProductService
     {
         return $this->productRepository->findByCategory($category);
     }
-    
+
     public function getActiveProductsQuery(): QueryBuilder
     {
         return $this->productRepository->createActiveProductsQueryBuilder();
     }
-    
+
     public function filterByCategory(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder
     {
         return $this->productRepository->addCategoryFilter($queryBuilder, $categoryId);
     }
-    
+
     public function filterBySearch(QueryBuilder $queryBuilder, string $search): QueryBuilder
     {
         return $this->productRepository->addSearchFilter($queryBuilder, $search);
     }
-    
+
     public function getAllCategories(): array
     {
         return $this->categoryRepository->findAll();
     }
-    
+
     public function saveProduct(Product $product): void
     {
         $this->productRepository->save($product);

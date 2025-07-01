@@ -8,9 +8,9 @@ use App\Application\Form\ChangePasswordType;
 use App\Application\Form\ProfileType;
 use App\Application\Form\RegistrationType;
 use App\Application\Service\UserService;
-use App\Domain\Model\User\User;
-use App\Domain\Model\User\UserRole;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\User\Model\User;
+use App\Domain\User\Model\UserRole;
+use App\Domain\User\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,7 @@ class SecurityController extends AbstractController
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
-        UserService $userService, 
+        UserService $userService,
         UserPasswordHasherInterface $passwordHasher,
         UserRepositoryInterface $userRepository
     ) {
@@ -39,10 +39,10 @@ class SecurityController extends AbstractController
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        
+
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -70,27 +70,27 @@ class SecurityController extends AbstractController
         );
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Set default values for new user
             $user->setRole(UserRole::CLIENT);
             $user->setIsActive(true);
-            
+
             // Hash the password
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()
             );
             $user->setPassword($hashedPassword);
-            
+
             // Save the user using the repository
             $this->userRepository->save($user);
-            
+
             $this->addFlash('success', 'Your account has been created. You can now log in.');
-            
+
             return $this->redirectToRoute('app_login');
         }
-        
+
         return $this->render('security/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
@@ -100,44 +100,44 @@ class SecurityController extends AbstractController
     public function profile(Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+
         /** @var User $user */
         $user = $this->getUser();
-        
+
         // Profile form
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
-        
+
         // Password change form
         $passwordForm = $this->createForm(ChangePasswordType::class);
         $passwordForm->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userRepository->save($user);
             $this->addFlash('success', 'Your profile has been updated');
-            
+
             return $this->redirectToRoute('app_profile');
         }
-        
+
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
             $currentPassword = $passwordForm->get('currentPassword')->getData();
             $newPassword = $passwordForm->get('newPassword')->getData();
-            
+
             // Verify current password
             if (!$this->passwordHasher->isPasswordValid($user, $currentPassword)) {
                 $this->addFlash('danger', 'Current password is incorrect.');
                 return $this->redirectToRoute('app_profile');
             }
-            
+
             // Update password
             $hashedPassword = $this->passwordHasher->hashPassword($user, $newPassword);
             $user->setPassword($hashedPassword);
             $this->userRepository->save($user);
-            
+
             $this->addFlash('success', 'Your password has been updated.');
             return $this->redirectToRoute('app_profile');
         }
-        
+
         return $this->render('security/profile.html.twig', [
             'form' => $form->createView(),
             'passwordForm' => $passwordForm->createView(),

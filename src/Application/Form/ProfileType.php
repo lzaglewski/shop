@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Form;
 
-use App\Domain\Model\User\User;
+use App\Domain\User\Model\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

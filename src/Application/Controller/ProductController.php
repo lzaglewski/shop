@@ -6,8 +6,8 @@ namespace App\Application\Controller;
 
 use App\Application\Form\ProductType;
 use App\Application\Service\ProductService;
-use App\Domain\Model\Product\Product;
-use App\Domain\Service\PricingService;
+use App\Domain\Pricing\Service\PricingService;
+use App\Domain\Product\Model\Product;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -24,7 +24,7 @@ class ProductController extends AbstractController
     private PricingService $pricingService;
     private SluggerInterface $slugger;
     private PaginatorInterface $paginator;
-    
+
     public function __construct(
         ProductService $productService,
         PricingService $pricingService,
@@ -41,30 +41,30 @@ class ProductController extends AbstractController
     public function list(Request $request): Response
     {
         $query = $this->productService->getActiveProductsQuery();
-        
+
         // Get filter parameters
         $categoryId = $request->query->get('category');
         $search = $request->query->get('search');
-        
+
         // Apply filters if provided
         if ($categoryId) {
             $query = $this->productService->filterByCategory($query, $categoryId);
         }
-        
+
         if ($search) {
             $query = $this->productService->filterBySearch($query, $search);
         }
-        
+
         // Paginate the results
         $pagination = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             9 // Items per page
         );
-        
+
         // Get categories for the filter
         $categories = $this->productService->getAllCategories();
-        
+
         return $this->render('product/list.html.twig', [
             'products' => $pagination,
             'categories' => $categories,
@@ -87,7 +87,7 @@ class ProductController extends AbstractController
         );
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle file upload
             $imageFile = $form->get('imageFile')->getData();
@@ -95,7 +95,7 @@ class ProductController extends AbstractController
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $this->slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-                
+
                 try {
                     $imageFile->move(
                         $this->getParameter('product_images_directory'),
@@ -106,15 +106,15 @@ class ProductController extends AbstractController
                     $this->addFlash('danger', 'There was an error uploading the image.');
                 }
             }
-            
+
             // Save the product
             $this->productService->saveProduct($product);
-            
+
             $this->addFlash('success', 'Product created successfully.');
-            
+
             return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
         }
-        
+
         return $this->render('product/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -124,24 +124,24 @@ class ProductController extends AbstractController
     public function show($id): Response
     {
         $product = $this->productService->getProductById((int)$id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
         }
-        
+
         $clientPrice = null;
         $user = $this->getUser();
-        
+
         if ($user) {
             // Get the client's custom price for this product
             $price = $this->pricingService->getProductPriceForClient($product, $user);
-            
+
             // If the client has a custom price (different from base price), create a ClientPrice object
             if ($price !== $product->getBasePrice()) {
-                $clientPrice = new \App\Domain\Model\Pricing\ClientPrice($user, $product, $price);
+                $clientPrice = new \App\Domain\Pricing\Model\ClientPrice($user, $product, $price);
             }
         }
-        
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'clientPrice' => $clientPrice,
@@ -153,14 +153,14 @@ class ProductController extends AbstractController
     public function edit($id, Request $request): Response
     {
         $product = $this->productService->getProductById((int)$id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
         }
-        
+
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle file upload
             $imageFile = $form->get('imageFile')->getData();
@@ -168,13 +168,13 @@ class ProductController extends AbstractController
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $this->slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-                
+
                 try {
                     $imageFile->move(
                         $this->getParameter('product_images_directory'),
                         $newFilename
                     );
-                    
+
                     // Remove old image if exists
                     $oldFilename = $product->getImageFilename();
                     if ($oldFilename) {
@@ -183,21 +183,21 @@ class ProductController extends AbstractController
                             unlink($oldFilePath);
                         }
                     }
-                    
+
                     $product->setImageFilename($newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('danger', 'There was an error uploading the image.');
                 }
             }
-            
+
             // Save the product
             $this->productService->saveProduct($product);
-            
+
             $this->addFlash('success', 'Product updated successfully.');
-            
+
             return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
         }
-        
+
         return $this->render('product/edit.html.twig', [
             'form' => $form->createView(),
             'product' => $product,
@@ -209,21 +209,21 @@ class ProductController extends AbstractController
     public function delete($id, Request $request): Response
     {
         $product = $this->productService->getProductById((int)$id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
         }
-        
+
         // Validate CSRF token
         $submittedToken = $request->request->get('_token');
         if (!$this->isCsrfTokenValid('delete-product-'.$id, $submittedToken)) {
             $this->addFlash('danger', 'Invalid CSRF token');
             return $this->redirectToRoute('product_list');
         }
-        
+
         $this->productService->deactivateProduct($product);
         $this->addFlash('success', 'Product has been deactivated.');
-        
+
         return $this->redirectToRoute('product_list');
     }
 }
