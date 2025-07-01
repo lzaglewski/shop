@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}B2B Shop - Welcome{% endblock %}
+
+{% block body %}
+    <div class="jumbotron bg-light p-5 mb-4 rounded">
+        <div class="container">
+            <h1 class="display-4">Welcome to B2B Shop</h1>
+            <p class="lead">Your trusted partner for business supplies with personalized pricing for each client.</p>
+            <hr class="my-4">
+            <p>Browse our extensive catalog of products with your individual pricing.</p>
+            <a class="btn btn-primary btn-lg" href="{{ path('product_list') }}" role="button">View Products</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="mb-4">Featured Products</h2>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in featuredProducts %}
+                <div class="col">
+                    <div class="card product-card h-100">
+                        {% if product.imageFilename %}
+                            <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="bg-light text-center p-5">
+                                <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">
+                                {% if app.user %}
+                                    {{ app.user.clientPrices.filter(p => p.product.id == product.id).first ? app.user.clientPrices.filter(p => p.product.id == product.id).first.price : product.basePrice }}€
+                                {% else %}
+                                    {{ product.basePrice }}€
+                                {% endif %}
+                            </span>
+                            <a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No featured products available at the moment.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-tags-fill text-primary mb-3" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title">Custom Pricing</h3>
+                        <p class="card-text">Each client gets their own personalized pricing for every product.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-truck text-primary mb-3" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title">Fast Delivery</h3>
+                        <p class="card-text">Quick and reliable shipping for all your business needs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-headset text-primary mb-3" style="font-size: 2.5rem;"></i>
+                        <h3 class="card-title">24/7 Support</h3>
+                        <p class="card-text">Our customer service team is always ready to assist you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

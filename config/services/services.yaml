@@ -1,0 +1,25 @@
+services:
+  # Domain services
+  App\Domain\Service\PricingService:
+    arguments:
+      - '@App\Domain\Repository\ClientPriceRepositoryInterface'
+
+  # Application services
+  App\Application\Service\UserService:
+    arguments:
+      - '@App\Domain\Repository\UserRepositoryInterface'
+      - '@security.user_password_hasher'
+
+  App\Application\Service\ProductService:
+    arguments:
+      - '@App\Domain\Repository\ProductRepositoryInterface'
+
+  App\Application\Service\ClientPriceService:
+    arguments:
+      - '@App\Domain\Repository\ClientPriceRepositoryInterface'
+      - '@App\Domain\Service\PricingService'
+
+  # Controllers are autowired
+  App\Application\Controller\:
+    resource: '../../src/Application/Controller'
+    tags: ['controller.service_arguments']

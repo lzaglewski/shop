@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Profile - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">Your Profile</h1>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Account Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-1">Company Name</h6>
+                            <p class="mb-0 fs-5">{{ app.user.companyName }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-1">Email Address</h6>
+                            <p class="mb-0">{{ app.user.email }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-1">Tax ID</h6>
+                            <p class="mb-0">{{ app.user.taxId }}</p>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Account Type</h6>
+                            <p class="mb-0">
+                                {% if app.user.isAdmin %}
+                                    <span class="badge bg-danger">Administrator</span>
+                                {% else %}
+                                    <span class="badge bg-primary">Client</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Edit Profile</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form_label(form.email) }}
+                                    {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(form.email) }}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form_label(form.companyName) }}
+                                    {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(form.companyName) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.taxId) }}
+                                {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(form.taxId) }}
+                            </div>
+
+                            {{ form_rest(form) }}
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Change Password</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(passwordForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                            <div class="mb-3">
+                                {{ form_label(passwordForm.currentPassword) }}
+                                {{ form_widget(passwordForm.currentPassword, {'attr': {'class': 'form-control' ~ (passwordForm.currentPassword.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(passwordForm.currentPassword) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(passwordForm.newPassword.first) }}
+                                {{ form_widget(passwordForm.newPassword.first, {'attr': {'class': 'form-control' ~ (passwordForm.newPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(passwordForm.newPassword.first) }}
+                                <div class="form-text">Password should be at least 8 characters and include letters and numbers.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(passwordForm.newPassword.second) }}
+                                {{ form_widget(passwordForm.newPassword.second, {'attr': {'class': 'form-control' ~ (passwordForm.newPassword.second.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(passwordForm.newPassword.second) }}
+                            </div>
+
+                            {{ form_rest(passwordForm) }}
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-lock me-2"></i>Update Password
+                                </button>
+                            </div>
+                        {{ form_end(passwordForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

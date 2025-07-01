@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Client Price - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">Edit Client Price</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                {% include 'client_price/form.html.twig' with {'button_label': 'Update'} %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

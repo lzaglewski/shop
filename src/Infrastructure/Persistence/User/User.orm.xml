@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Domain\Model\User\User" table="users">
+        <id name="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="email" type="string" length="180" unique="true" />
+        <field name="password" type="string" />
+        <field name="companyName" type="string" length="255" />
+        <field name="taxId" type="string" length="50" nullable="true" />
+        <field name="role" type="string" enum-type="App\Domain\Model\User\UserRole" />
+        <field name="isActive" type="boolean" />
+
+        <one-to-many field="clientPrices" target-entity="App\Domain\Model\Pricing\ClientPrice" mapped-by="client">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+    </entity>
+
+</doctrine-mapping>
