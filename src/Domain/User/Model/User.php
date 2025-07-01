@@ -7,18 +7,31 @@ namespace App\Domain\User\Model;
 use App\Domain\Pricing\Model\ClientPrice;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private int $id;
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $email;
+    #[ORM\Column(type: 'string')]
     private string $password;
+    #[ORM\Column(type: 'string', length: 255)]
     private string $companyName;
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $taxId;
+    #[ORM\Column(type: 'string', enumType: UserRole::class)]
     private UserRole $role;
+    #[ORM\Column(type: 'boolean')]
     private bool $isActive;
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientPrice::class, cascade: ['persist'])]
     private Collection $clientPrices;
 
     public function __construct(

@@ -6,13 +6,25 @@ namespace App\Domain\Pricing\Model;
 
 use App\Domain\Product\Model\Product;
 use App\Domain\User\Model\User;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'client_prices')]
 class ClientPrice
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private int $id;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clientPrices')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false)]
     private User $client;
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'clientPrices')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false)]
     private Product $product;
-    private float $price;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private string $price;
+    #[ORM\Column(type: 'boolean')]
     private bool $isActive;
 
     public function __construct(
@@ -22,7 +34,7 @@ class ClientPrice
     ) {
         $this->client = $client;
         $this->product = $product;
-        $this->price = $price;
+        $this->price = (string) $price;
         $this->isActive = true;
     }
 
@@ -53,12 +65,12 @@ class ClientPrice
 
     public function getPrice(): float
     {
-        return $this->price;
+        return (float) $this->price;
     }
 
     public function setPrice(float $price): void
     {
-        $this->price = $price;
+        $this->price = (string) $price;
     }
 
     public function isActive(): bool

@@ -12,28 +12,25 @@ doctrine:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true
-        validate_xml_mapping: true
+        validate_xml_mapping: false
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: false
         mappings:
             User:
-                type: xml
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure/Persistence/User'
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/User/Model'
                 prefix: 'App\Domain\User\Model'
                 alias: User
             Product:
-                type: xml
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Product'
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Product/Model'
                 prefix: 'App\Domain\Product\Model'
                 alias: Product
             Pricing:
-                type: xml
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Pricing'
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Pricing/Model'
                 prefix: 'App\Domain\Pricing\Model'
                 alias: Pricing
 
