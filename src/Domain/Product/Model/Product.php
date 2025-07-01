@@ -7,18 +7,34 @@ namespace App\Domain\Product\Model;
 use App\Domain\Pricing\Model\ClientPrice;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'products')]
 class Product
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private int $id;
+    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
+    #[ORM\Column(type: 'string', length: 50, unique: true)]
     private string $sku;
+    #[ORM\Column(type: 'text')]
     private string $description;
-    private float $basePrice;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private string $basePrice;
+    #[ORM\Column(type: 'integer')]
     private int $stock;
+    #[ORM\Column(type: 'boolean')]
     private bool $isActive;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename;
+    #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
     private ?ProductCategory $category;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ClientPrice::class, cascade: ['persist'])]
     private Collection $clientPrices;
 
     public function __construct(
@@ -33,7 +49,7 @@ class Product
         $this->name = $name;
         $this->sku = $sku;
         $this->description = $description;
-        $this->basePrice = $basePrice;
+        $this->basePrice = (string) $basePrice;
         $this->stock = $stock;
         $this->category = $category;
         $this->imageFilename = $imageFilename;
@@ -78,12 +94,12 @@ class Product
 
     public function getBasePrice(): float
     {
-        return $this->basePrice;
+        return (float) $this->basePrice;
     }
 
     public function setBasePrice(float $basePrice): void
     {
-        $this->basePrice = $basePrice;
+        $this->basePrice = (string) $basePrice;
     }
 
     public function getStock(): int
