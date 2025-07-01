@@ -33,6 +33,16 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Domain/Pricing/Model'
                 prefix: 'App\Domain\Pricing\Model'
                 alias: Pricing
+            Cart:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Cart/Model'
+                prefix: 'App\Domain\Cart\Model'
+                alias: Cart
+            Order:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Order/Model'
+                prefix: 'App\Domain\Order\Model'
+                alias: Order
 
 when@test:
     doctrine:

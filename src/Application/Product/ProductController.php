@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller;
+namespace App\Application\Product;
 
 use App\Application\Form\ProductType;
 use App\Application\Service\ProductService;

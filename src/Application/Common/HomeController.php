@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Controller;
+namespace App\Application\Common;
 
 use App\Application\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,12 +22,12 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $featuredProducts = $this->productService->getActiveProducts();
-        
+
         // In a real application, you might want to limit this to just a few featured products
         if (count($featuredProducts) > 8) {
             $featuredProducts = array_slice($featuredProducts, 0, 8);
         }
-        
+
         return $this->render('home/index.html.twig', [
             'featuredProducts' => $featuredProducts,
         ]);
