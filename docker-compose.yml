@@ -1,6 +1,6 @@
 services:
   nginx:
-    container_name: kakawa_nginx
+    container_name: shop_nginx
     build: config/docker/nginx
     ports:
       - '8921:80'
@@ -8,14 +8,14 @@ services:
       - './:/var/www/html/'
       - './config/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf'
   php:
-    container_name: kakawa_php
+    container_name: shop_php
     build: config/docker/php
     volumes:
       - './:/var/www/html/'
       - './config/docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
       - './config/docker/php/upload-limits.ini:/usr/local/etc/php/conf.d/upload-limits.ini'
   mysql:
-    container_name: kakawa_mysql
+    container_name: shop_mysql
     image: mariadb
     volumes:
       - './:/var/app/'
@@ -23,11 +23,11 @@ services:
       - '8922:3306'
     environment:
       MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_DATABASE: kakawa
+      MYSQL_DATABASE: shop
       MYSQL_USER: user
       MYSQL_PASSWORD: 12345678
   mail:
-    container_name: kakawa_mail
+    container_name: shop_mail
     image: registry.hub.docker.com/mailhog/mailhog
     ports:
       - '8923:8025'
