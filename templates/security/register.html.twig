@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h1 class="h3 mb-4 text-center">Create Your B2B Account</h1>
+
+                        {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form_label(registrationForm.email) }}
+                                    {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' ~ (registrationForm.email.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.email) }}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form_label(registrationForm.companyName) }}
+                                    {{ form_widget(registrationForm.companyName, {'attr': {'class': 'form-control' ~ (registrationForm.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.companyName) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.taxId) }}
+                                {{ form_widget(registrationForm.taxId, {'attr': {'class': 'form-control' ~ (registrationForm.taxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(registrationForm.taxId) }}
+                                <div class="form-text">Enter your company's tax identification number.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.plainPassword.first) }}
+                                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(registrationForm.plainPassword.first) }}
+                                <div class="form-text">Password should be at least 8 characters and include letters and numbers.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.plainPassword.second) }}
+                                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.second.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_errors(registrationForm.plainPassword.second) }}
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input' ~ (registrationForm.agreeTerms.vars.valid ? '' : ' is-invalid')}}) }}
+                                {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+
+                            {{ form_rest(registrationForm) }}
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-person-plus me-2"></i>Register
+                                </button>
+                            </div>
+                        {{ form_end(registrationForm) }}
+
+                        <div class="mt-4 text-center">
+                            <p>Already have an account? <a href="{{ path('app_login') }}">Login here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

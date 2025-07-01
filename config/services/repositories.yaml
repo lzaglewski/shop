@@ -1,0 +1,23 @@
+services:
+  # Repository interfaces
+  App\Domain\Repository\UserRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineUserRepository
+
+  App\Domain\Repository\ProductRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineProductRepository
+
+  App\Domain\Repository\ClientPriceRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineClientPriceRepository
+
+  # Repository implementations
+  App\Infrastructure\Repository\DoctrineUserRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  App\Infrastructure\Repository\DoctrineProductRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  App\Infrastructure\Repository\DoctrineClientPriceRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'

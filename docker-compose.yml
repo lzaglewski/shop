@@ -13,6 +13,7 @@ services:
     volumes:
       - './:/var/www/html/'
       - './config/docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
+      - './config/docker/php/upload-limits.ini:/usr/local/etc/php/conf.d/upload-limits.ini'
   mysql:
     container_name: kakawa_mysql
     image: mariadb

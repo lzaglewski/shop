@@ -1,0 +1,68 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.client) }}
+            {{ form_widget(form.client, {'attr': {'class': 'form-select' ~ (form.client.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.client) }}
+            <div class="form-text">Select the client for this special price.</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.product) }}
+            {{ form_widget(form.product, {'attr': {'class': 'form-select' ~ (form.product.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.product) }}
+            <div class="form-text">Select the product for this special price.</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price, {'attr': {'class': 'form-control' ~ (form.price.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.price) }}
+            <div class="form-text">The custom price for this client-product combination.</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="form-check form-switch mt-4">
+                {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input' ~ (form.isActive.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                {{ form_errors(form.isActive) }}
+            </div>
+            <div class="form-text">Toggle whether this custom price is active.</div>
+        </div>
+    </div>
+
+    {% if clientPrice is defined and clientPrice.id %}
+        <div class="alert alert-info">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Base Price:</strong> {{ clientPrice.product.basePrice }}€
+                </div>
+                <div class="col-md-6">
+                    <strong>Discount:</strong>
+                    {% if clientPrice.price < clientPrice.product.basePrice %}
+                        <span class="text-success">
+                            {{ ((1 - clientPrice.price / clientPrice.product.basePrice) * 100)|round }}%
+                        </span>
+                    {% elseif clientPrice.price > clientPrice.product.basePrice %}
+                        <span class="text-danger">
+                            +{{ ((clientPrice.price / clientPrice.product.basePrice - 1) * 100)|round }}%
+                        </span>
+                    {% else %}
+                        0%
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ form_rest(form) }}
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ path('client_price_index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> {{ button_label|default('Save') }}
+        </button>
+    </div>
+{{ form_end(form) }}
