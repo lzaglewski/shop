@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Subcategory - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">Create New Subcategory</h1>
+        <p class="text-muted">Parent category: <strong>{{ parent.name }}</strong></p>
+        
+        <div class="card">
+            <div class="card-body">
+                {% include 'category/form.html.twig' with {'button_label': 'Create'} %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

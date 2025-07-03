@@ -67,9 +67,32 @@ class ProductType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'class' => ProductCategory::class,
-                'choice_label' => 'name',
+                'choice_label' => function (ProductCategory $category) {
+                    $prefix = '';
+                    $current = $category;
+                    
+                    // Build path for nested categories
+                    while ($current->getParent() !== null) {
+                        $prefix .= '— ';
+                        $current = $current->getParent();
+                    }
+                    
+                    return $prefix . $category->getName();
+                },
                 'required' => false,
                 'placeholder' => 'Select a category',
+                'group_by' => function (ProductCategory $category) {
+                    if ($category->getParent() === null) {
+                        return 'Root Categories';
+                    }
+                    
+                    $parent = $category->getParent();
+                    while ($parent->getParent() !== null) {
+                        $parent = $parent->getParent();
+                    }
+                    
+                    return $parent->getName();
+                },
             ])
             ->add('imageFile', FileType::class, [
                 'required' => false,

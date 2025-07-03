@@ -40,6 +40,11 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
     {
         return $this->repository->findAll();
     }
+    
+    public function findRootCategories(): array
+    {
+        return $this->repository->findBy(['parent' => null], ['name' => 'ASC']);
+    }
 
     public function remove(ProductCategory $category): void
     {

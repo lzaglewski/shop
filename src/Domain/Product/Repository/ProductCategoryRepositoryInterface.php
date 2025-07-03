@@ -15,6 +15,8 @@ interface ProductCategoryRepositoryInterface
     public function findByName(string $name): ?ProductCategory;
 
     public function findAll(): array;
+    
+    public function findRootCategories(): array;
 
     public function remove(ProductCategory $category): void;
 }

@@ -1,0 +1,35 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name, {'attr': {'class': 'form-control' ~ (form.name.vars.valid ? '' : ' is-invalid')}}) }}
+        {{ form_errors(form.name) }}
+        <div class="form-text">Category name as it will appear in menus and filters.</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form.description.vars.valid ? '' : ' is-invalid'), 'rows': 3}}) }}
+        {{ form_errors(form.description) }}
+        <div class="form-text">Optional description of this category.</div>
+    </div>
+
+    {% if form.parent is defined and form.parent is not null %}
+        <div class="mb-3">
+            {{ form_label(form.parent) }}
+            {{ form_widget(form.parent, {'attr': {'class': 'form-select' ~ (form.parent.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.parent) }}
+            <div class="form-text">Parent category in the hierarchy. Leave empty for a top-level category.</div>
+        </div>
+    {% endif %}
+
+    {{ form_rest(form) }}
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ path('category_list') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> {{ button_label|default('Save') }}
+        </button>
+    </div>
+{{ form_end(form) }}
