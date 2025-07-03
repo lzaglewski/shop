@@ -75,12 +75,39 @@ class DoctrineProductRepository implements ProductRepositoryInterface
     public function addCategoryFilter(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder
     {
         if (!empty($categoryId)) {
-            $queryBuilder
-                ->andWhere('p.category = :categoryId')
-                ->setParameter('categoryId', $categoryId);
+            // Get the category and all its subcategories
+            $category = $this->entityManager->getRepository(ProductCategory::class)->find($categoryId);
+            
+            if ($category) {
+                // Get all subcategory IDs recursively
+                $categoryIds = $this->getAllCategoryIds($category);
+                
+                $queryBuilder
+                    ->andWhere('p.category IN (:categoryIds)')
+                    ->setParameter('categoryIds', $categoryIds);
+            } else {
+                // Fallback to original behavior if category not found
+                $queryBuilder
+                    ->andWhere('p.category = :categoryId')
+                    ->setParameter('categoryId', $categoryId);
+            }
         }
 
         return $queryBuilder;
+    }
+    
+    /**
+     * Get a category and all its subcategories as an array of IDs
+     */
+    private function getAllCategoryIds(ProductCategory $category): array
+    {
+        $ids = [$category->getId()];
+        
+        foreach ($category->getChildren() as $child) {
+            $ids = array_merge($ids, $this->getAllCategoryIds($child));
+        }
+        
+        return $ids;
     }
 
     public function addSearchFilter(QueryBuilder $queryBuilder, string $search): QueryBuilder
