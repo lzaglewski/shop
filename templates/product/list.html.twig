@@ -108,6 +108,9 @@
                                                 <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary">
                                                     <i class="bi bi-pencil"></i> Edit
                                                 </a>
+                                                <a href="{{ path('client_price_bulk_edit_for_product', {'id': product.id}) }}" class="btn btn-sm btn-outline-info" title="Manage client prices for this product">
+                                                    <i class="bi bi-tags"></i> Prices
+                                                </a>
                                             {% endif %}
                                         </div>
                                     </div>

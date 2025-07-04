@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulk Edit Prices for {{ product.name }} - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Bulk Edit Prices for {{ product.name }}</h1>
+            <a href="{{ path('client_price_index', {'product': product.id}) }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Client Prices
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Client Prices</h5>
+                    <div>
+                        <span class="badge bg-info me-2">Base Price: {{ basePrice }}€</span>
+                        <span class="badge bg-primary">{{ clients|length }} Clients</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="bulk-edit-form">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">#</th>
+                                    <th style="width: 30%">Client</th>
+                                    <th style="width: 20%">Client Price</th>
+                                    <th style="width: 15%">Discount</th>
+                                    <th style="width: 15%">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in clients %}
+                                    {% set hasPrice = priceMap[client.id] is defined %}
+                                    {% set price = hasPrice ? priceMap[client.id].price : basePrice %}
+                                    {% set isActive = hasPrice ? priceMap[client.id].isActive : false %}
+                                    {% set discount = price < basePrice 
+                                        ? ((1 - price / basePrice) * 100)|round 
+                                        : (price > basePrice ? ((price / basePrice - 1) * 100)|round : 0) %}
+                                    
+                                    <tr>
+                                        <td>{{ client.id }}</td>
+                                        <td>{{ client.companyName }}</td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="number" 
+                                                       name="prices[{{ client.id }}]" 
+                                                       class="form-control price-input" 
+                                                       value="{{ price }}" 
+                                                       step="0.01" 
+                                                       min="0"
+                                                       data-base-price="{{ basePrice }}"
+                                                       data-client-id="{{ client.id }}">
+                                                <span class="input-group-text">€</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span id="discount-{{ client.id }}" class="{{ discount < 0 ? 'text-danger' : (discount > 0 ? 'text-success' : '') }}">
+                                                {{ discount > 0 ? discount ~ '%' : (discount < 0 ? '+' ~ (discount * -1) ~ '%' : '0%') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       name="active[{{ client.id }}]" 
+                                                       id="active-{{ client.id }}" 
+                                                       {{ isActive ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="active-{{ client.id }}">
+                                                    Active
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No clients available</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-secondary" id="apply-discount-btn">
+                                <i class="bi bi-percent"></i> Apply Discount
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="reset-prices-btn">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset to Base Price
+                            </button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save All Prices
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply discount button
+            document.getElementById('apply-discount-btn').addEventListener('click', function() {
+                const discountPercent = prompt('Enter discount percentage (1-100):', '10');
+                if (discountPercent !== null && !isNaN(discountPercent)) {
+                    const discount = parseFloat(discountPercent) / 100;
+                    const basePrice = parseFloat(document.querySelector('.price-input').dataset.basePrice);
+                    
+                    document.querySelectorAll('.price-input').forEach(input => {
+                        const newPrice = (basePrice * (1 - discount)).toFixed(2);
+                        input.value = newPrice;
+                        
+                        // Update discount display
+                        const clientId = input.dataset.clientId;
+                        const discountElement = document.getElementById('discount-' + clientId);
+                        discountElement.textContent = discountPercent + '%';
+                        discountElement.className = 'text-success';
+                    });
+                }
+            });
+            
+            // Reset to base prices
+            document.getElementById('reset-prices-btn').addEventListener('click', function() {
+                if (confirm('Reset all prices to base product price?')) {
+                    const basePrice = parseFloat(document.querySelector('.price-input').dataset.basePrice);
+                    
+                    document.querySelectorAll('.price-input').forEach(input => {
+                        input.value = basePrice.toFixed(2);
+                        
+                        // Update discount display
+                        const clientId = input.dataset.clientId;
+                        const discountElement = document.getElementById('discount-' + clientId);
+                        discountElement.textContent = '0%';
+                        discountElement.className = '';
+                    });
+                }
+            });
+            
+            // Update discount when price changes
+            document.querySelectorAll('.price-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const basePrice = parseFloat(this.dataset.basePrice);
+                    const newPrice = parseFloat(this.value);
+                    const clientId = this.dataset.clientId;
+                    const discountElement = document.getElementById('discount-' + clientId);
+                    
+                    if (newPrice < basePrice) {
+                        const discount = Math.round((1 - newPrice / basePrice) * 100);
+                        discountElement.textContent = discount + '%';
+                        discountElement.className = 'text-success';
+                    } else if (newPrice > basePrice) {
+                        const increase = Math.round((newPrice / basePrice - 1) * 100);
+                        discountElement.textContent = '+' + increase + '%';
+                        discountElement.className = 'text-danger';
+                    } else {
+                        discountElement.textContent = '0%';
+                        discountElement.className = '';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
