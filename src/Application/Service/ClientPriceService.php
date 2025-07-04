@@ -50,9 +50,9 @@ class ClientPriceService
 
     public function bulkSetClientPrices(User $client, array $productPrices): void
     {
-        foreach ($productPrices as $productId => $price) {
-            $product = $productPrices[$productId]['product'] ?? null;
-            $priceValue = $productPrices[$productId]['price'] ?? null;
+        foreach ($productPrices as $productId => $data) {
+            $product = $data['product'] ?? null;
+            $priceValue = $data['price'] ?? null;
 
             if ($product instanceof Product && is_numeric($priceValue)) {
                 $this->setClientPrice($client, $product, (float)$priceValue);
@@ -69,6 +69,17 @@ class ClientPriceService
     {
         return $this->clientPriceRepository->findById($id);
     }
+    
+    /**
+     * Get a client price by client and product
+     */
+    public function getClientPriceByClientAndProduct(User $client, Product $product): ?ClientPrice
+    {
+        return $this->clientPriceRepository->findOneBy([
+            'client' => $client,
+            'product' => $product
+        ]);
+    }
 
     public function saveClientPrice(ClientPrice $clientPrice): void
     {
@@ -78,5 +89,43 @@ class ClientPriceService
     public function deleteClientPrice(ClientPrice $clientPrice): void
     {
         $this->clientPriceRepository->remove($clientPrice);
+    }
+    
+    /**
+     * Get all products that are visible to a specific client
+     * A product is visible to a client if there is an active ClientPrice entry for it
+     */
+    public function getVisibleProductsForClient(User $client): array
+    {
+        $clientPrices = $this->getClientPricesForClient($client);
+        $visibleProducts = [];
+        
+        foreach ($clientPrices as $clientPrice) {
+            if ($clientPrice->isActive()) {
+                $visibleProducts[] = $clientPrice->getProduct();
+            }
+        }
+        
+        return $visibleProducts;
+    }
+    
+    /**
+     * Check if a product is visible to a specific client
+     * A product is visible to a client if there is an active ClientPrice entry for it
+     */
+    public function isProductVisibleToClient(Product $product, User $client): bool
+    {
+        $clientPrice = $this->clientPriceRepository->findOneBy([
+            'client' => $client,
+            'product' => $product
+        ]);
+        
+        // If no client price exists, the product is NOT visible to the client
+        if (!$clientPrice) {
+            return false;
+        }
+        
+        // Only show active client prices
+        return $clientPrice->isActive();
     }
 }

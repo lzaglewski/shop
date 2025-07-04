@@ -25,20 +25,9 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label for="product" class="form-label">Product</label>
-                        <select name="product" id="product" class="form-select">
-                            <option value="">All Products</option>
-                            {% for product in products %}
-                                <option value="{{ product.id }}" {% if app.request.query.get('product') == product.id ~ '' %}selected{% endif %}>
-                                    {{ product.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="active" class="form-label">Status</label>
-                        <select name="active" id="active" class="form-select">
+                    <div class="col-md-3">
+                        <label for="filter_active" class="form-label">Status</label>
+                        <select name="active" id="filter_active" class="form-select">
                             <option value="">All</option>
                             <option value="1" {% if app.request.query.get('active') == '1' %}selected{% endif %}>Active</option>
                             <option value="0" {% if app.request.query.get('active') == '0' %}selected{% endif %}>Inactive</option>

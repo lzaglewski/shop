@@ -72,12 +72,12 @@ class ClientPrice
     {
         $this->price = (string) $price;
     }
-
+    
     public function isActive(): bool
     {
         return $this->isActive;
     }
-
+    
     public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
