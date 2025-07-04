@@ -21,6 +21,8 @@ interface ClientPriceRepositoryInterface
     public function findByProduct(Product $product): array;
 
     public function findAll(): array;
+    
+    public function findOneBy(array $criteria): ?ClientPrice;
 
     public function remove(ClientPrice $clientPrice): void;
 }
