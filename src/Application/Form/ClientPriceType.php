@@ -68,6 +68,8 @@ class ClientPriceType extends AbstractType
             ])
             ->add('isActive', CheckboxType::class, [
                 'required' => false,
+                'label' => 'Active',
+                'help' => 'If active, this price will be used and the product will be visible to the client.',
             ])
         ;
 

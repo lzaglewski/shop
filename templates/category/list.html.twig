@@ -55,38 +55,12 @@
                         {% endif %}
                     </div>
                     <div>
-                        <a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-sm btn-outline-primary me-1" title="Edit category">
+                        <a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-sm btn-outline-primary me-1">
                             <i class="bi bi-pencil"></i>
                         </a>
                         <a href="{{ path('category_new_subcategory', {'id': category.id}) }}" class="btn btn-sm btn-outline-success me-1" title="Add subcategory">
                             <i class="bi bi-diagram-3"></i>
                         </a>
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ category.id }}" title="Delete category">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Delete Modal for {{ category.name }} -->
-                <div class="modal fade" id="deleteModal{{ category.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ category.id }}" aria-hidden="true" data-has-products="{{ category.products|length > 0 ? '1' : '0' }}" data-has-children="{{ category.children|length > 0 ? '1' : '0' }}">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ category.id }}">Delete Category: {{ category.name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="delete-warnings"></div>
-                                <p>Are you sure you want to delete this category? This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form action="{{ path('category_delete', {'id': category.id}) }}" method="post" class="d-inline">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-category-' ~ category.id) }}">
-                                    <button type="submit" class="btn btn-danger btn-delete">Delete</button>
-                                </form>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -99,33 +73,3 @@
         {% endfor %}
     </ul>
 {% endmacro %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        // Add event listener to show appropriate warning messages in delete modals
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteModals = document.querySelectorAll('[id^="deleteModal"]');
-            deleteModals.forEach(modal => {
-                const hasProducts = modal.getAttribute('data-has-products') === '1';
-                const hasChildren = modal.getAttribute('data-has-children') === '1';
-                
-                const warningElement = modal.querySelector('.delete-warnings');
-                const deleteButton = modal.querySelector('.btn-delete');
-                
-                if (hasProducts || hasChildren) {
-                    let warningText = '';
-                    if (hasProducts) {
-                        warningText += '<div class="alert alert-warning">This category has products. Remove or reassign them before deleting.</div>';
-                    }
-                    if (hasChildren) {
-                        warningText += '<div class="alert alert-warning">This category has subcategories. Remove them before deleting.</div>';
-                    }
-                    warningElement.innerHTML = warningText;
-                    deleteButton.classList.add('disabled');
-                    deleteButton.setAttribute('disabled', 'disabled');
-                }
-            });
-        });
-    </script>
-{% endblock %}

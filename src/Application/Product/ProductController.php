@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Application\Product;
 
 use App\Application\Form\ProductType;
+use App\Application\Service\ClientPriceService;
 use App\Application\Service\ProductService;
-use App\Domain\Pricing\Service\PricingService;
 use App\Domain\Product\Model\Product;
+use App\Domain\Pricing\Service\PricingService;
+use App\Domain\User\Model\UserRole;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -22,17 +24,20 @@ class ProductController extends AbstractController
 {
     private ProductService $productService;
     private PricingService $pricingService;
+    private ClientPriceService $clientPriceService;
     private SluggerInterface $slugger;
     private PaginatorInterface $paginator;
 
     public function __construct(
         ProductService $productService,
         PricingService $pricingService,
+        ClientPriceService $clientPriceService,
         SluggerInterface $slugger,
         PaginatorInterface $paginator
     ) {
         $this->productService = $productService;
         $this->pricingService = $pricingService;
+        $this->clientPriceService = $clientPriceService;
         $this->slugger = $slugger;
         $this->paginator = $paginator;
     }
@@ -41,6 +46,8 @@ class ProductController extends AbstractController
     public function list(Request $request): Response
     {
         $query = $this->productService->getActiveProductsQuery();
+        $user = $this->getUser();
+        $isClient = $user && $user->getRole() === UserRole::CLIENT;
 
         // Get filter parameters
         $categoryId = $request->query->get('category');
@@ -54,10 +61,28 @@ class ProductController extends AbstractController
         if ($search) {
             $query = $this->productService->filterBySearch($query, $search);
         }
-
-        // Paginate the results
+        
+        // Get all products before filtering by visibility
+        $queryResult = $query->getQuery()->getResult();
+        
+        // Filter products by visibility if the user is a client
+        // Only show products that have a ClientPrice entry for this client
+        if ($isClient) {
+            $visibleProducts = $this->clientPriceService->getVisibleProductsForClient($user);
+            
+            // Filter the query result to only include visible products
+            $visibleProductIds = array_map(function($product) {
+                return $product->getId();
+            }, $visibleProducts);
+            
+            $queryResult = array_filter($queryResult, function($product) use ($visibleProductIds) {
+                return in_array($product->getId(), $visibleProductIds);
+            });
+        }
+        
+        // Paginate the filtered results
         $pagination = $this->paginator->paginate(
-            $query,
+            $queryResult,
             $request->query->getInt('page', 1),
             9 // Items per page
         );
@@ -131,15 +156,16 @@ class ProductController extends AbstractController
 
         $clientPrice = null;
         $user = $this->getUser();
-
-        if ($user) {
-            // Get the client's custom price for this product
-            $price = $this->pricingService->getProductPriceForClient($product, $user);
-
-            // If the client has a custom price (different from base price), create a ClientPrice object
-            if ($price !== $product->getBasePrice()) {
-                $clientPrice = new \App\Domain\Pricing\Model\ClientPrice($user, $product, $price);
+        
+        // Check if the user is a client and if the product is visible to them
+        if ($user && $user->getRole() === UserRole::CLIENT) {
+            // Check if the client has access to this product
+            if (!$this->clientPriceService->isProductVisibleToClient($product, $user)) {
+                throw $this->createAccessDeniedException('You do not have access to view this product.');
             }
+            
+            // Get the client price entry for this product
+            $clientPrice = $this->clientPriceService->getClientPriceByClientAndProduct($user, $product);
         }
 
         return $this->render('product/show.html.twig', [

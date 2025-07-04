@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Common;
 
+use App\Application\Service\ClientPriceService;
 use App\Application\Service\ProductService;
+use App\Domain\User\Model\UserRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,16 +14,36 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     private ProductService $productService;
+    private ClientPriceService $clientPriceService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, ClientPriceService $clientPriceService)
     {
         $this->productService = $productService;
+        $this->clientPriceService = $clientPriceService;
     }
 
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
-        $featuredProducts = $this->productService->getActiveProducts();
+        $activeProducts = $this->productService->getActiveProducts();
+        $user = $this->getUser();
+        $isClient = $user && $user->getRole() === UserRole::CLIENT;
+        
+        // Filter products by visibility if the user is a client
+        if ($isClient) {
+            $visibleProducts = $this->clientPriceService->getVisibleProductsForClient($user);
+            
+            // Filter the active products to only include visible products
+            $visibleProductIds = array_map(function($product) {
+                return $product->getId();
+            }, $visibleProducts);
+            
+            $featuredProducts = array_filter($activeProducts, function($product) use ($visibleProductIds) {
+                return in_array($product->getId(), $visibleProductIds);
+            });
+        } else {
+            $featuredProducts = $activeProducts;
+        }
 
         // In a real application, you might want to limit this to just a few featured products
         if (count($featuredProducts) > 8) {
