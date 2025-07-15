@@ -19,6 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Validator\Constraints\All;
 
 class ProductType extends AbstractType
 {
@@ -106,6 +107,27 @@ class ProductType extends AbstractType
                             'image/gif',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid image (JPEG, PNG, GIF)',
+                    ])
+                ],
+            ])
+            ->add('imageFiles', FileType::class, [
+                'required' => false,
+                'mapped' => false,
+                'multiple' => true,
+                'attr' => [
+                    'accept' => 'image/*'
+                ],
+                'constraints' => [
+                    new All([
+                        new File([
+                            'maxSize' => '2M',
+                            'mimeTypes' => [
+                                'image/jpeg',
+                                'image/png',
+                                'image/gif',
+                            ],
+                            'mimeTypesMessage' => 'Please upload valid images (JPEG, PNG, GIF)',
+                        ])
                     ])
                 ],
             ])
