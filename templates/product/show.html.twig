@@ -15,8 +15,54 @@
         <div class="row">
             <div class="col-md-5 mb-4">
                 <div class="card">
+                    {% set allImages = [] %}
                     {% if product.imageFilename %}
-                        <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
+                        {% set allImages = allImages|merge([product.imageFilename]) %}
+                    {% endif %}
+                    {% if product.images %}
+                        {% set allImages = allImages|merge(product.images) %}
+                    {% endif %}
+                    
+                    {% if allImages|length > 0 %}
+                        <div class="position-relative">
+                            <img src="{{ asset('uploads/products/' ~ allImages[0]) }}" 
+                                 class="card-img-top" 
+                                 alt="{{ product.name }}"
+                                 style="cursor: pointer;"
+                                 onclick="openGallery(0)">
+                            {% if allImages|length > 1 %}
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-dark bg-opacity-75">
+                                        <i class="bi bi-images"></i> {{ allImages|length }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if allImages|length > 1 %}
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    {% for image in allImages|slice(1, 3) %}
+                                        <div class="col-4">
+                                            <img src="{{ asset('uploads/products/' ~ image) }}" 
+                                                 class="img-thumbnail w-100" 
+                                                 alt="{{ product.name }}"
+                                                 style="cursor: pointer; height: 80px; object-fit: cover;"
+                                                 onclick="openGallery({{ loop.index }})">
+                                        </div>
+                                    {% endfor %}
+                                    {% if allImages|length > 4 %}
+                                        <div class="col-4">
+                                            <div class="img-thumbnail w-100 d-flex align-items-center justify-content-center bg-light text-muted" 
+                                                 style="cursor: pointer; height: 80px;"
+                                                 onclick="openGallery(4)">
+                                                +{{ allImages|length - 4 }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
                     {% else %}
                         <div class="bg-light text-center p-5" style="height: 300px;">
                             <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
@@ -101,5 +147,88 @@
                 {% endif %}
             </div>
         </div>
+        
+        <!-- Gallery Modal -->
+        <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="galleryModalLabel">{{ product.name }} - Gallery</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="galleryImage" src="" alt="{{ product.name }}" class="img-fluid mb-3">
+                        <div id="galleryThumbnails" class="d-flex justify-content-center flex-wrap gap-2">
+                            {% for image in allImages %}
+                                <img src="{{ asset('uploads/products/' ~ image) }}" 
+                                     class="img-thumbnail gallery-thumb" 
+                                     alt="{{ product.name }}"
+                                     style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                     onclick="showImage({{ loop.index0 }})">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary me-auto" onclick="prevImage()">
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </button>
+                        <span id="imageCounter" class="align-self-center"></span>
+                        <button type="button" class="btn btn-secondary" onclick="nextImage()">
+                            Next <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        const galleryImages = [
+            {% for image in allImages %}
+                "{{ asset('uploads/products/' ~ image) }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        let currentImageIndex = 0;
+        
+        function openGallery(index) {
+            currentImageIndex = index;
+            showImage(index);
+            const modal = new bootstrap.Modal(document.getElementById('galleryModal'));
+            modal.show();
+        }
+        
+        function showImage(index) {
+            currentImageIndex = index;
+            document.getElementById('galleryImage').src = galleryImages[index];
+            document.getElementById('imageCounter').textContent = `${index + 1} / ${galleryImages.length}`;
+            
+            // Update thumbnail active state
+            document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+                thumb.classList.toggle('border-primary', i === index);
+                thumb.classList.toggle('border-3', i === index);
+            });
+        }
+        
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+            showImage(currentImageIndex);
+        }
+        
+        function prevImage() {
+            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+            showImage(currentImageIndex);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('galleryModal').classList.contains('show')) {
+                if (e.key === 'ArrowRight') nextImage();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'Escape') {
+                    bootstrap.Modal.getInstance(document.getElementById('galleryModal')).hide();
+                }
+            }
+        });
+    </script>
 {% endblock %}

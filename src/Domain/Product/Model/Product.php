@@ -31,6 +31,9 @@ class Product
     private bool $isActive;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename;
+    
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $images = null;
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
     private ?ProductCategory $category;
@@ -53,6 +56,7 @@ class Product
         $this->stock = $stock;
         $this->category = $category;
         $this->imageFilename = $imageFilename;
+        $this->images = [];
         $this->isActive = true;
         $this->clientPrices = new ArrayCollection();
     }
@@ -130,6 +134,35 @@ class Product
     public function setImageFilename(?string $imageFilename): void
     {
         $this->imageFilename = $imageFilename;
+    }
+
+    public function getImages(): array
+    {
+        return $this->images ?? [];
+    }
+
+    public function setImages(?array $images): void
+    {
+        $this->images = $images;
+    }
+
+    public function addImage(string $filename): void
+    {
+        if ($this->images === null) {
+            $this->images = [];
+        }
+        
+        if (!in_array($filename, $this->images)) {
+            $this->images[] = $filename;
+        }
+    }
+
+    public function removeImage(string $filename): void
+    {
+        if ($this->images !== null) {
+            $this->images = array_filter($this->images, fn($image) => $image !== $filename);
+            $this->images = array_values($this->images); // Reindex array
+        }
     }
 
     public function getCategory(): ?ProductCategory

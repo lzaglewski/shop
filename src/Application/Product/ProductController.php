@@ -156,8 +156,15 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle file upload
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $this->addFlash('danger', 'Form has validation errors. Please check your input.');
+                return $this->render('product/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+            
+            // Handle single image upload (for backward compatibility)
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -175,12 +182,37 @@ class ProductController extends AbstractController
                 }
             }
 
+            // Handle multiple images upload
+            $imageFiles = $form->get('imageFiles')->getData();
+            if ($imageFiles) {
+                foreach ($imageFiles as $imageFile) {
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $this->slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('product_images_directory'),
+                            $newFilename
+                        );
+                        $product->addImage($newFilename);
+                    } catch (FileException $e) {
+                        $this->addFlash('danger', 'There was an error uploading one of the images.');
+                    }
+                }
+            }
+
             // Save the product
-            $this->productService->saveProduct($product);
-
-            $this->addFlash('success', 'Product created successfully.');
-
-            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+            try {
+                $this->productService->saveProduct($product);
+                $this->addFlash('success', 'Product created successfully.');
+                return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Error creating product: ' . $e->getMessage());
+                return $this->render('product/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
         }
 
         return $this->render('product/new.html.twig', [
@@ -230,8 +262,16 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle file upload
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $this->addFlash('danger', 'Form has validation errors. Please check your input.');
+                return $this->render('product/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'product' => $product,
+                ]);
+            }
+            
+            // Handle single image upload (for backward compatibility)
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -259,12 +299,38 @@ class ProductController extends AbstractController
                 }
             }
 
+            // Handle multiple images upload
+            $imageFiles = $form->get('imageFiles')->getData();
+            if ($imageFiles) {
+                foreach ($imageFiles as $imageFile) {
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $this->slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('product_images_directory'),
+                            $newFilename
+                        );
+                        $product->addImage($newFilename);
+                    } catch (FileException $e) {
+                        $this->addFlash('danger', 'There was an error uploading one of the images.');
+                    }
+                }
+            }
+
             // Save the product
-            $this->productService->saveProduct($product);
-
-            $this->addFlash('success', 'Product updated successfully.');
-
-            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+            try {
+                $this->productService->saveProduct($product);
+                $this->addFlash('success', 'Product updated successfully.');
+                return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Error updating product: ' . $e->getMessage());
+                return $this->render('product/edit.html.twig', [
+                    'form' => $form->createView(),
+                    'product' => $product,
+                ]);
+            }
         }
 
         return $this->render('product/edit.html.twig', [
@@ -294,5 +360,51 @@ class ProductController extends AbstractController
         $this->addFlash('success', 'Product has been deactivated.');
 
         return $this->redirectToRoute('product_list');
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}/delete-image', name: 'product_delete_image', methods: ['POST'])]
+    public function deleteImage(int $id, Request $request): Response
+    {
+        $product = $this->productService->getProductById($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException('Product not found');
+        }
+
+        // Validate CSRF token
+        $submittedToken = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete-image-'.$id, $submittedToken)) {
+            $this->addFlash('danger', 'Invalid CSRF token');
+            return $this->redirectToRoute('product_edit', ['id' => $id]);
+        }
+
+        $imageType = $request->request->get('image_type');
+        $imageFilename = $request->request->get('image_filename');
+
+        if ($imageType === 'main' && $imageFilename === $product->getImageFilename()) {
+            // Delete main image
+            $imagePath = $this->getParameter('product_images_directory').'/'.$imageFilename;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $product->setImageFilename(null);
+            $this->addFlash('success', 'Main image deleted successfully.');
+        } elseif ($imageType === 'additional') {
+            // Delete additional image
+            $imagePath = $this->getParameter('product_images_directory').'/'.$imageFilename;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $product->removeImage($imageFilename);
+            $this->addFlash('success', 'Additional image deleted successfully.');
+        } else {
+            $this->addFlash('danger', 'Invalid image specified.');
+            return $this->redirectToRoute('product_edit', ['id' => $id]);
+        }
+
+        $this->productService->saveProduct($product);
+
+        return $this->redirectToRoute('product_edit', ['id' => $id]);
     }
 }
