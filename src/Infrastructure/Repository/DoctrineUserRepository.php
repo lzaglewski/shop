@@ -7,6 +7,9 @@ namespace App\Infrastructure\Repository;
 use App\Domain\User\Model\User;
 use App\Domain\User\Model\UserRole;
 use App\Domain\User\Repository\UserRepositoryInterface;
+use App\Domain\Pricing\Model\ClientPrice;
+use App\Domain\Order\Model\Order;
+use App\Domain\Cart\Model\Cart;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -53,6 +56,30 @@ class DoctrineUserRepository implements UserRepositoryInterface
     public function remove(User $user): void
     {
         $this->entityManager->remove($user);
+        $this->entityManager->flush();
+    }
+    
+    public function findClientPricesForUser(User $user): array
+    {
+        return $this->entityManager->getRepository(ClientPrice::class)
+            ->findBy(['client' => $user]);
+    }
+    
+    public function findOrdersForUser(User $user): array
+    {
+        return $this->entityManager->getRepository(Order::class)
+            ->findBy(['user' => $user]);
+    }
+    
+    public function findCartsForUser(User $user): array
+    {
+        return $this->entityManager->getRepository(Cart::class)
+            ->findBy(['user' => $user]);
+    }
+    
+    public function removeCart($cart): void
+    {
+        $this->entityManager->remove($cart);
         $this->entityManager->flush();
     }
 }

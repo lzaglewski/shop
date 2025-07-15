@@ -100,8 +100,37 @@ class UserService
         $this->userRepository->save($user);
     }
 
+    public function canDeleteUser(User $user): array
+    {
+        $errors = [];
+        
+        if ($user->getRole() === UserRole::CLIENT) {
+            // Check for existing client prices
+            $clientPrices = $this->userRepository->findClientPricesForUser($user);
+            if (!empty($clientPrices)) {
+                $errors[] = 'User has associated client prices. Please remove all client prices first.';
+            }
+            
+            // Check for existing orders
+            $orders = $this->userRepository->findOrdersForUser($user);
+            if (!empty($orders)) {
+                $errors[] = 'User has associated orders. Please consider deactivating the user instead.';
+            }
+        }
+        
+        return $errors;
+    }
+
     public function deleteUser(User $user): void
     {
+        // Clean up carts first (these can be safely removed)
+        if ($user->getRole() === UserRole::CLIENT) {
+            $carts = $this->userRepository->findCartsForUser($user);
+            foreach ($carts as $cart) {
+                $this->userRepository->removeCart($cart);
+            }
+        }
+        
         $this->userRepository->remove($user);
     }
 
