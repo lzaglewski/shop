@@ -211,6 +211,15 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_show', ['id' => $id]);
         }
 
+        // Check if user can be deleted
+        $errors = $this->userService->canDeleteUser($user);
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $this->addFlash('danger', $error);
+            }
+            return $this->redirectToRoute('user_show', ['id' => $id]);
+        }
+
         // Delete the user
         $this->userService->deleteUser($user);
 

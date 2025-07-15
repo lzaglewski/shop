@@ -19,4 +19,12 @@ interface UserRepositoryInterface
     public function findActiveClients(): array;
 
     public function remove(User $user): void;
+    
+    public function findClientPricesForUser(User $user): array;
+    
+    public function findOrdersForUser(User $user): array;
+    
+    public function findCartsForUser(User $user): array;
+    
+    public function removeCart($cart): void;
 }
