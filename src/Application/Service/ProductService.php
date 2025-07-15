@@ -113,6 +113,11 @@ class ProductService
         return $this->productRepository->createActiveProductsQueryBuilder();
     }
 
+    public function getAllProductsQuery(): QueryBuilder
+    {
+        return $this->productRepository->createAllProductsQueryBuilder();
+    }
+
     public function filterByCategory(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder
     {
         return $this->productRepository->addCategoryFilter($queryBuilder, $categoryId);
@@ -121,6 +126,11 @@ class ProductService
     public function filterBySearch(QueryBuilder $queryBuilder, string $search): QueryBuilder
     {
         return $this->productRepository->addSearchFilter($queryBuilder, $search);
+    }
+
+    public function filterByStatus(QueryBuilder $queryBuilder, bool $isActive): QueryBuilder
+    {
+        return $this->productRepository->addStatusFilter($queryBuilder, $isActive);
     }
 
     public function getAllCategories(): array

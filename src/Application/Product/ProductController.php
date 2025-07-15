@@ -97,6 +97,49 @@ class ProductController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin', name: 'product_admin_list', methods: ['GET'])]
+    public function adminList(Request $request): Response
+    {
+        $query = $this->productService->getAllProductsQuery();
+
+        // Get filter parameters
+        $categoryId = $request->query->get('category');
+        $search = $request->query->get('search');
+        $status = $request->query->get('status');
+
+        // Apply filters if provided
+        if ($categoryId) {
+            $query = $this->productService->filterByCategory($query, $categoryId);
+        }
+
+        if ($search) {
+            $query = $this->productService->filterBySearch($query, $search);
+        }
+
+        if ($status !== null) {
+            $query = $this->productService->filterByStatus($query, $status === '1');
+        }
+
+        // Paginate the results
+        $pagination = $this->paginator->paginate(
+            $query->getQuery(),
+            $request->query->getInt('page', 1),
+            9 // Items per page
+        );
+
+        // Get categories for the filter
+        $categories = $this->productService->getAllCategories();
+
+        return $this->render('product/admin_list.html.twig', [
+            'products' => $pagination,
+            'categories' => $categories,
+            'selectedCategory' => $categoryId,
+            'searchTerm' => $search,
+            'selectedStatus' => $status,
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'product_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {

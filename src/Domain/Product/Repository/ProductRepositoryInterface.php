@@ -26,7 +26,11 @@ interface ProductRepositoryInterface
 
     public function createActiveProductsQueryBuilder(): QueryBuilder;
 
+    public function createAllProductsQueryBuilder(): QueryBuilder;
+
     public function addCategoryFilter(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder;
 
     public function addSearchFilter(QueryBuilder $queryBuilder, string $search): QueryBuilder;
+
+    public function addStatusFilter(QueryBuilder $queryBuilder, bool $isActive): QueryBuilder;
 }

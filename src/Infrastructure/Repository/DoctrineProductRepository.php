@@ -72,6 +72,17 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         return $queryBuilder;
     }
 
+    public function createAllProductsQueryBuilder(): QueryBuilder
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('p')
+            ->from(Product::class, 'p')
+            ->orderBy('p.name', 'ASC');
+
+        return $queryBuilder;
+    }
+
     public function addCategoryFilter(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder
     {
         if (!empty($categoryId)) {
@@ -117,6 +128,15 @@ class DoctrineProductRepository implements ProductRepositoryInterface
                 ->andWhere('p.name LIKE :search OR p.description LIKE :search OR p.sku LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
+
+        return $queryBuilder;
+    }
+
+    public function addStatusFilter(QueryBuilder $queryBuilder, bool $isActive): QueryBuilder
+    {
+        $queryBuilder
+            ->andWhere('p.isActive = :status')
+            ->setParameter('status', $isActive);
 
         return $queryBuilder;
     }
