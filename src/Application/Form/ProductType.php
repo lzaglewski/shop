@@ -27,34 +27,39 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => 'form.name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a product name',
+                        'message' => 'form.product_name_required',
                     ]),
                 ],
             ])
             ->add('sku', TextType::class, [
+                'label' => 'form.sku',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a SKU',
+                        'message' => 'form.sku_required',
                     ]),
                 ],
             ])
             ->add('description', TextareaType::class, [
+                'label' => 'form.description',
                 'required' => false,
             ])
             ->add('basePrice', MoneyType::class, [
+                'label' => 'form.base_price',
                 'currency' => 'EUR',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a base price',
+                        'message' => 'form.base_price_required',
                     ]),
                     new Positive([
-                        'message' => 'Price must be positive',
+                        'message' => 'form.price_positive',
                     ]),
                 ],
             ])
             ->add('stock', NumberType::class, [
+                'label' => 'form.stock',
                 'html5' => true,
                 'attr' => [
                     'min' => 0,
@@ -62,11 +67,12 @@ class ProductType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter stock quantity',
+                        'message' => 'form.stock_required',
                     ]),
                 ],
             ])
             ->add('category', EntityType::class, [
+                'label' => 'form.category',
                 'class' => ProductCategory::class,
                 'choice_label' => function (ProductCategory $category) {
                     $prefix = '';
@@ -81,10 +87,10 @@ class ProductType extends AbstractType
                     return $prefix . $category->getName();
                 },
                 'required' => false,
-                'placeholder' => 'Select a category',
+                'placeholder' => 'form.select_category',
                 'group_by' => function (ProductCategory $category) {
                     if ($category->getParent() === null) {
-                        return 'Root Categories';
+                        return 'form.root_categories';
                     }
                     
                     $parent = $category->getParent();
@@ -96,6 +102,7 @@ class ProductType extends AbstractType
                 },
             ])
             ->add('imageFile', FileType::class, [
+                'label' => 'form.image_file',
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
@@ -106,11 +113,12 @@ class ProductType extends AbstractType
                             'image/png',
                             'image/gif',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image (JPEG, PNG, GIF)',
+                        'mimeTypesMessage' => 'form.invalid_image_format',
                     ])
                 ],
             ])
             ->add('imageFiles', FileType::class, [
+                'label' => 'form.image_files',
                 'required' => false,
                 'mapped' => false,
                 'multiple' => true,
@@ -126,12 +134,13 @@ class ProductType extends AbstractType
                                 'image/png',
                                 'image/gif',
                             ],
-                            'mimeTypesMessage' => 'Please upload valid images (JPEG, PNG, GIF)',
+                            'mimeTypesMessage' => 'form.invalid_images_format',
                         ])
                     ])
                 ],
             ])
             ->add('isActive', CheckboxType::class, [
+                'label' => 'form.is_active',
                 'required' => false,
             ])
         ;

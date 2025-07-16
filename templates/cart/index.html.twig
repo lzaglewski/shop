@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Shopping Cart{% endblock %}
+{% block title %}{{ 'cart.shopping_cart'|trans }}{% endblock %}
 
 {% block body %}
     <div class="container my-4">
-        <h1>Shopping Cart</h1>
+        <h1>{{ 'cart.shopping_cart'|trans }}</h1>
         
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
@@ -20,18 +20,18 @@
         
         {% if cart.items.empty %}
             <div class="alert alert-info">
-                Your cart is empty. <a href="{{ path('product_list') }}">Continue shopping</a>
+                {{ 'cart.empty'|trans }} <a href="{{ path('product_list') }}">{{ 'cart.continue_shopping'|trans }}</a>
             </div>
         {% else %}
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
-                            <th>Actions</th>
+                            <th>{{ 'cart.product'|trans }}</th>
+                            <th>{{ 'common.price'|trans }}</th>
+                            <th>{{ 'common.quantity'|trans }}</th>
+                            <th>{{ 'cart.subtotal'|trans }}</th>
+                            <th>{{ 'common.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,7 @@
                                         {% endif %}
                                         <div>
                                             <strong>{{ item.product.name }}</strong>
-                                            <div class="small text-muted">SKU: {{ item.product.sku }}</div>
+                                            <div class="small text-muted">{{ 'product.sku'|trans }}: {{ item.product.sku }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -63,7 +63,7 @@
                                 <td>
                                     <form action="{{ path('cart_remove', {'id': item.product.id}) }}" method="post">
                                         <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash"></i> Remove
+                                            <i class="bi bi-trash"></i> {{ 'cart.remove'|trans }}
                                         </button>
                                     </form>
                                 </td>
@@ -72,7 +72,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td colspan="3" class="text-end"><strong>{{ 'common.total'|trans }}:</strong></td>
                             <td><strong>{{ cart.totalPrice|number_format(2) }}</strong></td>
                             <td></td>
                         </tr>
@@ -82,18 +82,18 @@
             
             <div class="d-flex justify-content-between mt-4">
                 <a href="{{ path('product_list') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                    <i class="bi bi-arrow-left"></i> {{ 'cart.continue_shopping'|trans }}
                 </a>
                 
                 <div>
                     <form action="{{ path('cart_clear') }}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-outline-danger me-2">
-                            <i class="bi bi-x-circle"></i> Clear Cart
+                            <i class="bi bi-x-circle"></i> {{ 'cart.clear_cart'|trans }}
                         </button>
                     </form>
                     
                     <a href="{{ path('checkout_index') }}" class="btn btn-primary">
-                        <i class="bi bi-credit-card"></i> Proceed to Checkout
+                        <i class="bi bi-credit-card"></i> {{ 'cart.proceed_to_checkout'|trans }}
                     </a>
                 </div>
             </div>

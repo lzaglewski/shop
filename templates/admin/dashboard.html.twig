@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}{{ 'admin.dashboard'|trans }}{% endblock %}
 
 {% block body %}
     <div class="container my-4">
-        <h1 class="mb-4">Admin Dashboard</h1>
+        <h1 class="mb-4">{{ 'admin.dashboard'|trans }}</h1>
         
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-box-seam"></i> Orders Management
+                            <i class="bi bi-box-seam"></i> {{ 'admin.orders_management'|trans }}
                         </h5>
-                        <p class="card-text">View and manage all customer orders. Update order statuses and track order details.</p>
-                        <a href="{{ path('admin_order_list') }}" class="btn btn-primary">Manage Orders</a>
+                        <p class="card-text">{{ 'admin.orders_description'|trans }}</p>
+                        <a href="{{ path('admin_order_list') }}" class="btn btn-primary">{{ 'admin.manage_orders'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -23,10 +23,10 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-people"></i> User Management
+                            <i class="bi bi-people"></i> {{ 'admin.user_management'|trans }}
                         </h5>
-                        <p class="card-text">Manage user accounts, view user details, and control user access.</p>
-                        <a href="{{ path('user_index') }}" class="btn btn-primary">Manage Users</a>
+                        <p class="card-text">{{ 'admin.user_description'|trans }}</p>
+                        <a href="{{ path('user_index') }}" class="btn btn-primary">{{ 'admin.manage_users'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -35,10 +35,10 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-currency-euro"></i> Client Prices
+                            <i class="bi bi-currency-euro"></i> {{ 'admin.client_prices'|trans }}
                         </h5>
-                        <p class="card-text">Manage special pricing for clients, set custom prices and discounts.</p>
-                        <a href="{{ path('client_price_index') }}" class="btn btn-primary">Manage Prices</a>
+                        <p class="card-text">{{ 'admin.client_prices_description'|trans }}</p>
+                        <a href="{{ path('client_price_index') }}" class="btn btn-primary">{{ 'admin.manage_prices'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,10 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-box"></i> Products
+                            <i class="bi bi-box"></i> {{ 'admin.products'|trans }}
                         </h5>
-                        <p class="card-text">Manage product catalog, add new products, update inventory.</p>
-                        <a href="{{ path('product_list') }}" class="btn btn-primary">View Products</a>
+                        <p class="card-text">{{ 'admin.products_description'|trans }}</p>
+                        <a href="{{ path('product_list') }}" class="btn btn-primary">{{ 'admin.view_products'|trans }}</a>
                     </div>
                 </div>
             </div>

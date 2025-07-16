@@ -4,13 +4,13 @@
             {{ form_label(form.email) }}
             {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
             {{ form_errors(form.email) }}
-            <div class="form-text">Email address will be used for login.</div>
+            <div class="form-text">{{ 'form.email_help'|trans }}</div>
         </div>
         <div class="col-md-6 mb-3">
             {{ form_label(form.companyName) }}
             {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
             {{ form_errors(form.companyName) }}
-            <div class="form-text">Company name for business identification.</div>
+            <div class="form-text">{{ 'form.company_name_help'|trans }}</div>
         </div>
     </div>
 
@@ -19,13 +19,13 @@
             {{ form_label(form.taxId) }}
             {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
             {{ form_errors(form.taxId) }}
-            <div class="form-text">Tax identification number for billing purposes.</div>
+            <div class="form-text">{{ 'form.tax_id_help'|trans }}</div>
         </div>
         <div class="col-md-6 mb-3">
             {{ form_label(form.role) }}
             {{ form_widget(form.role, {'attr': {'class': 'form-select' ~ (form.role.vars.valid ? '' : ' is-invalid')}}) }}
             {{ form_errors(form.role) }}
-            <div class="form-text">User role determines permissions in the system.</div>
+            <div class="form-text">{{ 'form.role_help'|trans }}</div>
         </div>
     </div>
 
@@ -35,7 +35,7 @@
                 {{ form_label(form.plainPassword.first) }}
                 {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control' ~ (form.plainPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
                 {{ form_errors(form.plainPassword.first) }}
-                <div class="form-text">Password should be at least 8 characters and include letters and numbers.</div>
+                <div class="form-text">{{ 'auth.password_help'|trans }}</div>
             </div>
             <div class="col-md-6 mb-3">
                 {{ form_label(form.plainPassword.second) }}
@@ -49,17 +49,17 @@
         {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input' ~ (form.isActive.vars.valid ? '' : ' is-invalid')}}) }}
         {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label'}}) }}
         {{ form_errors(form.isActive) }}
-        <div class="form-text">Inactive users cannot log in to the system.</div>
+        <div class="form-text">{{ 'form.inactive_users_help'|trans }}</div>
     </div>
 
     {{ form_rest(form) }}
 
     <div class="d-flex justify-content-between mt-4">
         <a href="{{ path('user_index') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Back to List
+            <i class="bi bi-arrow-left"></i> {{ 'form.back_to_list'|trans }}
         </a>
         <button type="submit" class="btn btn-primary">
-            <i class="bi bi-save"></i> {{ button_label|default('Save') }}
+            <i class="bi bi-save"></i> {{ button_label|default('buttons.save'|trans) }}
         </button>
     </div>
 {{ form_end(form) }}

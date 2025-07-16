@@ -21,30 +21,30 @@ class ChangePasswordType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your current password',
+                        'message' => 'form.current_password_required',
                     ]),
                 ],
-                'label' => 'Current Password',
+                'label' => 'form.current_password',
             ])
             ->add('newPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options' => [
-                    'label' => 'New Password',
+                    'label' => 'form.new_password',
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a new password',
+                            'message' => 'form.new_password_required',
                         ]),
                         new Length([
                             'min' => 8,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'form.password_min_length',
                         ]),
                     ],
                 ],
                 'second_options' => [
-                    'label' => 'Repeat New Password',
+                    'label' => 'form.repeat_new_password',
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form.password_mismatch',
             ])
         ;
     }

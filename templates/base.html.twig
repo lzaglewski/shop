@@ -44,30 +44,30 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('homepage') }}">Home</a>
+                                <a class="nav-link" href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('product_list') }}">Products</a>
+                                <a class="nav-link" href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('about') }}">About</a>
+                                <a class="nav-link" href="{{ path('about') }}">{{ 'navigation.about'|trans }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('contact') }}">Contact</a>
+                                <a class="nav-link" href="{{ path('contact') }}">{{ 'navigation.contact'|trans }}</a>
                             </li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Admin
+                                        {{ 'navigation.admin'|trans }}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                        <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">{{ 'navigation.dashboard'|trans }}</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('admin_order_list') }}">Orders</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('user_index') }}">Users</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('product_admin_list') }}">Products</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('category_list') }}">Categories</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('client_price_index') }}">Client Prices</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_order_list') }}">{{ 'navigation.orders'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_index') }}">{{ 'navigation.users'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('product_admin_list') }}">{{ 'navigation.products'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('category_list') }}">{{ 'navigation.categories'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('client_price_index') }}">{{ 'navigation.client_prices'|trans }}</a></li>
                                     </ul>
                                 </li>
                             {% endif %}
@@ -75,7 +75,7 @@
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link position-relative" href="{{ path('cart_index') }}">
-                                    <i class="bi bi-cart"></i> Cart
+                                    <i class="bi bi-cart"></i> {{ 'navigation.cart'|trans }}
                                     {% if app.session.has('cart_id') or app.user %}
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
                                             {{ render(controller('App\\Application\\Cart\\CartController::cartItemCount')) }}
@@ -89,18 +89,18 @@
                                         {{ app.user.companyName }}
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profile</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('user_orders') }}">My Orders</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'navigation.profile'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_orders') }}">{{ 'navigation.my_orders'|trans }}</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'navigation.logout'|trans }}</a></li>
                                     </ul>
                                 </li>
                             {% else %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                                    <a class="nav-link" href="{{ path('app_login') }}">{{ 'navigation.login'|trans }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                                    <a class="nav-link" href="{{ path('app_register') }}">{{ 'navigation.register'|trans }}</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -127,19 +127,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <h5>B2B Shop</h5>
-                        <p>Your trusted partner for business supplies.</p>
+                        <p>{{ 'footer.description'|trans }}</p>
                     </div>
                     <div class="col-md-4">
-                        <h5>Quick Links</h5>
+                        <h5>{{ 'footer.quick_links'|trans }}</h5>
                         <ul class="list-unstyled">
-                            <li><a href="{{ path('homepage') }}">Home</a></li>
-                            <li><a href="{{ path('product_list') }}">Products</a></li>
-                            <li><a href="{{ path('about') }}">About</a></li>
-                            <li><a href="{{ path('contact') }}">Contact</a></li>
+                            <li><a href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a></li>
+                            <li><a href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a></li>
+                            <li><a href="{{ path('about') }}">{{ 'navigation.about'|trans }}</a></li>
+                            <li><a href="{{ path('contact') }}">{{ 'navigation.contact'|trans }}</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
-                        <h5>Contact</h5>
+                        <h5>{{ 'footer.contact'|trans }}</h5>
                         <address>
                             <strong>B2B Shop, Inc.</strong><br>
                             123 Business Street<br>
@@ -151,7 +151,7 @@
                 </div>
                 <hr>
                 <div class="text-center">
-                    <p>&copy; {{ 'now'|date('Y') }} B2B Shop. All rights reserved.</p>
+                    <p>&copy; {{ 'now'|date('Y') }} B2B Shop. {{ 'footer.all_rights_reserved'|trans }}</p>
                 </div>
             </div>
         </footer>

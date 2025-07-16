@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}My Orders{% endblock %}
+{% block title %}{{ 'navigation.my_orders'|trans }}{% endblock %}
 
 {% block body %}
     <div class="container my-4">
-        <h1>My Orders</h1>
+        <h1>{{ 'navigation.my_orders'|trans }}</h1>
         
         {% if orders is empty %}
             <div class="alert alert-info">
-                You haven't placed any orders yet. <a href="{{ path('product_list') }}">Start shopping</a>
+                {{ 'order.no_orders_yet'|trans }} <a href="{{ path('product_list') }}">{{ 'order.start_shopping'|trans }}</a>
             </div>
         {% else %}
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Order Number</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                            <th>Actions</th>
+                            <th>{{ 'order.order_number'|trans }}</th>
+                            <th>{{ 'common.date'|trans }}</th>
+                            <th>{{ 'common.status'|trans }}</th>
+                            <th>{{ 'common.total'|trans }}</th>
+                            <th>{{ 'common.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,7 +39,7 @@
                                 <td>{{ order.totalAmount|number_format(2) }}</td>
                                 <td>
                                     <a href="{{ path('user_order_details', {'orderNumber': order.orderNumber}) }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i> View Details
+                                        <i class="bi bi-eye"></i> {{ 'order.view_details'|trans }}
                                     </a>
                                 </td>
                             </tr>

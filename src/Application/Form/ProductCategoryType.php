@@ -19,13 +19,15 @@ class ProductCategoryType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => 'form.name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a category name',
+                        'message' => 'form.category_name_required',
                     ]),
                 ],
             ])
             ->add('description', TextareaType::class, [
+                'label' => 'form.description',
                 'required' => false,
             ]);
             
@@ -45,10 +47,10 @@ class ProductCategoryType extends AbstractType
                 return $prefix . $category->getName();
             },
             'required' => false,
-            'placeholder' => 'No parent (root category)',
+            'placeholder' => 'form.no_parent_category',
             'group_by' => function (ProductCategory $category) {
                 if ($category->getParent() === null) {
-                    return 'Root Categories';
+                    return 'form.root_categories';
                 }
                 
                 $parent = $category->getParent();
@@ -63,7 +65,7 @@ class ProductCategoryType extends AbstractType
         // If parent is locked, make the field disabled
         if ($options['parent_locked']) {
             $parentFieldOptions['disabled'] = true;
-            $parentFieldOptions['help'] = 'Parent category cannot be changed';
+            $parentFieldOptions['help'] = 'form.parent_category_locked';
         }
         
         $builder->add('parent', EntityType::class, $parentFieldOptions);

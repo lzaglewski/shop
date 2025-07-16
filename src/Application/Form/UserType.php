@@ -25,38 +25,43 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'form.email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'form.email_required',
                     ]),
                     new Email([
-                        'message' => 'Please enter a valid email address',
+                        'message' => 'form.email_invalid',
                     ]),
                 ],
             ])
             ->add('companyName', TextType::class, [
+                'label' => 'form.company_name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a company name',
+                        'message' => 'form.company_name_required',
                     ]),
                 ],
             ])
             ->add('taxId', TextType::class, [
+                'label' => 'form.tax_id',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a tax ID',
+                        'message' => 'form.tax_id_required',
                     ]),
                 ],
             ])
             ->add('role', EnumType::class, [
+                'label' => 'form.role',
                 'class' => UserRole::class,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a role',
+                        'message' => 'form.role_required',
                     ]),
                 ],
             ])
             ->add('isActive', CheckboxType::class, [
+                'label' => 'form.is_active',
                 'required' => false,
             ]);
 
@@ -66,21 +71,21 @@ class UserType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options' => [
-                    'label' => 'Password',
+                    'label' => 'form.password',
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'form.password_required',
                         ]),
                         new Length([
                             'min' => 8,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'form.password_min_length',
                         ]),
                     ],
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'label' => 'form.repeat_password',
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form.password_mismatch',
             ]);
         }
     }

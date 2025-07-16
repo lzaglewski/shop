@@ -24,6 +24,7 @@ class ClientPriceType extends AbstractType
     {
         $builder
             ->add('client', EntityType::class, [
+                'label' => 'form.client',
                 'class' => User::class,
                 'choice_label' => 'companyName',
                 'query_builder' => function (EntityRepository $er) {
@@ -36,11 +37,12 @@ class ClientPriceType extends AbstractType
                 },
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a client',
+                        'message' => 'form.client_required',
                     ]),
                 ],
             ])
             ->add('product', EntityType::class, [
+                'label' => 'form.product',
                 'class' => Product::class,
                 'choice_label' => 'name',
                 'query_builder' => function (EntityRepository $er) {
@@ -51,25 +53,26 @@ class ClientPriceType extends AbstractType
                 },
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please select a product',
+                        'message' => 'form.product_required',
                     ]),
                 ],
             ])
             ->add('price', MoneyType::class, [
+                'label' => 'form.price',
                 'currency' => 'EUR',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a price',
+                        'message' => 'form.price_required',
                     ]),
                     new Positive([
-                        'message' => 'Price must be positive',
+                        'message' => 'form.price_positive',
                     ]),
                 ],
             ])
             ->add('isActive', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Active',
-                'help' => 'If active, this price will be used and the product will be visible to the client.',
+                'label' => 'form.active',
+                'help' => 'form.client_price_active_help',
             ])
         ;
 

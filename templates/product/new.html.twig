@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Product - B2B Shop{% endblock %}
+{% block title %}{{ 'product.new_product'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1 class="mb-4">Create New Product</h1>
+        <h1 class="mb-4">{{ 'product.create_new_product'|trans }}</h1>
         
         <div class="card">
             <div class="card-body">
-                {% include 'product/form.html.twig' with {'button_label': 'Create'} %}
+                {% include 'product/form.html.twig' with {'button_label': 'buttons.create'|trans} %}
             </div>
         </div>
     </div>
