@@ -43,6 +43,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Domain/Order/Model'
                 prefix: 'App\Domain\Order\Model'
                 alias: Order
+            Settings:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Settings/Model'
+                prefix: 'App\Domain\Settings\Model'
+                alias: Settings
 
 when@test:
     doctrine:

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ustawienia - Admin{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <h1 class="mb-4">Ustawienia systemu</h1>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Ustawienia strony głównej</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ path('admin_settings_homepage_category') }}">
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Kategoria dla sekcji "Nowe propozycje"</label>
+                            <select class="form-select" id="category_id" name="category_id">
+                                <option value="">Wszystkie produkty</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                        {% if currentCategory and currentCategory.id == category.id %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">
+                                Wybierz kategorię produktów, które będą wyświetlane w sekcji "Nowe propozycje" na stronie głównej.
+                                Jeśli nie wybierzesz kategorii, będą wyświetlane wszystkie produkty widoczne dla klienta.
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Zapisz ustawienia
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Informacje</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        <strong>Nowe propozycje</strong> to sekcja na stronie głównej, która pokazuje produkty klientom.
+                    </p>
+                    <p class="small text-muted">
+                        Możesz wybrać konkretną kategorię (np. "nowe") lub pozostawić puste pole, 
+                        aby wyświetlać wszystkie produkty widoczne dla danego klienta.
+                    </p>
+                    <p class="small text-muted">
+                        Produkty są filtrowane według uprawnień klienta - pokazywane są tylko te produkty, 
+                        dla których klient ma ustawione ceny.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

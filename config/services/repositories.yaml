@@ -12,6 +12,9 @@ services:
   App\Domain\Pricing\Repository\ClientPriceRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineClientPriceRepository
 
+  App\Domain\Settings\Repository\SettingsRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineSettingsRepository
+
   # Repository implementations
   App\Infrastructure\Repository\DoctrineUserRepository:
     arguments:
@@ -24,3 +27,7 @@ services:
   App\Infrastructure\Repository\DoctrineClientPriceRepository:
     arguments:
       - '@doctrine.orm.entity_manager'
+
+  App\Infrastructure\Repository\DoctrineSettingsRepository:
+    arguments:
+      - '@doctrine'

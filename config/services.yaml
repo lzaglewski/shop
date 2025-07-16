@@ -34,6 +34,8 @@ services:
             tags: ['app.repository']
         App\Domain\User\Repository\UserRepositoryInterface:
             tags: ['app.repository']
+        App\Domain\Settings\Repository\SettingsRepositoryInterface:
+            tags: ['app.repository']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
