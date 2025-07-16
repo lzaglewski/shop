@@ -43,6 +43,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('', name: 'product_list', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function list(Request $request): Response
     {
         $query = $this->productService->getActiveProductsQuery();
@@ -61,25 +62,25 @@ class ProductController extends AbstractController
         if ($search) {
             $query = $this->productService->filterBySearch($query, $search);
         }
-        
+
         // Get all products before filtering by visibility
         $queryResult = $query->getQuery()->getResult();
-        
+
         // Filter products by visibility if the user is a client
         // Only show products that have a ClientPrice entry for this client
         if ($isClient) {
             $visibleProducts = $this->clientPriceService->getVisibleProductsForClient($user);
-            
+
             // Filter the query result to only include visible products
             $visibleProductIds = array_map(function($product) {
                 return $product->getId();
             }, $visibleProducts);
-            
+
             $queryResult = array_filter($queryResult, function($product) use ($visibleProductIds) {
                 return in_array($product->getId(), $visibleProductIds);
             });
         }
-        
+
         // Paginate the filtered results
         $pagination = $this->paginator->paginate(
             $queryResult,
@@ -163,7 +164,7 @@ class ProductController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-            
+
             // Handle single image upload (for backward compatibility)
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
@@ -231,14 +232,14 @@ class ProductController extends AbstractController
 
         $clientPrice = null;
         $user = $this->getUser();
-        
+
         // Check if the user is a client and if the product is visible to them
         if ($user && $user->getRole() === UserRole::CLIENT) {
             // Check if the client has access to this product
             if (!$this->clientPriceService->isProductVisibleToClient($product, $user)) {
                 throw $this->createAccessDeniedException('You do not have access to view this product.');
             }
-            
+
             // Get the client price entry for this product
             $clientPrice = $this->clientPriceService->getClientPriceByClientAndProduct($user, $product);
         }
@@ -270,7 +271,7 @@ class ProductController extends AbstractController
                     'product' => $product,
                 ]);
             }
-            
+
             // Handle single image upload (for backward compatibility)
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
