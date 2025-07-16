@@ -6,6 +6,7 @@ namespace App\Application\Common;
 
 use App\Application\Service\ClientPriceService;
 use App\Application\Service\ProductService;
+use App\Application\Service\SettingsService;
 use App\Domain\User\Model\UserRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,37 +16,54 @@ class HomeController extends AbstractController
 {
     private ProductService $productService;
     private ClientPriceService $clientPriceService;
+    private SettingsService $settingsService;
 
-    public function __construct(ProductService $productService, ClientPriceService $clientPriceService)
-    {
+    public function __construct(
+        ProductService $productService, 
+        ClientPriceService $clientPriceService,
+        SettingsService $settingsService
+    ) {
         $this->productService = $productService;
         $this->clientPriceService = $clientPriceService;
+        $this->settingsService = $settingsService;
     }
 
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
-        $activeProducts = $this->productService->getActiveProducts();
         $user = $this->getUser();
         $isClient = $user && $user->getRole() === UserRole::CLIENT;
-        
-        // Filter products by visibility if the user is a client
+
+        // Get featured category from settings
+        $featuredCategory = $this->settingsService->getHomepageCategory();
+
         if ($isClient) {
+            // Get products visible to client
             $visibleProducts = $this->clientPriceService->getVisibleProductsForClient($user);
-            
-            // Filter the active products to only include visible products
-            $visibleProductIds = array_map(function($product) {
-                return $product->getId();
-            }, $visibleProducts);
-            
-            $featuredProducts = array_filter($activeProducts, function($product) use ($visibleProductIds) {
-                return in_array($product->getId(), $visibleProductIds);
-            });
+
+            // Filter by category if specified in settings
+            if ($featuredCategory) {
+                $featuredProducts = array_filter($visibleProducts, function($product) use ($featuredCategory) {
+                    return $product->getCategory() && $product->getCategory()->getId() === $featuredCategory->getId();
+                });
+            } else {
+                $featuredProducts = $visibleProducts;
+            }
         } else {
-            $featuredProducts = $activeProducts;
+            // For non-clients, get all active products
+            $activeProducts = $this->productService->getActiveProducts();
+            
+            // Filter by category if specified in settings
+            if ($featuredCategory) {
+                $featuredProducts = array_filter($activeProducts, function($product) use ($featuredCategory) {
+                    return $product->getCategory() && $product->getCategory()->getId() === $featuredCategory->getId();
+                });
+            } else {
+                $featuredProducts = $activeProducts;
+            }
         }
 
-        // In a real application, you might want to limit this to just a few featured products
+        // Limit to 8 products
         if (count($featuredProducts) > 8) {
             $featuredProducts = array_slice($featuredProducts, 0, 8);
         }

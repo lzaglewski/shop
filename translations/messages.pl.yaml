@@ -6,7 +6,7 @@ welcome:
     view_products: 'Zobacz produkty'
 
 featured_products:
-    title: 'Polecane produkty'
+    title: 'Nowe propozycje'
     no_products: 'Brak polecanych produktów w tym momencie.'
     view_details: 'Zobacz szczegóły'
 
@@ -23,7 +23,7 @@ features:
 
 navigation:
     home: 'Strona główna'
-    products: 'Produkty'
+    products: 'Katalog produktów'
     categories: 'Kategorie'
     admin: 'Admin'
     profile: 'Profil'
@@ -184,7 +184,7 @@ admin:
     company: 'Firma'
     registered: 'Zarejestrowany'
     guest: 'Gość'
-    
+
     # Order details
     order: 'Zamówienie'
     order_information: 'Informacje o zamówieniu'
@@ -200,7 +200,7 @@ admin:
     update_status: 'Aktualizuj status'
     order_items: 'Pozycje zamówienia'
     back_to_orders: 'Powrót do zamówień'
-    
+
     # Order statuses
     status_new: 'Nowe'
     status_processing: 'W trakcie realizacji'
@@ -267,7 +267,7 @@ form:
     stock: 'Zapas'
     image_file: 'Plik obrazu'
     image_files: 'Pliki obrazów'
-    
+
     # Form help texts
     email_help: 'Adres email będzie używany do logowania.'
     company_name_help: 'Nazwa firmy do identyfikacji biznesowej.'
@@ -275,7 +275,7 @@ form:
     role_help: 'Rola użytkownika określa uprawnienia w systemie.'
     inactive_users_help: 'Nieaktywni użytkownicy nie mogą się zalogować do systemu.'
     back_to_list: 'Powrót do listy'
-    
+
     # Password fields
     current_password: 'Aktualne hasło'
     current_password_required: 'Wprowadź aktualne hasło'
@@ -287,14 +287,14 @@ form:
     repeat_password: 'Powtórz hasło'
     password_min_length: 'Hasło powinno mieć co najmniej {{ limit }} znaków'
     password_mismatch: 'Pola hasła muszą się zgadzać.'
-    
+
     # User fields
     email_required: 'Wprowadź adres email'
     email_invalid: 'Wprowadź prawidłowy adres email'
     company_name_required: 'Wprowadź nazwę firmy'
     tax_id_required: 'Wprowadź NIP'
     role_required: 'Wybierz rolę'
-    
+
     # Client price fields
     client_required: 'Wybierz klienta'
     product_required: 'Wybierz produkt'
@@ -302,13 +302,13 @@ form:
     price_positive: 'Cena musi być dodatnia'
     active: 'Aktywny'
     client_price_active_help: 'Jeśli aktywne, ta cena będzie używana i produkt będzie widoczny dla klienta.'
-    
+
     # Category fields
     category_name_required: 'Wprowadź nazwę kategorii'
     no_parent_category: 'Brak rodzica (kategoria główna)'
     root_categories: 'Kategorie główne'
     parent_category_locked: 'Kategoria rodzica nie może być zmieniona'
-    
+
     # Product fields
     product_name_required: 'Wprowadź nazwę produktu'
     sku_required: 'Wprowadź SKU'
@@ -317,7 +317,7 @@ form:
     select_category: 'Wybierz kategorię'
     invalid_image_format: 'Wgraj prawidłowy obraz (JPEG, PNG, GIF)'
     invalid_images_format: 'Wgraj prawidłowe obrazy (JPEG, PNG, GIF)'
-    
+
     # Registration fields
     agree_terms: 'Akceptuję regulamin'
     terms_required: 'Musisz zaakceptować regulamin.'
