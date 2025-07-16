@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order #{{ order.orderNumber }} - Admin Panel{% endblock %}
+{% block title %}{{ 'admin.order'|trans }} #{{ order.orderNumber }} - {{ 'admin.admin_panel'|trans }}{% endblock %}
 
 {% block body %}
     <div class="container my-4">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('admin_order_list') }}">Orders</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Order #{{ order.orderNumber }}</li>
+                <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">{{ 'navigation.dashboard'|trans }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('admin_order_list') }}">{{ 'navigation.orders'|trans }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ 'admin.order'|trans }} #{{ order.orderNumber }}</li>
             </ol>
         </nav>
         
@@ -26,7 +26,7 @@
         
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="h5 mb-0">Order #{{ order.orderNumber }}</h2>
+                <h2 class="h5 mb-0">{{ 'admin.order'|trans }} #{{ order.orderNumber }}</h2>
                 <span class="badge bg-{{ order.status.value == 'new' ? 'warning' : 
                                         order.status.value == 'processing' ? 'info' : 
                                         order.status.value == 'shipped' ? 'primary' : 
@@ -37,22 +37,22 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h3 class="h6 mb-3">Order Information</h3>
-                        <p class="mb-1"><strong>Date:</strong> {{ order.createdAt|date('Y-m-d H:i') }}</p>
-                        <p class="mb-1"><strong>Total:</strong> {{ order.totalAmount|number_format(2) }}</p>
-                        <p class="mb-1"><strong>Items:</strong> {{ order.items|length }}</p>
+                        <h3 class="h6 mb-3">{{ 'admin.order_information'|trans }}</h3>
+                        <p class="mb-1"><strong>{{ 'common.date'|trans }}:</strong> {{ order.createdAt|date('Y-m-d H:i') }}</p>
+                        <p class="mb-1"><strong>{{ 'common.total'|trans }}:</strong> {{ order.totalAmount|number_format(2) }}</p>
+                        <p class="mb-1"><strong>{{ 'admin.items'|trans }}:</strong> {{ order.items|length }}</p>
                     </div>
                     <div class="col-md-6">
-                        <h3 class="h6 mb-3">Customer Information</h3>
-                        <p class="mb-1"><strong>Email:</strong> {{ order.customerEmail }}</p>
-                        <p class="mb-1"><strong>Company:</strong> {{ order.customerCompanyName }}</p>
+                        <h3 class="h6 mb-3">{{ 'admin.customer_information'|trans }}</h3>
+                        <p class="mb-1"><strong>{{ 'auth.email'|trans }}:</strong> {{ order.customerEmail }}</p>
+                        <p class="mb-1"><strong>{{ 'admin.company'|trans }}:</strong> {{ order.customerCompanyName }}</p>
                         {% if order.customerTaxId %}
-                            <p class="mb-1"><strong>Tax ID:</strong> {{ order.customerTaxId }}</p>
+                            <p class="mb-1"><strong>{{ 'profile.tax_id'|trans }}:</strong> {{ order.customerTaxId }}</p>
                         {% endif %}
                         {% if order.user %}
-                            <p class="mb-1"><strong>User Account:</strong> Yes (ID: {{ order.user.id }})</p>
+                            <p class="mb-1"><strong>{{ 'admin.user_account'|trans }}:</strong> {{ 'admin.yes_user_id'|trans({'%id%': order.user.id}) }}</p>
                         {% else %}
-                            <p class="mb-1"><strong>User Account:</strong> No (Guest Order)</p>
+                            <p class="mb-1"><strong>{{ 'admin.user_account'|trans }}:</strong> {{ 'admin.no_guest_order'|trans }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -61,18 +61,18 @@
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <h3 class="h6 mb-3">Shipping Address</h3>
+                        <h3 class="h6 mb-3">{{ 'admin.shipping_address'|trans }}</h3>
                         <p>{{ order.shippingAddress|nl2br }}</p>
                     </div>
                     <div class="col-md-6">
-                        <h3 class="h6 mb-3">Billing Address</h3>
+                        <h3 class="h6 mb-3">{{ 'admin.billing_address'|trans }}</h3>
                         <p>{{ order.billingAddress|nl2br }}</p>
                     </div>
                 </div>
                 
                 {% if order.notes %}
                     <hr>
-                    <h3 class="h6 mb-3">Order Notes</h3>
+                    <h3 class="h6 mb-3">{{ 'admin.order_notes'|trans }}</h3>
                     <p>{{ order.notes|nl2br }}</p>
                 {% endif %}
             </div>
@@ -80,22 +80,22 @@
         
         <div class="card mb-4">
             <div class="card-header">
-                <h2 class="h5 mb-0">Update Order Status</h2>
+                <h2 class="h5 mb-0">{{ 'admin.update_order_status'|trans }}</h2>
             </div>
             <div class="card-body">
                 <form action="{{ path('admin_order_update_status', {'orderNumber': order.orderNumber}) }}" method="post" class="row g-3 align-items-end">
                     <div class="col-auto">
-                        <label for="status" class="form-label">Status</label>
+                        <label for="status" class="form-label">{{ 'common.status'|trans }}</label>
                         <select name="status" id="status" class="form-select">
-                            <option value="new" {{ order.status.value == 'new' ? 'selected' : '' }}>New</option>
-                            <option value="processing" {{ order.status.value == 'processing' ? 'selected' : '' }}>Processing</option>
-                            <option value="shipped" {{ order.status.value == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                            <option value="delivered" {{ order.status.value == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                            <option value="cancelled" {{ order.status.value == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="new" {{ order.status.value == 'new' ? 'selected' : '' }}>{{ 'admin.status_new'|trans }}</option>
+                            <option value="processing" {{ order.status.value == 'processing' ? 'selected' : '' }}>{{ 'admin.status_processing'|trans }}</option>
+                            <option value="shipped" {{ order.status.value == 'shipped' ? 'selected' : '' }}>{{ 'admin.status_shipped'|trans }}</option>
+                            <option value="delivered" {{ order.status.value == 'delivered' ? 'selected' : '' }}>{{ 'admin.status_delivered'|trans }}</option>
+                            <option value="cancelled" {{ order.status.value == 'cancelled' ? 'selected' : '' }}>{{ 'admin.status_cancelled'|trans }}</option>
                         </select>
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Update Status</button>
+                        <button type="submit" class="btn btn-primary">{{ 'admin.update_status'|trans }}</button>
                     </div>
                 </form>
             </div>
@@ -103,18 +103,18 @@
         
         <div class="card">
             <div class="card-header">
-                <h2 class="h5 mb-0">Order Items</h2>
+                <h2 class="h5 mb-0">{{ 'admin.order_items'|trans }}</h2>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>SKU</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th>
+                                <th>{{ 'client_price.product'|trans }}</th>
+                                <th>{{ 'product.sku'|trans }}</th>
+                                <th>{{ 'common.price'|trans }}</th>
+                                <th>{{ 'common.quantity'|trans }}</th>
+                                <th>{{ 'cart.subtotal'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,7 +140,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                <td colspan="4" class="text-end"><strong>{{ 'common.total'|trans }}:</strong></td>
                                 <td><strong>{{ order.totalAmount|number_format(2) }}</strong></td>
                             </tr>
                         </tfoot>
@@ -151,7 +151,7 @@
         
         <div class="mt-4">
             <a href="{{ path('admin_order_list') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Orders
+                <i class="bi bi-arrow-left"></i> {{ 'admin.back_to_orders'|trans }}
             </a>
         </div>
     </div>

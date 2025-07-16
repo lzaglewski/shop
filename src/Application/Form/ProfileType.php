@@ -19,26 +19,29 @@ class ProfileType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'form.email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'form.email_required',
                     ]),
                     new Email([
-                        'message' => 'Please enter a valid email address',
+                        'message' => 'form.email_invalid',
                     ]),
                 ],
             ])
             ->add('companyName', TextType::class, [
+                'label' => 'form.company_name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your company name',
+                        'message' => 'form.company_name_required',
                     ]),
                 ],
             ])
             ->add('taxId', TextType::class, [
+                'label' => 'form.tax_id',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your tax ID',
+                        'message' => 'form.tax_id_required',
                     ]),
                 ],
             ])

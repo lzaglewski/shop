@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Login - B2B Shop{% endblock %}
+{% block title %}{{ 'auth.login'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -8,7 +8,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h1 class="h3 mb-4 text-center">Login to Your Account</h1>
+                        <h1 class="h3 mb-4 text-center">{{ 'auth.login_to_account'|trans }}</h1>
 
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -17,13 +17,13 @@
                         <form method="post">
                             {% if app.user %}
                                 <div class="alert alert-info mb-3">
-                                    You are logged in as {{ app.user.userIdentifier }}.
-                                    <a href="{{ path('app_logout') }}">Logout</a>
+                                    {{ 'auth.already_logged_in'|trans({'%username%': app.user.userIdentifier}) }}
+                                    <a href="{{ path('app_logout') }}">{{ 'auth.logout'|trans }}</a>
                                 </div>
                             {% endif %}
 
                             <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
+                                <label for="inputEmail" class="form-label">{{ 'auth.email'|trans }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="inputPassword" class="form-label">Password</label>
+                                <label for="inputPassword" class="form-label">{{ 'auth.password'|trans }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
@@ -40,20 +40,20 @@
 
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
-                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                                <label class="form-check-label" for="rememberMe">{{ 'auth.remember_me'|trans }}</label>
                             </div>
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                             <div class="d-grid gap-2">
                                 <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'auth.login'|trans }}
                                 </button>
                             </div>
                         </form>
 
                         <div class="mt-4 text-center">
-                            <p>Don't have an account? <a href="{{ path('app_register') }}">Register now</a></p>
+                            <p>{{ 'auth.no_account'|trans }} <a href="{{ path('app_register') }}">{{ 'auth.register_now'|trans }}</a></p>
                         </div>
                     </div>
                 </div>

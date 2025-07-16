@@ -24,26 +24,29 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label' => 'form.email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'form.email_required',
                     ]),
                     new Email([
-                        'message' => 'Please enter a valid email address',
+                        'message' => 'form.email_invalid',
                     ]),
                 ],
             ])
             ->add('companyName', TextType::class, [
+                'label' => 'form.company_name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your company name',
+                        'message' => 'form.company_name_required',
                     ]),
                 ],
             ])
             ->add('taxId', TextType::class, [
+                'label' => 'form.tax_id',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your tax ID',
+                        'message' => 'form.tax_id_required',
                     ]),
                 ],
             ])
@@ -51,28 +54,28 @@ class RegistrationType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options' => [
-                    'label' => 'Password',
+                    'label' => 'form.password',
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'form.password_required',
                         ]),
                         new Length([
                             'min' => 8,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'form.password_min_length',
                         ]),
                     ],
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'label' => 'form.repeat_password',
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form.password_mismatch',
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
-                'label' => 'I agree to the terms and conditions',
+                'label' => 'form.agree_terms',
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'form.terms_required',
                     ]),
                 ],
             ])

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register - B2B Shop{% endblock %}
+{% block title %}{{ 'auth.register'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -8,7 +8,7 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h1 class="h3 mb-4 text-center">Create Your B2B Account</h1>
+                        <h1 class="h3 mb-4 text-center">{{ 'auth.create_account'|trans }}</h1>
 
                         {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
                             <div class="row">
@@ -29,14 +29,14 @@
                                 {{ form_label(registrationForm.taxId) }}
                                 {{ form_widget(registrationForm.taxId, {'attr': {'class': 'form-control' ~ (registrationForm.taxId.vars.valid ? '' : ' is-invalid')}}) }}
                                 {{ form_errors(registrationForm.taxId) }}
-                                <div class="form-text">Enter your company's tax identification number.</div>
+                                <div class="form-text">{{ 'auth.tax_id_help'|trans }}</div>
                             </div>
 
                             <div class="mb-3">
                                 {{ form_label(registrationForm.plainPassword.first) }}
                                 {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
                                 {{ form_errors(registrationForm.plainPassword.first) }}
-                                <div class="form-text">Password should be at least 8 characters and include letters and numbers.</div>
+                                <div class="form-text">{{ 'auth.password_help'|trans }}</div>
                             </div>
 
                             <div class="mb-3">
@@ -55,13 +55,13 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-person-plus me-2"></i>Register
+                                    <i class="bi bi-person-plus me-2"></i>{{ 'auth.register'|trans }}
                                 </button>
                             </div>
                         {{ form_end(registrationForm) }}
 
                         <div class="mt-4 text-center">
-                            <p>Already have an account? <a href="{{ path('app_login') }}">Login here</a></p>
+                            <p>{{ 'auth.already_have_account'|trans }} <a href="{{ path('app_login') }}">{{ 'auth.login_here'|trans }}</a></p>
                         </div>
                     </div>
                 </div>

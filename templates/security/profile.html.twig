@@ -1,37 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Your Profile - B2B Shop{% endblock %}
+{% block title %}{{ 'profile.your_profile'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1 class="mb-4">Your Profile</h1>
+        <h1 class="mb-4">{{ 'profile.your_profile'|trans }}</h1>
         
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Account Information</h5>
+                        <h5 class="mb-0">{{ 'profile.account_info'|trans }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <h6 class="text-muted mb-1">Company Name</h6>
+                            <h6 class="text-muted mb-1">{{ 'profile.company_name'|trans }}</h6>
                             <p class="mb-0 fs-5">{{ app.user.companyName }}</p>
                         </div>
                         <div class="mb-3">
-                            <h6 class="text-muted mb-1">Email Address</h6>
+                            <h6 class="text-muted mb-1">{{ 'profile.email_address'|trans }}</h6>
                             <p class="mb-0">{{ app.user.email }}</p>
                         </div>
                         <div class="mb-3">
-                            <h6 class="text-muted mb-1">Tax ID</h6>
+                            <h6 class="text-muted mb-1">{{ 'profile.tax_id'|trans }}</h6>
                             <p class="mb-0">{{ app.user.taxId }}</p>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1">Account Type</h6>
+                            <h6 class="text-muted mb-1">{{ 'profile.account_type'|trans }}</h6>
                             <p class="mb-0">
                                 {% if app.user.isAdmin %}
-                                    <span class="badge bg-danger">Administrator</span>
+                                    <span class="badge bg-danger">{{ 'profile.administrator'|trans }}</span>
                                 {% else %}
-                                    <span class="badge bg-primary">Client</span>
+                                    <span class="badge bg-primary">{{ 'profile.client'|trans }}</span>
                                 {% endif %}
                             </p>
                         </div>
@@ -42,7 +42,7 @@
             <div class="col-md-8">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5 class="mb-0">Edit Profile</h5>
+                        <h5 class="mb-0">{{ 'profile.edit_profile'|trans }}</h5>
                     </div>
                     <div class="card-body">
                         {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
@@ -70,7 +70,7 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save me-2"></i>Save Changes
+                                    <i class="bi bi-save me-2"></i>{{ 'profile.save_changes'|trans }}
                                 </button>
                             </div>
                         {{ form_end(form) }}
@@ -79,7 +79,7 @@
                 
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Change Password</h5>
+                        <h5 class="mb-0">{{ 'profile.change_password'|trans }}</h5>
                     </div>
                     <div class="card-body">
                         {{ form_start(passwordForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
@@ -93,7 +93,7 @@
                                 {{ form_label(passwordForm.newPassword.first) }}
                                 {{ form_widget(passwordForm.newPassword.first, {'attr': {'class': 'form-control' ~ (passwordForm.newPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
                                 {{ form_errors(passwordForm.newPassword.first) }}
-                                <div class="form-text">Password should be at least 8 characters and include letters and numbers.</div>
+                                <div class="form-text">{{ 'auth.password_help'|trans }}</div>
                             </div>
 
                             <div class="mb-3">
@@ -106,7 +106,7 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-lock me-2"></i>Update Password
+                                    <i class="bi bi-lock me-2"></i>{{ 'profile.update_password'|trans }}
                                 </button>
                             </div>
                         {{ form_end(passwordForm) }}

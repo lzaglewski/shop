@@ -1,21 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}B2B Shop - Welcome{% endblock %}
+{% block title %}{{ 'welcome.title'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="jumbotron bg-light p-5 mb-4 rounded">
         <div class="container">
-            <h1 class="display-4">Welcome to B2B Shop</h1>
-            <p class="lead">Your trusted partner for business supplies with personalized pricing for each client.</p>
+            <h1 class="display-4">{{ 'welcome.title'|trans }}</h1>
+            <p class="lead">{{ 'welcome.subtitle'|trans }}</p>
             <hr class="my-4">
-            <p>Browse our extensive catalog of products with your individual pricing.</p>
-            <a class="btn btn-primary btn-lg" href="{{ path('product_list') }}" role="button">View Products</a>
+            <p>{{ 'welcome.description'|trans }}</p>
+            <a class="btn btn-primary btn-lg" href="{{ path('product_list') }}" role="button">{{ 'welcome.view_products'|trans }}</a>
         </div>
     </div>
 
     {% if is_granted('ROLE_CLIENT') %}
         <div class="container">
-            <h2 class="mb-4">Featured Products</h2>
+            <h2 class="mb-4">{{ 'featured_products.title'|trans }}</h2>
             
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 {% for product in featuredProducts %}
@@ -40,14 +40,14 @@
                                         {{ product.basePrice }}€
                                     {% endif %}
                                 </span>
-                                <a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                <a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary">{{ 'featured_products.view_details'|trans }}</a>
                             </div>
                         </div>
                     </div>
                 {% else %}
                     <div class="col-12">
                         <div class="alert alert-info">
-                            No featured products available at the moment.
+                            {{ 'featured_products.no_products'|trans }}
                         </div>
                     </div>
                 {% endfor %}
@@ -61,8 +61,8 @@
                 <div class="card h-100">
                     <div class="card-body text-center">
                         <i class="bi bi-tags-fill text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">Custom Pricing</h3>
-                        <p class="card-text">Each client gets their own personalized pricing for every product.</p>
+                        <h3 class="card-title">{{ 'features.custom_pricing.title'|trans }}</h3>
+                        <p class="card-text">{{ 'features.custom_pricing.description'|trans }}</p>
                     </div>
                 </div>
             </div>
@@ -70,8 +70,8 @@
                 <div class="card h-100">
                     <div class="card-body text-center">
                         <i class="bi bi-truck text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">Fast Delivery</h3>
-                        <p class="card-text">Quick and reliable shipping for all your business needs.</p>
+                        <h3 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h3>
+                        <p class="card-text">{{ 'features.fast_delivery.description'|trans }}</p>
                     </div>
                 </div>
             </div>
@@ -79,8 +79,8 @@
                 <div class="card h-100">
                     <div class="card-body text-center">
                         <i class="bi bi-headset text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">24/7 Support</h3>
-                        <p class="card-text">Our customer service team is always ready to assist you.</p>
+                        <h3 class="card-title">{{ 'features.support.title'|trans }}</h3>
+                        <p class="card-text">{{ 'features.support.description'|trans }}</p>
                     </div>
                 </div>
             </div>
