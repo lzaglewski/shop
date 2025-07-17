@@ -99,39 +99,6 @@ class ClientPriceController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'client_price_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
-    {
-        // Get the first client and product as temporary defaults
-        // These will be replaced by the form data
-        $clients = $this->userService->getActiveClients();
-        $products = $this->productService->getActiveProducts();
-
-        if (empty($clients) || empty($products)) {
-            $this->addFlash('danger', 'You need at least one active client and one active product to create a client price.');
-            return $this->redirectToRoute('client_price_index');
-        }
-
-        $client = $clients[0];
-        $product = $products[0];
-
-        // Create a new ClientPrice with required constructor arguments
-        $clientPrice = new ClientPrice($client, $product, 0.0);
-        $form = $this->createForm(ClientPriceType::class, $clientPrice);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->clientPriceService->saveClientPrice($clientPrice);
-
-            $this->addFlash('success', 'Client price created successfully.');
-            return $this->redirectToRoute('client_price_index');
-        }
-
-        return $this->render('client_price/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'client_price_edit', methods: ['GET', 'POST'])]
     public function edit(int $id, Request $request): Response
     {
@@ -181,7 +148,7 @@ class ClientPriceController extends AbstractController
         $this->addFlash('success', 'Client price has been deleted successfully.');
         return $this->redirectToRoute('client_price_index');
     }
-    
+
     /**
      * Bulk edit prices for a specific client
      */
@@ -189,14 +156,14 @@ class ClientPriceController extends AbstractController
     public function bulkEditForClient(int $id, Request $request): Response
     {
         $client = $this->userService->getUserById($id);
-        
+
         if (!$client) {
             throw $this->createNotFoundException('Client not found');
         }
-        
+
         $products = $this->productService->getActiveProducts();
         $clientPrices = $this->clientPriceService->getClientPricesForClient($client);
-        
+
         // Create a map of product IDs to client prices
         $priceMap = [];
         foreach ($clientPrices as $clientPrice) {
@@ -206,47 +173,47 @@ class ClientPriceController extends AbstractController
                 'id' => $clientPrice->getId()
             ];
         }
-        
+
         if ($request->isMethod('POST')) {
             $productPrices = $request->request->all('prices');
             $productStatus = $request->request->all('active');
             $updatedCount = 0;
-            
+
             foreach ($products as $product) {
                 $productId = $product->getId();
                 $price = isset($productPrices[$productId]) ? (float)$productPrices[$productId] : null;
                 $isActive = isset($productStatus[$productId]);
-                
+
                 // Skip if no price was provided
                 if ($price === null) {
                     continue;
                 }
-                
+
                 // Get existing client price or create a new one
                 $clientPrice = $this->clientPriceService->getClientPriceByClientAndProduct($client, $product);
-                
+
                 if (!$clientPrice) {
                     $clientPrice = new ClientPrice($client, $product, $price);
                 } else {
                     $clientPrice->setPrice($price);
                 }
-                
+
                 $clientPrice->setIsActive($isActive);
                 $this->clientPriceService->saveClientPrice($clientPrice);
                 $updatedCount++;
             }
-            
+
             $this->addFlash('success', sprintf('Successfully updated %d prices for %s', $updatedCount, $client->getCompanyName()));
             return $this->redirectToRoute('client_price_index', ['client' => $client->getId()]);
         }
-        
+
         return $this->render('client_price/bulk_edit_client.html.twig', [
             'client' => $client,
             'products' => $products,
             'priceMap' => $priceMap
         ]);
     }
-    
+
     /**
      * Bulk edit prices for a specific product
      */
@@ -254,14 +221,14 @@ class ClientPriceController extends AbstractController
     public function bulkEditForProduct(int $id, Request $request): Response
     {
         $product = $this->productService->getProductById($id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
         }
-        
+
         $clients = $this->userService->getActiveClients();
         $clientPrices = $this->clientPriceService->getClientPricesForProduct($product);
-        
+
         // Create a map of client IDs to client prices
         $priceMap = [];
         foreach ($clientPrices as $clientPrice) {
@@ -271,40 +238,40 @@ class ClientPriceController extends AbstractController
                 'id' => $clientPrice->getId()
             ];
         }
-        
+
         if ($request->isMethod('POST')) {
             $clientPrices = $request->request->all('prices');
             $clientStatus = $request->request->all('active');
             $updatedCount = 0;
-            
+
             foreach ($clients as $client) {
                 $clientId = $client->getId();
                 $price = isset($clientPrices[$clientId]) ? (float)$clientPrices[$clientId] : null;
                 $isActive = isset($clientStatus[$clientId]);
-                
+
                 // Skip if no price was provided
                 if ($price === null) {
                     continue;
                 }
-                
+
                 // Get existing client price or create a new one
                 $clientPrice = $this->clientPriceService->getClientPriceByClientAndProduct($client, $product);
-                
+
                 if (!$clientPrice) {
                     $clientPrice = new ClientPrice($client, $product, $price);
                 } else {
                     $clientPrice->setPrice($price);
                 }
-                
+
                 $clientPrice->setIsActive($isActive);
                 $this->clientPriceService->saveClientPrice($clientPrice);
                 $updatedCount++;
             }
-            
+
             $this->addFlash('success', sprintf('Successfully updated %d prices for %s', $updatedCount, $product->getName()));
             return $this->redirectToRoute('client_price_index', ['product' => $product->getId()]);
         }
-        
+
         return $this->render('client_price/bulk_edit_product.html.twig', [
             'product' => $product,
             'clients' => $clients,
