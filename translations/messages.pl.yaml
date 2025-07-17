@@ -249,6 +249,25 @@ order:
     start_shopping: 'Rozpocznij zakupy'
     view_details: 'Zobacz szczegóły'
 
+order_details:
+    title: 'Szczegóły zamówienia'
+    back_to_orders: 'Powrót do zamówień'
+    order_number: 'Zamówienie'
+    order_date: 'Data zamówienia'
+    status: 'Status'
+    email: 'Email'
+    company: 'Firma'
+    tax_id: 'NIP'
+    shipping_address: 'Adres dostawy'
+    billing_address: 'Adres rozliczeniowy'
+    order_notes: 'Notatki do zamówienia'
+    product: 'Produkt'
+    sku: 'SKU'
+    price: 'Cena'
+    quantity: 'Ilość'
+    subtotal: 'Suma częściowa'
+    total: 'Razem'
+
 form:
     # Basic form labels
     name: 'Nazwa'
