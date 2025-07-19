@@ -99,7 +99,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
             } else {
                 // Fallback to original behavior if category not found
                 $queryBuilder
-                    ->andWhere('p.category = :categoryId')
+                    ->andWhere('p.category.id = :categoryId')
                     ->setParameter('categoryId', $categoryId);
             }
         }

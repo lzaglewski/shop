@@ -117,7 +117,7 @@ class ProductController extends AbstractController
             $query = $this->productService->filterBySearch($query, $search);
         }
 
-        if ($status !== null) {
+        if ($status !== null && $status !== 'All' && $status !== '') {
             $query = $this->productService->filterByStatus($query, $status === '1');
         }
 
