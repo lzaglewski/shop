@@ -38,6 +38,7 @@ navigation:
     users: 'Użytkownicy'
     client_prices: 'Ceny klientów'
     my_orders: 'Moje zamówienia'
+    new_order: 'Nowe zamówienie'
 
 auth:
     login: 'Zaloguj się'
@@ -67,6 +68,9 @@ buttons:
     add_to_cart: 'Dodaj do koszyka'
     checkout: 'Finalizuj zamówienie'
     view: 'Zobacz'
+    view_cart: 'Zobacz koszyk'
+    in_cart: 'W koszyku'
+    filter: 'Filtruj'
 
 common:
     name: 'Nazwa'
@@ -75,10 +79,12 @@ common:
     category: 'Kategoria'
     image: 'Zdjęcie'
     quantity: 'Ilość'
+    subtotal: 'Suma częściowa'
     total: 'Razem'
     actions: 'Akcje'
     status: 'Status'
     date: 'Data'
+    product: 'Produkt'
 
 footer:
     description: 'Twój zaufany partner w zakresie dostaw biznesowych.'
@@ -110,6 +116,7 @@ product:
     prices: 'Ceny'
     no_products_found: 'Nie znaleziono produktów.'
     try_changing_filters: 'Spróbuj zmienić filtry.'
+    no_category: 'Brak kategorii'
     availability: 'Dostępność'
     in_stock: 'Na stanie'
     available: 'dostępne'
