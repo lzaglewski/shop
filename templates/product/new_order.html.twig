@@ -133,12 +133,11 @@
                                                 <i class="bi bi-cart-check"></i> {{ 'buttons.in_cart'|trans }}
                                             </button>
                                         {% else %}
-                                            <form action="{{ path('cart_add', {'id': product.id}) }}" method="post" class="add-to-cart-form" style="display: inline;">
-                                                <input type="hidden" name="quantity" class="quantity-value" value="0">
-                                                <button type="submit" class="btn btn-success btn-sm add-to-cart-btn" disabled>
-                                                    <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
-                                                </button>
-                                            </form>
+                                            <button class="btn btn-success btn-sm add-to-cart-btn" 
+                                                    data-product-id="{{ product.id }}"
+                                                    disabled>
+                                                <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
+                                            </button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -175,35 +174,102 @@
                     // Update subtotal
                     row.querySelector('.subtotal').textContent = subtotal.toFixed(2) + '€';
                     
-                    // Update hidden quantity field and enable/disable button (only for products not in cart)
-                    const form = row.querySelector('.add-to-cart-form');
-                    if (form) {
-                        const hiddenQuantity = form.querySelector('.quantity-value');
-                        const addBtn = form.querySelector('.add-to-cart-btn');
-                        
-                        hiddenQuantity.value = quantity;
+                    // Enable/disable add to cart button (only for products not in cart)
+                    const addBtn = row.querySelector('.add-to-cart-btn');
+                    if (addBtn) {
                         addBtn.disabled = quantity <= 0;
                     }
                 });
             });
 
-            // Handle form submissions to reset quantity after successful add
-            document.querySelectorAll('.add-to-cart-form').forEach(function(form) {
-                form.addEventListener('submit', function(e) {
+            // Handle add to cart button clicks with AJAX
+            document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
                     const row = this.closest('tr');
                     const quantityInput = row.querySelector('.quantity-input');
                     const quantity = parseInt(quantityInput.value) || 0;
                     
                     if (quantity <= 0) {
-                        e.preventDefault();
                         alert('Please enter a valid quantity');
-                        return false;
+                        return;
                     }
                     
-                    // After form submission, reset the form (this will happen after page reload due to flash messages)
-                    // The server handles the actual cart addition
+                    // Disable button to prevent double clicks
+                    this.disabled = true;
+                    this.innerHTML = '<i class="bi bi-hourglass-split"></i> Adding...';
+                    
+                    // Send AJAX request to add to cart
+                    fetch('{{ path('cart_ajax_add') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=' + productId + '&quantity=' + quantity
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Reset quantity to 0 and update subtotal
+                            quantityInput.value = 0;
+                            row.querySelector('.subtotal').textContent = '0.00€';
+                            
+                            // Change button to "In Cart" state
+                            this.className = 'btn btn-secondary btn-sm';
+                            this.innerHTML = '<i class="bi bi-cart-check"></i> {{ 'buttons.in_cart'|trans }}';
+                            this.disabled = true;
+                            
+                            // Update cart counter in navbar if exists
+                            const cartCounter = document.querySelector('.cart-count');
+                            if (cartCounter && data.itemCount) {
+                                cartCounter.textContent = data.itemCount;
+                            }
+                            
+                            // Show success message
+                            showMessage('{{ 'cart.product_added_successfully'|trans }}', 'success');
+                        } else {
+                            // Re-enable button on error
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}';
+                            showMessage(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Re-enable button on error
+                        this.disabled = false;
+                        this.innerHTML = '<i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}';
+                        showMessage('An error occurred while adding the product to cart', 'error');
+                    });
                 });
             });
+            
+            // Function to show messages
+            function showMessage(message, type) {
+                // Create alert div
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+                alertDiv.style.position = 'fixed';
+                alertDiv.style.top = '20px';
+                alertDiv.style.right = '20px';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.style.minWidth = '300px';
+                alertDiv.style.maxWidth = '400px';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Add to body instead of container
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+            }
         });
     </script>
 {% endblock %}
