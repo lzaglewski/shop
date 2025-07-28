@@ -79,7 +79,7 @@ common:
     category: 'Kategoria'
     image: 'Zdjęcie'
     quantity: 'Ilość'
-    subtotal: 'Suma częściowa'
+    subtotal: 'Suma'
     total: 'Razem'
     actions: 'Akcje'
     status: 'Status'
@@ -149,7 +149,7 @@ cart:
     empty: 'Twój koszyk jest pusty.'
     continue_shopping: 'Kontynuuj zakupy'
     product: 'Produkt'
-    subtotal: 'Suma częściowa'
+    subtotal: 'Suma'
     remove: 'Usuń'
     clear_cart: 'Wyczyść koszyk'
     proceed_to_checkout: 'Przejdź do kasy'
@@ -273,7 +273,7 @@ order_details:
     sku: 'SKU'
     price: 'Cena'
     quantity: 'Ilość'
-    subtotal: 'Suma częściowa'
+    subtotal: 'Suma'
     total: 'Razem'
 
 form:
