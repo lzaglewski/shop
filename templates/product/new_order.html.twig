@@ -244,32 +244,7 @@
                 });
             });
             
-            // Function to show messages
-            function showMessage(message, type) {
-                // Create alert div
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
-                alertDiv.style.position = 'fixed';
-                alertDiv.style.top = '20px';
-                alertDiv.style.right = '20px';
-                alertDiv.style.zIndex = '9999';
-                alertDiv.style.minWidth = '300px';
-                alertDiv.style.maxWidth = '400px';
-                alertDiv.innerHTML = `
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                `;
-                
-                // Add to body instead of container
-                document.body.appendChild(alertDiv);
-                
-                // Auto remove after 3 seconds
-                setTimeout(() => {
-                    if (alertDiv.parentNode) {
-                        alertDiv.remove();
-                    }
-                }, 3000);
-            }
+            // Function showMessage is now available globally from base.html.twig
         });
     </script>
 {% endblock %}

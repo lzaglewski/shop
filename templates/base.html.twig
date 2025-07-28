@@ -115,15 +115,6 @@
         </header>
 
         <main class="container py-4">
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-
             {% block body %}{% endblock %}
         </main>
 
@@ -160,5 +151,73 @@
                 </div>
             </div>
         </footer>
+        
+        <!-- Universal Flash Messages Handler -->
+        <script>
+            // Global function to show fixed position messages
+            window.showMessage = function(message, type) {
+                // Calculate position based on existing alerts
+                const existingAlerts = document.querySelectorAll('.alert[style*="position: fixed"]');
+                let topPosition = 20;
+                existingAlerts.forEach(alert => {
+                    topPosition += alert.offsetHeight + 10; // 10px margin between alerts
+                });
+                
+                // Create alert div
+                const alertDiv = document.createElement('div');
+                const alertType = type === 'danger' ? 'danger' : (type === 'error' ? 'danger' : type);
+                alertDiv.className = `alert alert-${alertType} alert-dismissible fade show`;
+                alertDiv.style.position = 'fixed';
+                alertDiv.style.top = topPosition + 'px';
+                alertDiv.style.right = '20px';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.style.minWidth = '300px';
+                alertDiv.style.maxWidth = '400px';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Add to body
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 4 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                        // Reposition remaining alerts
+                        repositionAlerts();
+                    }
+                }, 4000);
+                
+                // Add click handler for close button
+                const closeBtn = alertDiv.querySelector('.btn-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        alertDiv.remove();
+                        repositionAlerts();
+                    });
+                }
+            };
+            
+            // Function to reposition alerts after one is removed
+            function repositionAlerts() {
+                const alerts = document.querySelectorAll('.alert[style*="position: fixed"]');
+                let topPosition = 20;
+                alerts.forEach(alert => {
+                    alert.style.top = topPosition + 'px';
+                    topPosition += alert.offsetHeight + 10;
+                });
+            }
+
+            // Show flash messages on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        showMessage('{{ message|e('js') }}', '{{ label }}');
+                    {% endfor %}
+                {% endfor %}
+            });
+        </script>
     </body>
 </html>
