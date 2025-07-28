@@ -1,0 +1,209 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'navigation.new_order'|trans }} - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{{ 'navigation.new_order'|trans }}</h1>
+            <a href="{{ path('cart_index') }}" class="btn btn-primary">
+                <i class="bi bi-cart"></i> {{ 'buttons.view_cart'|trans }}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="category" class="form-label">{{ 'common.category'|trans }}</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">{{ 'product.all_categories'|trans }}</option>
+                            
+                            {# First, find all root categories #}
+                            {% set rootCategories = [] %}
+                            {% for category in categories %}
+                                {% if category.parent is null %}
+                                    {% set rootCategories = rootCategories|merge([category]) %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {# Group options by root category #}
+                            {% for rootCategory in rootCategories %}
+                                <optgroup label="{{ rootCategory.name }}">
+                                    <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
+                                        {{ rootCategory.name }}
+                                    </option>
+                                    
+                                    {# Render subcategories recursively #}
+                                    {% macro renderSubcategories(category, level, selectedCategory) %}
+                                        {% for subcategory in category.children %}
+                                            <option value="{{ subcategory.id }}" {% if selectedCategory == subcategory.id ~ '' %}selected{% endif %}>
+                                                {% set prefix = '' %}
+                                                {% for i in 1..level %}
+                                                    {% set prefix = prefix ~ '— ' %}
+                                                {% endfor %}
+                                                {{ prefix }}{{ subcategory.name }}
+                                            </option>
+                                            {{ _self.renderSubcategories(subcategory, level + 1, selectedCategory) }}
+                                        {% endfor %}
+                                    {% endmacro %}
+                                    
+                                    {{ _self.renderSubcategories(rootCategory, 1, selectedCategory) }}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">{{ 'product.search'|trans }}</label>
+                        <input type="text" name="search" id="search" class="form-control" value="{{ searchTerm }}">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">{{ 'buttons.filter'|trans }}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{ 'common.product'|trans }}</th>
+                                <th>{{ 'common.category'|trans }}</th>
+                                <th>{{ 'common.price'|trans }}</th>
+                                <th>{{ 'common.quantity'|trans }}</th>
+                                <th>{{ 'common.subtotal'|trans }}</th>
+                                <th>{{ 'common.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                {% set clientPrice = null %}
+                                {% if app.user and app.user.role.value == 'CLIENT' %}
+                                    {% for price in app.user.clientPrices %}
+                                        {% if price.product.id == product.id %}
+                                            {% set clientPrice = price %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% set finalPrice = clientPrice ? clientPrice.price : product.basePrice %}
+                                
+                                <tr data-product-id="{{ product.id }}" data-price="{{ finalPrice }}">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if product.imageFilename %}
+                                                <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" 
+                                                     class="img-thumbnail me-3" 
+                                                     style="width: 60px; height: 60px; object-fit: cover;" 
+                                                     alt="{{ product.name }}">
+                                            {% else %}
+                                                <div class="bg-light d-flex align-items-center justify-content-center me-3" 
+                                                     style="width: 60px; height: 60px;">
+                                                    <i class="bi bi-image text-secondary"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div>
+                                                <strong>{{ product.name }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ product.sku }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if product.category %}
+                                            {{ product.category.name }}
+                                        {% else %}
+                                            <span class="text-muted">{{ 'product.no_category'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="product-price">{{ finalPrice }}€</td>
+                                    <td>
+                                        <input type="number" 
+                                               class="form-control quantity-input" 
+                                               min="0" 
+                                               max="{{ product.stock }}"
+                                               value="0" 
+                                               style="width: 80px;"
+                                               data-product-id="{{ product.id }}">
+                                        <small class="text-muted">Max: {{ product.stock }}</small>
+                                    </td>
+                                    <td class="subtotal">0.00€</td>
+                                    <td>
+                                        {% if product.id in cartProductIds %}
+                                            <button class="btn btn-secondary btn-sm" disabled>
+                                                <i class="bi bi-cart-check"></i> {{ 'buttons.in_cart'|trans }}
+                                            </button>
+                                        {% else %}
+                                            <form action="{{ path('cart_add', {'id': product.id}) }}" method="post" class="add-to-cart-form" style="display: inline;">
+                                                <input type="hidden" name="quantity" class="quantity-value" value="0">
+                                                <button type="submit" class="btn btn-success btn-sm add-to-cart-btn" disabled>
+                                                    <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <div class="alert alert-info mb-0">
+                                            {{ 'product.no_products_found'|trans }} {% if app.request.query.count > 0 %}{{ 'product.try_changing_filters'|trans }}{% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="navigation d-flex justify-content-center mt-4">
+                    {{ knp_pagination_render(products) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update subtotal and button state when quantity changes
+            document.querySelectorAll('.quantity-input').forEach(function(input) {
+                input.addEventListener('input', function() {
+                    const row = this.closest('tr');
+                    const price = parseFloat(row.getAttribute('data-price'));
+                    const quantity = parseInt(this.value) || 0;
+                    const subtotal = price * quantity;
+                    
+                    // Update subtotal
+                    row.querySelector('.subtotal').textContent = subtotal.toFixed(2) + '€';
+                    
+                    // Update hidden quantity field and enable/disable button (only for products not in cart)
+                    const form = row.querySelector('.add-to-cart-form');
+                    if (form) {
+                        const hiddenQuantity = form.querySelector('.quantity-value');
+                        const addBtn = form.querySelector('.add-to-cart-btn');
+                        
+                        hiddenQuantity.value = quantity;
+                        addBtn.disabled = quantity <= 0;
+                    }
+                });
+            });
+
+            // Handle form submissions to reset quantity after successful add
+            document.querySelectorAll('.add-to-cart-form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    const row = this.closest('tr');
+                    const quantityInput = row.querySelector('.quantity-input');
+                    const quantity = parseInt(quantityInput.value) || 0;
+                    
+                    if (quantity <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid quantity');
+                        return false;
+                    }
+                    
+                    // After form submission, reset the form (this will happen after page reload due to flash messages)
+                    // The server handles the actual cart addition
+                });
+            });
+        });
+    </script>
+{% endblock %}
