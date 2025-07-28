@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Product;
 
+use App\Application\Cart\CartService;
 use App\Application\Form\ProductType;
 use App\Application\Service\ClientPriceService;
 use App\Application\Service\ProductService;
@@ -13,6 +14,7 @@ use App\Domain\User\Model\UserRole;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -27,19 +29,22 @@ class ProductController extends AbstractController
     private ClientPriceService $clientPriceService;
     private SluggerInterface $slugger;
     private PaginatorInterface $paginator;
+    private CartService $cartService;
 
     public function __construct(
         ProductService $productService,
         PricingService $pricingService,
         ClientPriceService $clientPriceService,
         SluggerInterface $slugger,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        CartService $cartService
     ) {
         $this->productService = $productService;
         $this->pricingService = $pricingService;
         $this->clientPriceService = $clientPriceService;
         $this->slugger = $slugger;
         $this->paginator = $paginator;
+        $this->cartService = $cartService;
     }
 
     #[Route('', name: 'product_list', methods: ['GET'])]
@@ -139,6 +144,71 @@ class ProductController extends AbstractController
             'selectedStatus' => $status,
         ]);
     }
+
+    #[IsGranted('ROLE_CLIENT')]
+    #[Route('/new-order', name: 'product_new_order', methods: ['GET'])]
+    public function newOrder(Request $request): Response
+    {
+        $query = $this->productService->getActiveProductsQuery();
+        $user = $this->getUser();
+        $isClient = $user && $user->getRole() === UserRole::CLIENT;
+
+        // Get filter parameters
+        $categoryId = $request->query->get('category');
+        $search = $request->query->get('search');
+
+        // Apply filters if provided
+        if ($categoryId) {
+            $query = $this->productService->filterByCategory($query, $categoryId);
+        }
+
+        if ($search) {
+            $query = $this->productService->filterBySearch($query, $search);
+        }
+
+        // Get all products before filtering by visibility
+        $queryResult = $query->getQuery()->getResult();
+
+        // Filter products by visibility if the user is a client
+        if ($isClient) {
+            $visibleProducts = $this->clientPriceService->getVisibleProductsForClient($user);
+
+            // Filter the query result to only include visible products
+            $visibleProductIds = array_map(function($product) {
+                return $product->getId();
+            }, $visibleProducts);
+
+            $queryResult = array_filter($queryResult, function($product) use ($visibleProductIds) {
+                return in_array($product->getId(), $visibleProductIds);
+            });
+        }
+
+        // Paginate the filtered results
+        $pagination = $this->paginator->paginate(
+            $queryResult,
+            $request->query->getInt('page', 1),
+            20 // Items per page
+        );
+
+        // Get categories for the filter
+        $categories = $this->productService->getAllCategories();
+
+        // Get current cart to check which products are already in cart
+        $cart = $this->cartService->getCart();
+        $cartProductIds = [];
+        foreach ($cart->getItems() as $cartItem) {
+            $cartProductIds[] = $cartItem->getProduct()->getId();
+        }
+
+        return $this->render('product/new_order.html.twig', [
+            'products' => $pagination,
+            'categories' => $categories,
+            'selectedCategory' => $categoryId,
+            'searchTerm' => $search,
+            'cartProductIds' => $cartProductIds,
+        ]);
+    }
+
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'product_new', methods: ['GET', 'POST'])]
