@@ -6,6 +6,7 @@ namespace App\Application\Cart;
 
 use App\Domain\Product\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -80,6 +81,39 @@ class CartController extends AbstractController
         $this->addFlash('success', 'Cart cleared successfully.');
         
         return $this->redirectToRoute('cart_index');
+    }
+
+    #[Route('/ajax-add', name: 'ajax_add', methods: ['POST'])]
+    public function ajaxAdd(Request $request): JsonResponse
+    {
+        $productId = (int) $request->request->get('product_id');
+        $quantity = (int) $request->request->get('quantity', 1);
+
+        if ($quantity <= 0) {
+            return new JsonResponse(['success' => false, 'message' => 'Invalid quantity']);
+        }
+
+        try {
+            $this->cartService->addToCart($productId, $quantity);
+            
+            // Get updated cart info for response
+            $cart = $this->cartService->getCart();
+            $cartProductIds = [];
+            foreach ($cart->getItems() as $cartItem) {
+                $cartProductIds[] = $cartItem->getProduct()->getId();
+            }
+            
+            return new JsonResponse([
+                'success' => true, 
+                'message' => 'Product added to cart successfully',
+                'cartProductIds' => $cartProductIds,
+                'itemCount' => $this->cartService->getItemCount()
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => 'Error adding product to cart']);
+        }
     }
     
     public function cartItemCount(): Response

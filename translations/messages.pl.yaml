@@ -153,6 +153,7 @@ cart:
     remove: 'Usuń'
     clear_cart: 'Wyczyść koszyk'
     proceed_to_checkout: 'Przejdź do kasy'
+    product_added_successfully: 'Produkt został dodany do koszyka'
 
 checkout:
     checkout: 'Kasa'
