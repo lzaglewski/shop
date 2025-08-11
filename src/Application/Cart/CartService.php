@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Cart;
 
-use App\Application\Service\ClientPriceService;
+use App\Application\Pricing\ClientPriceService;
 use App\Domain\Cart\Model\Cart;
 use App\Domain\Cart\Model\CartItem;
 use App\Domain\Cart\Repository\CartRepository;
-use App\Domain\Product\Model\Product;
 use App\Domain\Product\Repository\ProductRepository;
 use App\Domain\User\Model\User;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class CartService
 {
@@ -42,11 +41,11 @@ class CartService
         // If user is logged in, try to find their cart
         if ($user) {
             $this->cart = $this->cartRepository->findByUser($user);
-            
+
             // If user has no cart but there's a session cart, associate it with the user
             if ($this->cart === null) {
                 $sessionCart = $this->cartRepository->findBySessionId($this->sessionId);
-                
+
                 if ($sessionCart) {
                     $sessionCart->setUser($user);
                     $sessionCart->setSessionId(null);
@@ -76,41 +75,41 @@ class CartService
         }
 
         $cart = $this->getCart();
-        
+
         // Pobierz cenę dla klienta, jeśli jest zalogowany
         $price = $product->getBasePrice();
         $user = $this->security->getUser();
-        
+
         if ($user instanceof User) {
             $price = $this->clientPriceService->getClientPrice($user, $product);
         }
-        
+
         $cartItem = new CartItem($product, $quantity);
         $cartItem->setPrice($price);
         $cart->addItem($cartItem);
-        
+
         $this->cartRepository->save($cart);
     }
 
     public function updateQuantity(int $productId, int $quantity): void
     {
         $cart = $this->getCart();
-        
+
         // Jeśli ilość jest większa od 0, upewnij się, że cena jest aktualna
         if ($quantity > 0) {
             $product = $this->productRepository->find($productId);
             if (!$product) {
                 throw new \InvalidArgumentException('Product not found');
             }
-            
+
             // Pobierz cenę dla klienta, jeśli jest zalogowany
             $price = $product->getBasePrice();
             $user = $this->security->getUser();
-            
+
             if ($user instanceof User) {
                 $price = $this->clientPriceService->getClientPrice($user, $product);
             }
-            
+
             // Zaktualizuj cenę dla istniejącego elementu koszyka
             foreach ($cart->getItems() as $item) {
                 if ($item->getProduct()->getId() === $productId) {
@@ -119,7 +118,7 @@ class CartService
                 }
             }
         }
-        
+
         $cart->updateItemQuantity($productId, $quantity);
         $this->cartRepository->save($cart);
     }
@@ -133,7 +132,7 @@ class CartService
     {
         $cart = $this->getCart();
         $cart->clear();
-        
+
         $this->cartRepository->save($cart);
     }
 

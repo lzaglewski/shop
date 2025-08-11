@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Service;
+namespace App\Application\User;
 
 use App\Domain\User\Model\User;
 use App\Domain\User\Model\UserRole;
@@ -103,21 +103,21 @@ class UserService
     public function canDeleteUser(User $user): array
     {
         $errors = [];
-        
+
         if ($user->getRole() === UserRole::CLIENT) {
             // Check for existing client prices
             $clientPrices = $this->userRepository->findClientPricesForUser($user);
             if (!empty($clientPrices)) {
                 $errors[] = 'User has associated client prices. Please remove all client prices first.';
             }
-            
+
             // Check for existing orders
             $orders = $this->userRepository->findOrdersForUser($user);
             if (!empty($orders)) {
                 $errors[] = 'User has associated orders. Please consider deactivating the user instead.';
             }
         }
-        
+
         return $errors;
     }
 
@@ -130,7 +130,7 @@ class UserService
                 $this->userRepository->removeCart($cart);
             }
         }
-        
+
         $this->userRepository->remove($user);
     }
 

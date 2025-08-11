@@ -7,19 +7,24 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Product\Model\Product;
 use App\Domain\Product\Model\ProductCategory;
 use App\Domain\Product\Repository\ProductRepositoryInterface;
+use App\Domain\User\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class DoctrineProductRepository implements ProductRepositoryInterface
 {
     private EntityManagerInterface $entityManager;
     private EntityRepository $repository;
+    private PaginatorInterface $paginator;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, PaginatorInterface $paginator)
     {
         $this->entityManager = $entityManager;
         $this->repository = $entityManager->getRepository(Product::class);
+        $this->paginator = $paginator;
     }
 
     public function save(Product $product): void
@@ -139,5 +144,26 @@ class DoctrineProductRepository implements ProductRepositoryInterface
             ->setParameter('status', $isActive);
 
         return $queryBuilder;
+    }
+
+    public function addClientVisibilityFilter(QueryBuilder $queryBuilder, User $client): QueryBuilder
+    {
+        $queryBuilder
+            ->innerJoin('p.clientPrices', 'cp')
+            ->andWhere('cp.client = :client')
+            ->andWhere('cp.isActive = :clientPriceActive')
+            ->setParameter('client', $client)
+            ->setParameter('clientPriceActive', true);
+
+        return $queryBuilder;
+    }
+
+    public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $queryBuilder->getQuery(),
+            $page,
+            $limit
+        );
     }
 }

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Application\User;
 
 use App\Application\Form\UserType;
-use App\Application\Service\ClientPriceService;
-use App\Application\Service\UserService;
+use App\Application\Pricing\ClientPriceService;
 use App\Domain\User\Model\User;
 use App\Domain\User\Model\UserRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

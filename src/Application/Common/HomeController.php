@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Common;
 
-use App\Application\Service\ClientPriceService;
-use App\Application\Service\ProductService;
-use App\Application\Service\SettingsService;
+use App\Application\Pricing\ClientPriceService;
+use App\Domain\Product\Repository\ProductRepositoryInterface;
 use App\Domain\User\Model\UserRole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,16 +13,16 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    private ProductService $productService;
+    private ProductRepositoryInterface $productRepository;
     private ClientPriceService $clientPriceService;
     private SettingsService $settingsService;
 
     public function __construct(
-        ProductService $productService, 
+        ProductRepositoryInterface $productRepository,
         ClientPriceService $clientPriceService,
         SettingsService $settingsService
     ) {
-        $this->productService = $productService;
+        $this->productRepository = $productRepository;
         $this->clientPriceService = $clientPriceService;
         $this->settingsService = $settingsService;
     }
@@ -51,8 +50,8 @@ class HomeController extends AbstractController
             }
         } else {
             // For non-clients, get all active products
-            $activeProducts = $this->productService->getActiveProducts();
-            
+            $activeProducts = $this->productRepository->findActive();
+
             // Filter by category if specified in settings
             if ($featuredCategory) {
                 $featuredProducts = array_filter($activeProducts, function($product) use ($featuredCategory) {

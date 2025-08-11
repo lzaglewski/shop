@@ -102,7 +102,7 @@
                                         <div>
                                             {% if is_granted('ROLE_CLIENT') %}
                                                 <button type="button" class="btn btn-sm btn-success add-to-cart-btn" data-product-id="{{ product.id }}" onclick="event.stopPropagation();">
-                                                    <i class="bi bi-cart-plus"></i> {{ 'cart.add_to_cart'|trans }}
+                                                    <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
                                                 </button>
                                             {% endif %}
                                             {% if is_granted('ROLE_ADMIN') %}

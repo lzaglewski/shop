@@ -7,7 +7,7 @@ namespace App\Application\Common;
 use App\Application\Form\ChangePasswordType;
 use App\Application\Form\ProfileType;
 use App\Application\Form\RegistrationType;
-use App\Application\Service\UserService;
+use App\Application\User\UserService;
 use App\Domain\User\Model\User;
 use App\Domain\User\Model\UserRole;
 use App\Domain\User\Repository\UserRepositoryInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Service;
+namespace App\Application\Common;
 
 use App\Domain\Product\Model\ProductCategory;
 use App\Domain\Settings\Model\Settings;
@@ -28,11 +28,11 @@ class SettingsService
     public function setHomepageCategory(?ProductCategory $category): void
     {
         $setting = $this->settingsRepository->findByKey(self::HOMEPAGE_CATEGORY_KEY);
-        
+
         if (!$setting) {
             $setting = new Settings(self::HOMEPAGE_CATEGORY_KEY);
         }
-        
+
         $setting->setCategory($category);
         $this->settingsRepository->save($setting);
     }
@@ -45,14 +45,14 @@ class SettingsService
     public function setSetting(string $key, ?string $value = null, ?ProductCategory $category = null): void
     {
         $setting = $this->settingsRepository->findByKey($key);
-        
+
         if (!$setting) {
             $setting = new Settings($key, $value, $category);
         } else {
             $setting->setSettingValue($value);
             $setting->setCategory($category);
         }
-        
+
         $this->settingsRepository->save($setting);
     }
 }

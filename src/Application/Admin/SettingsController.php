@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin;
 
-use App\Application\Service\SettingsService;
+use App\Application\Common\SettingsService;
 use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ class SettingsController extends AbstractController
     public function updateHomepageCategory(Request $request): Response
     {
         $categoryId = $request->request->get('category_id');
-        
+
         $category = null;
         if ($categoryId && $categoryId !== '') {
             $category = $this->categoryRepository->findById((int)$categoryId);

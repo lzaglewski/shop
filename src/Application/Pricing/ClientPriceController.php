@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Application\Pricing;
 
 use App\Application\Form\ClientPriceType;
-use App\Application\Service\ClientPriceService;
-use App\Application\Service\ProductService;
-use App\Application\Service\UserService;
+use App\Application\User\UserService;
 use App\Domain\Pricing\Model\ClientPrice;
+use App\Domain\Product\Repository\ProductRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,23 +20,23 @@ class ClientPriceController extends AbstractController
 {
     private ClientPriceService $clientPriceService;
     private UserService $userService;
-    private ProductService $productService;
+    private ProductRepositoryInterface $productRepository;
 
     public function __construct(
         ClientPriceService $clientPriceService,
         UserService $userService,
-        ProductService $productService
+        ProductRepositoryInterface $productRepository
     ) {
         $this->clientPriceService = $clientPriceService;
         $this->userService = $userService;
-        $this->productService = $productService;
+        $this->productRepository = $productRepository;
     }
 
     #[Route('', name: 'client_price_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $clients = $this->userService->getActiveClients();
-        $products = $this->productService->getActiveProducts();
+        $products = $this->productRepository->findActive();
         $clientPrices = $this->clientPriceService->getAllClientPrices();
 
         // Filter parameters
@@ -84,7 +83,7 @@ class ClientPriceController extends AbstractController
         }
 
         $clientPrices = $this->clientPriceService->getClientPricesForClient($client);
-        $products = $this->productService->getActiveProducts();
+        $products = $this->productRepository->findActive();
 
         // Create a map of product IDs to client prices
         $priceMap = [];
@@ -161,7 +160,7 @@ class ClientPriceController extends AbstractController
             throw $this->createNotFoundException('Client not found');
         }
 
-        $products = $this->productService->getActiveProducts();
+        $products = $this->productRepository->findActive();
         $clientPrices = $this->clientPriceService->getClientPricesForClient($client);
 
         // Create a map of product IDs to client prices
@@ -220,7 +219,7 @@ class ClientPriceController extends AbstractController
     #[Route('/bulk-edit/product/{id}', name: 'client_price_bulk_edit_for_product', methods: ['GET', 'POST'])]
     public function bulkEditForProduct(int $id, Request $request): Response
     {
-        $product = $this->productService->getProductById($id);
+        $product = $this->productRepository->findById($id);
 
         if (!$product) {
             throw $this->createNotFoundException('Product not found');

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Service;
+namespace App\Application\Pricing;
 
 use App\Domain\Pricing\Model\ClientPrice;
 use App\Domain\Pricing\Repository\ClientPriceRepositoryInterface;
@@ -69,7 +69,7 @@ class ClientPriceService
     {
         return $this->clientPriceRepository->findById($id);
     }
-    
+
     /**
      * Get a client price by client and product
      */
@@ -90,7 +90,7 @@ class ClientPriceService
     {
         $this->clientPriceRepository->remove($clientPrice);
     }
-    
+
     /**
      * Get all products that are visible to a specific client
      * A product is visible to a client if there is an active ClientPrice entry for it
@@ -99,16 +99,16 @@ class ClientPriceService
     {
         $clientPrices = $this->getClientPricesForClient($client);
         $visibleProducts = [];
-        
+
         foreach ($clientPrices as $clientPrice) {
             if ($clientPrice->isActive()) {
                 $visibleProducts[] = $clientPrice->getProduct();
             }
         }
-        
+
         return $visibleProducts;
     }
-    
+
     /**
      * Check if a product is visible to a specific client
      * A product is visible to a client if there is an active ClientPrice entry for it
@@ -119,12 +119,12 @@ class ClientPriceService
             'client' => $client,
             'product' => $product
         ]);
-        
+
         // If no client price exists, the product is NOT visible to the client
         if (!$clientPrice) {
             return false;
         }
-        
+
         // Only show active client prices
         return $clientPrice->isActive();
     }

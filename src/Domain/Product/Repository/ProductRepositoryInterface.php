@@ -6,7 +6,9 @@ namespace App\Domain\Product\Repository;
 
 use App\Domain\Product\Model\Product;
 use App\Domain\Product\Model\ProductCategory;
+use App\Domain\User\Model\User;
 use Doctrine\ORM\QueryBuilder;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 interface ProductRepositoryInterface
 {
@@ -33,4 +35,8 @@ interface ProductRepositoryInterface
     public function addSearchFilter(QueryBuilder $queryBuilder, string $search): QueryBuilder;
 
     public function addStatusFilter(QueryBuilder $queryBuilder, bool $isActive): QueryBuilder;
+
+    public function addClientVisibilityFilter(QueryBuilder $queryBuilder, User $client): QueryBuilder;
+
+    public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface;
 }
