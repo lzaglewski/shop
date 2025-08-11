@@ -40,6 +40,7 @@ class Cart
         $this->sessionId = $sessionId;
         $this->items = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->updatedAt = null;
     }
 
     public function getId(): int

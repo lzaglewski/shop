@@ -79,6 +79,7 @@ class Order
         $this->totalAmount = '0.00';
         $this->items = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->updatedAt = null;
     }
 
     public function getId(): int
