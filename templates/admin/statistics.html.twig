@@ -1,0 +1,428 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistics Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .statistics-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .statistics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .statistics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+        
+        .statistics-card.users {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .statistics-card.products {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .statistics-card.orders {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .statistics-card.recent-orders {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            opacity: 0.3;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .chart-title {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .chart-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+        
+        .spinner-border {
+            color: #667eea;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .stat-number {
+                font-size: 2rem;
+            }
+            .stat-icon {
+                font-size: 2rem;
+            }
+            .chart-wrapper {
+                height: 300px;
+            }
+        }
+        
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid my-4">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="mb-0" style="color: #333; font-weight: 700;">
+                    <i class="bi bi-bar-chart-line me-2"></i>Statistics Dashboard
+                </h1>
+                <p class="text-muted mb-4">Comprehensive analytics and insights for your e-commerce platform</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-5">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card statistics-card users h-100">
+                    <div class="card-body text-center position-relative">
+                        <div class="stat-number">{{ totalUsers }}</div>
+                        <div class="stat-label">Total Users</div>
+                        <i class="bi bi-people stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card statistics-card products h-100">
+                    <div class="card-body text-center position-relative">
+                        <div class="stat-number">{{ totalProducts }}</div>
+                        <div class="stat-label">Total Products</div>
+                        <i class="bi bi-box stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card statistics-card orders h-100">
+                    <div class="card-body text-center position-relative">
+                        <div class="stat-number">{{ totalOrders }}</div>
+                        <div class="stat-label">Total Orders</div>
+                        <i class="bi bi-cart-check stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card statistics-card recent-orders h-100">
+                    <div class="card-body text-center position-relative">
+                        <div class="stat-number">{{ recentOrders }}</div>
+                        <div class="stat-label">Recent Orders (30 days)</div>
+                        <i class="bi bi-clock-history stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row">
+            <!-- User Registration Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-person-plus me-2"></i>User Registrations
+                    </h3>
+                    <div class="chart-wrapper">
+                        <div class="loading-spinner" id="users-loading">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <canvas id="usersChart" style="display: none;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-graph-up me-2"></i>Orders Over Time
+                    </h3>
+                    <div class="chart-wrapper">
+                        <div class="loading-spinner" id="orders-loading">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <canvas id="ordersChart" style="display: none;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Products by Category Chart -->
+            <div class="col-lg-8 mb-4">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-pie-chart me-2"></i>Products by Category
+                    </h3>
+                    <div class="chart-wrapper">
+                        <div class="loading-spinner" id="categories-loading">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <canvas id="categoriesChart" style="display: none;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-lg-4 mb-4">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-lightning me-2"></i>Quick Actions
+                    </h3>
+                    <div class="d-grid gap-3">
+                        <a href="{{ path('admin_order_list') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-list-ul me-2"></i>View All Orders
+                        </a>
+                        <a href="{{ path('user_index') }}" class="btn btn-outline-success btn-lg">
+                            <i class="bi bi-people me-2"></i>Manage Users
+                        </a>
+                        <a href="{{ path('product_admin_list') }}" class="btn btn-outline-info btn-lg">
+                            <i class="bi bi-box-seam me-2"></i>Manage Products
+                        </a>
+                        <a href="{{ path('admin_dashboard') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-house me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        // Chart configurations
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            family: 'system-ui, -apple-system, sans-serif',
+                            size: 12
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            }
+        };
+
+        // Load Users Chart
+        fetch('{{ path('admin_statistics_users_data') }}')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('users-loading').style.display = 'none';
+                document.getElementById('usersChart').style.display = 'block';
+                
+                const ctx = document.getElementById('usersChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'New Users',
+                            data: data.data,
+                            borderColor: 'rgb(102, 126, 234)',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: 'rgb(102, 126, 234)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: chartOptions
+                });
+            })
+            .catch(error => {
+                console.error('Error loading users chart:', error);
+                document.getElementById('users-loading').innerHTML = '<p class="text-danger">Failed to load chart</p>';
+            });
+
+        // Load Orders Chart
+        fetch('{{ path('admin_statistics_orders_data') }}')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('orders-loading').style.display = 'none';
+                document.getElementById('ordersChart').style.display = 'block';
+                
+                const ctx = document.getElementById('ordersChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Orders Count',
+                            data: data.data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: chartOptions
+                });
+            })
+            .catch(error => {
+                console.error('Error loading orders chart:', error);
+                document.getElementById('orders-loading').innerHTML = '<p class="text-danger">Failed to load chart</p>';
+            });
+
+        // Load Categories Chart
+        fetch('{{ path('admin_statistics_products_category_data') }}')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('categories-loading').style.display = 'none';
+                document.getElementById('categoriesChart').style.display = 'block';
+                
+                const ctx = document.getElementById('categoriesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderColor: '#fff',
+                            borderWidth: 3,
+                            hoverBorderWidth: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: {
+                                        family: 'system-ui, -apple-system, sans-serif',
+                                        size: 12
+                                    },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error loading categories chart:', error);
+                document.getElementById('categories-loading').innerHTML = '<p class="text-danger">Failed to load chart</p>';
+            });
+    </script>
+{% endblock %}
