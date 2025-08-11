@@ -25,6 +25,12 @@
                             <h6 class="text-muted mb-1">{{ 'profile.tax_id'|trans }}</h6>
                             <p class="mb-0">{{ app.user.taxId }}</p>
                         </div>
+                        {% if app.user.contactNumber %}
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-1">{{ 'form.contact_number'|trans }}</h6>
+                            <p class="mb-0">{{ app.user.contactNumber }}</p>
+                        </div>
+                        {% endif %}
                         <div>
                             <h6 class="text-muted mb-1">{{ 'profile.account_type'|trans }}</h6>
                             <p class="mb-0">
@@ -37,6 +43,80 @@
                         </div>
                     </div>
                 </div>
+                
+                {# Delivery Address Card #}
+                {% if app.user.deliveryStreet or app.user.deliveryCity or app.user.deliveryPostalCode %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'checkout.shipping_address'|trans }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if app.user.deliveryStreet %}
+                        <div class="mb-2">
+                            <h6 class="text-muted mb-1">{{ 'form.delivery_street'|trans }}</h6>
+                            <p class="mb-0">{{ app.user.deliveryStreet }}</p>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            {% if app.user.deliveryPostalCode %}
+                            <div class="col-md-4">
+                                <h6 class="text-muted mb-1">{{ 'form.delivery_postal_code'|trans }}</h6>
+                                <p class="mb-0">{{ app.user.deliveryPostalCode }}</p>
+                            </div>
+                            {% endif %}
+                            {% if app.user.deliveryCity %}
+                            <div class="col-md-8">
+                                <h6 class="text-muted mb-1">{{ 'form.delivery_city'|trans }}</h6>
+                                <p class="mb-0">{{ app.user.deliveryCity }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# Billing Information Card #}
+                {% if app.user.billingCompanyName or app.user.billingStreet or app.user.billingCity or app.user.billingPostalCode or app.user.billingTaxId %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'checkout.billing_address'|trans }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if app.user.billingCompanyName %}
+                        <div class="mb-2">
+                            <h6 class="text-muted mb-1">{{ 'form.billing_company_name'|trans }}</h6>
+                            <p class="mb-0">{{ app.user.billingCompanyName }}</p>
+                        </div>
+                        {% endif %}
+                        {% if app.user.billingTaxId %}
+                        <div class="mb-2">
+                            <h6 class="text-muted mb-1">{{ 'form.billing_tax_id'|trans }}</h6>
+                            <p class="mb-0">{{ app.user.billingTaxId }}</p>
+                        </div>
+                        {% endif %}
+                        {% if app.user.billingStreet %}
+                        <div class="mb-2">
+                            <h6 class="text-muted mb-1">{{ 'form.billing_street'|trans }}</h6>
+                            <p class="mb-0">{{ app.user.billingStreet }}</p>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            {% if app.user.billingPostalCode %}
+                            <div class="col-md-4">
+                                <h6 class="text-muted mb-1">{{ 'form.billing_postal_code'|trans }}</h6>
+                                <p class="mb-0">{{ app.user.billingPostalCode }}</p>
+                            </div>
+                            {% endif %}
+                            {% if app.user.billingCity %}
+                            <div class="col-md-8">
+                                <h6 class="text-muted mb-1">{{ 'form.billing_city'|trans }}</h6>
+                                <p class="mb-0">{{ app.user.billingCity }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             
             <div class="col-md-8">
@@ -46,25 +126,99 @@
                     </div>
                     <div class="card-body">
                         {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.email) }}
-                                    {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
-                                    {{ form_errors(form.email) }}
+                            {# Basic Information Section #}
+                            <fieldset class="mb-4">
+                                <legend class="h6 mb-3 text-primary border-bottom pb-2">{{ 'profile.account_info'|trans }}</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.email) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.companyName) }}
+                                        {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.companyName) }}
+                                    </div>
                                 </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.companyName) }}
-                                    {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
-                                    {{ form_errors(form.companyName) }}
-                                </div>
-                            </div>
 
-                            <div class="mb-3">
-                                {{ form_label(form.taxId) }}
-                                {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
-                                {{ form_errors(form.taxId) }}
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.taxId) }}
+                                        {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.taxId) }}
+                                    </div>
+                                    
+                                    {% if form.contactNumber is defined %}
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.contactNumber) }}
+                                        {{ form_widget(form.contactNumber, {'attr': {'class': 'form-control' ~ (form.contactNumber.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.contactNumber) }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </fieldset>
+
+                            {# Delivery Address Section #}
+                            {% if form.deliveryStreet is defined %}
+                            <fieldset class="mb-4">
+                                <legend class="h6 mb-3 text-primary border-bottom pb-2">{{ 'checkout.shipping_address'|trans }}</legend>
+                                <div class="mb-3">
+                                    {{ form_label(form.deliveryStreet) }}
+                                    {{ form_widget(form.deliveryStreet, {'attr': {'class': 'form-control' ~ (form.deliveryStreet.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(form.deliveryStreet) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        {{ form_label(form.deliveryPostalCode) }}
+                                        {{ form_widget(form.deliveryPostalCode, {'attr': {'class': 'form-control' ~ (form.deliveryPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.deliveryPostalCode) }}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        {{ form_label(form.deliveryCity) }}
+                                        {{ form_widget(form.deliveryCity, {'attr': {'class': 'form-control' ~ (form.deliveryCity.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.deliveryCity) }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% endif %}
+
+                            {# Billing Information Section #}
+                            {% if form.billingCompanyName is defined %}
+                            <fieldset class="mb-4">
+                                <legend class="h6 mb-3 text-primary border-bottom pb-2">{{ 'checkout.billing_address'|trans }}</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.billingCompanyName) }}
+                                        {{ form_widget(form.billingCompanyName, {'attr': {'class': 'form-control' ~ (form.billingCompanyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.billingCompanyName) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.billingTaxId) }}
+                                        {{ form_widget(form.billingTaxId, {'attr': {'class': 'form-control' ~ (form.billingTaxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.billingTaxId) }}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(form.billingStreet) }}
+                                    {{ form_widget(form.billingStreet, {'attr': {'class': 'form-control' ~ (form.billingStreet.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(form.billingStreet) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        {{ form_label(form.billingPostalCode) }}
+                                        {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control' ~ (form.billingPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.billingPostalCode) }}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        {{ form_label(form.billingCity) }}
+                                        {{ form_widget(form.billingCity, {'attr': {'class': 'form-control' ~ (form.billingCity.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(form.billingCity) }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% endif %}
 
                             {{ form_rest(form) }}
 

@@ -1,35 +1,109 @@
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.email) }}
-            {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
-            {{ form_errors(form.email) }}
-            <div class="form-text">{{ 'form.email_help'|trans }}</div>
+    {# Basic Information Section #}
+    <fieldset class="mb-4">
+        <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'profile.account_info'|trans }}</legend>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.email) }}
+                <div class="form-text">{{ 'form.email_help'|trans }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.companyName) }}
+                {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.companyName) }}
+                <div class="form-text">{{ 'form.company_name_help'|trans }}</div>
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.companyName) }}
-            {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
-            {{ form_errors(form.companyName) }}
-            <div class="form-text">{{ 'form.company_name_help'|trans }}</div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.taxId) }}
-            {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
-            {{ form_errors(form.taxId) }}
-            <div class="form-text">{{ 'form.tax_id_help'|trans }}</div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.taxId) }}
+                {{ form_widget(form.taxId, {'attr': {'class': 'form-control' ~ (form.taxId.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.taxId) }}
+                <div class="form-text">{{ 'form.tax_id_help'|trans }}</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.role) }}
+                {{ form_widget(form.role, {'attr': {'class': 'form-select' ~ (form.role.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.role) }}
+                <div class="form-text">{{ 'form.role_help'|trans }}</div>
+            </div>
+            {% if form.contactNumber is defined %}
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.contactNumber) }}
+                {{ form_widget(form.contactNumber, {'attr': {'class': 'form-control' ~ (form.contactNumber.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.contactNumber) }}
+            </div>
+            {% endif %}
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.role) }}
-            {{ form_widget(form.role, {'attr': {'class': 'form-select' ~ (form.role.vars.valid ? '' : ' is-invalid')}}) }}
-            {{ form_errors(form.role) }}
-            <div class="form-text">{{ 'form.role_help'|trans }}</div>
-        </div>
-    </div>
+    </fieldset>
 
+    {# Delivery Address Section #}
+    {% if form.deliveryStreet is defined %}
+    <fieldset class="mb-4">
+        <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'checkout.shipping_address'|trans }}</legend>
+        <div class="mb-3">
+            {{ form_label(form.deliveryStreet) }}
+            {{ form_widget(form.deliveryStreet, {'attr': {'class': 'form-control' ~ (form.deliveryStreet.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.deliveryStreet) }}
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.deliveryPostalCode) }}
+                {{ form_widget(form.deliveryPostalCode, {'attr': {'class': 'form-control' ~ (form.deliveryPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.deliveryPostalCode) }}
+            </div>
+            <div class="col-md-8 mb-3">
+                {{ form_label(form.deliveryCity) }}
+                {{ form_widget(form.deliveryCity, {'attr': {'class': 'form-control' ~ (form.deliveryCity.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.deliveryCity) }}
+            </div>
+        </div>
+    </fieldset>
+    {% endif %}
+
+    {# Billing Information Section #}
+    {% if form.billingCompanyName is defined %}
+    <fieldset class="mb-4">
+        <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'checkout.billing_address'|trans }}</legend>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.billingCompanyName) }}
+                {{ form_widget(form.billingCompanyName, {'attr': {'class': 'form-control' ~ (form.billingCompanyName.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.billingCompanyName) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.billingTaxId) }}
+                {{ form_widget(form.billingTaxId, {'attr': {'class': 'form-control' ~ (form.billingTaxId.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.billingTaxId) }}
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.billingStreet) }}
+            {{ form_widget(form.billingStreet, {'attr': {'class': 'form-control' ~ (form.billingStreet.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.billingStreet) }}
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.billingPostalCode) }}
+                {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control' ~ (form.billingPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.billingPostalCode) }}
+            </div>
+            <div class="col-md-8 mb-3">
+                {{ form_label(form.billingCity) }}
+                {{ form_widget(form.billingCity, {'attr': {'class': 'form-control' ~ (form.billingCity.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.billingCity) }}
+            </div>
+        </div>
+    </fieldset>
+    {% endif %}
+
+    {# Password Section #}
     {% if form.plainPassword is defined %}
+    <fieldset class="mb-4">
+        <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'profile.change_password'|trans }}</legend>
         <div class="row">
             <div class="col-md-6 mb-3">
                 {{ form_label(form.plainPassword.first) }}
@@ -43,14 +117,19 @@
                 {{ form_errors(form.plainPassword.second) }}
             </div>
         </div>
+    </fieldset>
     {% endif %}
 
-    <div class="mb-3 form-check form-switch">
-        {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input' ~ (form.isActive.vars.valid ? '' : ' is-invalid')}}) }}
-        {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label'}}) }}
-        {{ form_errors(form.isActive) }}
-        <div class="form-text">{{ 'form.inactive_users_help'|trans }}</div>
-    </div>
+    {# User Status Section #}
+    <fieldset class="mb-4">
+        <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'common.status'|trans }}</legend>
+        <div class="form-check form-switch">
+            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input' ~ (form.isActive.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            {{ form_errors(form.isActive) }}
+            <div class="form-text">{{ 'form.inactive_users_help'|trans }}</div>
+        </div>
+    </fieldset>
 
     {{ form_rest(form) }}
 

@@ -45,6 +45,42 @@ class ProfileType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('contactNumber', TextType::class, [
+                'label' => 'form.contact_number',
+                'required' => false,
+            ])
+            ->add('deliveryStreet', TextType::class, [
+                'label' => 'form.delivery_street',
+                'required' => false,
+            ])
+            ->add('deliveryPostalCode', TextType::class, [
+                'label' => 'form.delivery_postal_code',
+                'required' => false,
+            ])
+            ->add('deliveryCity', TextType::class, [
+                'label' => 'form.delivery_city',
+                'required' => false,
+            ])
+            ->add('billingCompanyName', TextType::class, [
+                'label' => 'form.billing_company_name',
+                'required' => false,
+            ])
+            ->add('billingStreet', TextType::class, [
+                'label' => 'form.billing_street',
+                'required' => false,
+            ])
+            ->add('billingPostalCode', TextType::class, [
+                'label' => 'form.billing_postal_code',
+                'required' => false,
+            ])
+            ->add('billingCity', TextType::class, [
+                'label' => 'form.billing_city',
+                'required' => false,
+            ])
+            ->add('billingTaxId', TextType::class, [
+                'label' => 'form.billing_tax_id',
+                'required' => false,
+            ])
         ;
     }
 

@@ -31,6 +31,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private UserRole $role;
     #[ORM\Column(type: 'boolean')]
     private bool $isActive;
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $contactNumber;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $deliveryStreet;
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $deliveryPostalCode;
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $deliveryCity;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $billingCompanyName;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $billingStreet;
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $billingPostalCode;
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $billingCity;
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $billingTaxId;
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientPrice::class, cascade: ['persist'])]
     private Collection $clientPrices;
 
@@ -158,5 +176,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function getContactNumber(): ?string
+    {
+        return $this->contactNumber;
+    }
+
+    public function setContactNumber(?string $contactNumber): void
+    {
+        $this->contactNumber = $contactNumber;
+    }
+
+    public function getDeliveryStreet(): ?string
+    {
+        return $this->deliveryStreet;
+    }
+
+    public function setDeliveryStreet(?string $deliveryStreet): void
+    {
+        $this->deliveryStreet = $deliveryStreet;
+    }
+
+    public function getDeliveryPostalCode(): ?string
+    {
+        return $this->deliveryPostalCode;
+    }
+
+    public function setDeliveryPostalCode(?string $deliveryPostalCode): void
+    {
+        $this->deliveryPostalCode = $deliveryPostalCode;
+    }
+
+    public function getDeliveryCity(): ?string
+    {
+        return $this->deliveryCity;
+    }
+
+    public function setDeliveryCity(?string $deliveryCity): void
+    {
+        $this->deliveryCity = $deliveryCity;
+    }
+
+    public function getBillingCompanyName(): ?string
+    {
+        return $this->billingCompanyName;
+    }
+
+    public function setBillingCompanyName(?string $billingCompanyName): void
+    {
+        $this->billingCompanyName = $billingCompanyName;
+    }
+
+    public function getBillingStreet(): ?string
+    {
+        return $this->billingStreet;
+    }
+
+    public function setBillingStreet(?string $billingStreet): void
+    {
+        $this->billingStreet = $billingStreet;
+    }
+
+    public function getBillingPostalCode(): ?string
+    {
+        return $this->billingPostalCode;
+    }
+
+    public function setBillingPostalCode(?string $billingPostalCode): void
+    {
+        $this->billingPostalCode = $billingPostalCode;
+    }
+
+    public function getBillingCity(): ?string
+    {
+        return $this->billingCity;
+    }
+
+    public function setBillingCity(?string $billingCity): void
+    {
+        $this->billingCity = $billingCity;
+    }
+
+    public function getBillingTaxId(): ?string
+    {
+        return $this->billingTaxId;
+    }
+
+    public function setBillingTaxId(?string $billingTaxId): void
+    {
+        $this->billingTaxId = $billingTaxId;
     }
 }

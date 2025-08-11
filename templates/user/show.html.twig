@@ -54,6 +54,12 @@
                                     <th>Tax ID</th>
                                     <td>{{ user.taxId }}</td>
                                 </tr>
+                                {% if user.contactNumber %}
+                                <tr>
+                                    <th>{{ 'form.contact_number'|trans }}</th>
+                                    <td>{{ user.contactNumber }}</td>
+                                </tr>
+                                {% endif %}
                                 <tr>
                                     <th>Role</th>
                                     <td>
@@ -78,6 +84,84 @@
                         </table>
                     </div>
                 </div>
+
+                {# Delivery Address Card #}
+                {% if user.deliveryStreet or user.deliveryCity or user.deliveryPostalCode %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'checkout.shipping_address'|trans }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                                {% if user.deliveryStreet %}
+                                <tr>
+                                    <th style="width: 30%">{{ 'form.delivery_street'|trans }}</th>
+                                    <td>{{ user.deliveryStreet }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.deliveryPostalCode %}
+                                <tr>
+                                    <th>{{ 'form.delivery_postal_code'|trans }}</th>
+                                    <td>{{ user.deliveryPostalCode }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.deliveryCity %}
+                                <tr>
+                                    <th>{{ 'form.delivery_city'|trans }}</th>
+                                    <td>{{ user.deliveryCity }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# Billing Information Card #}
+                {% if user.billingCompanyName or user.billingStreet or user.billingCity or user.billingPostalCode or user.billingTaxId %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'checkout.billing_address'|trans }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                                {% if user.billingCompanyName %}
+                                <tr>
+                                    <th style="width: 30%">{{ 'form.billing_company_name'|trans }}</th>
+                                    <td>{{ user.billingCompanyName }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.billingTaxId %}
+                                <tr>
+                                    <th>{{ 'form.billing_tax_id'|trans }}</th>
+                                    <td>{{ user.billingTaxId }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.billingStreet %}
+                                <tr>
+                                    <th>{{ 'form.billing_street'|trans }}</th>
+                                    <td>{{ user.billingStreet }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.billingPostalCode %}
+                                <tr>
+                                    <th>{{ 'form.billing_postal_code'|trans }}</th>
+                                    <td>{{ user.billingPostalCode }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if user.billingCity %}
+                                <tr>
+                                    <th>{{ 'form.billing_city'|trans }}</th>
+                                    <td>{{ user.billingCity }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             {% if not user.isAdmin %}
@@ -85,9 +169,6 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Client Prices</h5>
-                            <a href="{{ path('client_price_new', {'client': user.id}) }}" class="btn btn-sm btn-primary">
-                                <i class="bi bi-plus-circle"></i> Add Price
-                            </a>
                         </div>
                         <div class="card-body">
                             {% if user.clientPrices|length > 0 %}

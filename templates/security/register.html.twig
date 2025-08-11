@@ -11,39 +11,119 @@
                         <h1 class="h3 mb-4 text-center">{{ 'auth.create_account'|trans }}</h1>
 
                         {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(registrationForm.email) }}
-                                    {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' ~ (registrationForm.email.vars.valid ? '' : ' is-invalid')}}) }}
-                                    {{ form_errors(registrationForm.email) }}
+                            {# Basic Information Section #}
+                            <fieldset class="mb-4">
+                                <legend class="h5 mb-3 text-primary">{{ 'profile.account_info'|trans }}</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(registrationForm.email) }}
+                                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' ~ (registrationForm.email.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.email) }}
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(registrationForm.companyName) }}
+                                        {{ form_widget(registrationForm.companyName, {'attr': {'class': 'form-control' ~ (registrationForm.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.companyName) }}
+                                    </div>
                                 </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(registrationForm.companyName) }}
-                                    {{ form_widget(registrationForm.companyName, {'attr': {'class': 'form-control' ~ (registrationForm.companyName.vars.valid ? '' : ' is-invalid')}}) }}
-                                    {{ form_errors(registrationForm.companyName) }}
+
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.taxId) }}
+                                    {{ form_widget(registrationForm.taxId, {'attr': {'class': 'form-control' ~ (registrationForm.taxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.taxId) }}
+                                    <div class="form-text">{{ 'auth.tax_id_help'|trans }}</div>
                                 </div>
-                            </div>
+                            </fieldset>
 
-                            <div class="mb-3">
-                                {{ form_label(registrationForm.taxId) }}
-                                {{ form_widget(registrationForm.taxId, {'attr': {'class': 'form-control' ~ (registrationForm.taxId.vars.valid ? '' : ' is-invalid')}}) }}
-                                {{ form_errors(registrationForm.taxId) }}
-                                <div class="form-text">{{ 'auth.tax_id_help'|trans }}</div>
-                            </div>
+                            {# Contact Information Section #}
+                            {% if registrationForm.contactNumber is defined %}
+                            <fieldset class="mb-4">
+                                <legend class="h5 mb-3 text-primary">{{ 'checkout.order_information'|trans }}</legend>
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.contactNumber) }}
+                                    {{ form_widget(registrationForm.contactNumber, {'attr': {'class': 'form-control' ~ (registrationForm.contactNumber.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.contactNumber) }}
+                                </div>
+                            </fieldset>
+                            {% endif %}
 
-                            <div class="mb-3">
-                                {{ form_label(registrationForm.plainPassword.first) }}
-                                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
-                                {{ form_errors(registrationForm.plainPassword.first) }}
-                                <div class="form-text">{{ 'auth.password_help'|trans }}</div>
-                            </div>
+                            {# Delivery Address Section #}
+                            {% if registrationForm.deliveryStreet is defined %}
+                            <fieldset class="mb-4">
+                                <legend class="h5 mb-3 text-primary">{{ 'checkout.shipping_address'|trans }}</legend>
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.deliveryStreet) }}
+                                    {{ form_widget(registrationForm.deliveryStreet, {'attr': {'class': 'form-control' ~ (registrationForm.deliveryStreet.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.deliveryStreet) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        {{ form_label(registrationForm.deliveryPostalCode) }}
+                                        {{ form_widget(registrationForm.deliveryPostalCode, {'attr': {'class': 'form-control' ~ (registrationForm.deliveryPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.deliveryPostalCode) }}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        {{ form_label(registrationForm.deliveryCity) }}
+                                        {{ form_widget(registrationForm.deliveryCity, {'attr': {'class': 'form-control' ~ (registrationForm.deliveryCity.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.deliveryCity) }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% endif %}
 
-                            <div class="mb-3">
-                                {{ form_label(registrationForm.plainPassword.second) }}
-                                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.second.vars.valid ? '' : ' is-invalid')}}) }}
-                                {{ form_errors(registrationForm.plainPassword.second) }}
-                            </div>
+                            {# Billing Information Section #}
+                            {% if registrationForm.billingCompanyName is defined %}
+                            <fieldset class="mb-4">
+                                <legend class="h5 mb-3 text-primary">{{ 'checkout.billing_address'|trans }}</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(registrationForm.billingCompanyName) }}
+                                        {{ form_widget(registrationForm.billingCompanyName, {'attr': {'class': 'form-control' ~ (registrationForm.billingCompanyName.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.billingCompanyName) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(registrationForm.billingTaxId) }}
+                                        {{ form_widget(registrationForm.billingTaxId, {'attr': {'class': 'form-control' ~ (registrationForm.billingTaxId.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.billingTaxId) }}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.billingStreet) }}
+                                    {{ form_widget(registrationForm.billingStreet, {'attr': {'class': 'form-control' ~ (registrationForm.billingStreet.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.billingStreet) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        {{ form_label(registrationForm.billingPostalCode) }}
+                                        {{ form_widget(registrationForm.billingPostalCode, {'attr': {'class': 'form-control' ~ (registrationForm.billingPostalCode.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.billingPostalCode) }}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        {{ form_label(registrationForm.billingCity) }}
+                                        {{ form_widget(registrationForm.billingCity, {'attr': {'class': 'form-control' ~ (registrationForm.billingCity.vars.valid ? '' : ' is-invalid')}}) }}
+                                        {{ form_errors(registrationForm.billingCity) }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% endif %}
+
+                            {# Password Section #}
+                            <fieldset class="mb-4">
+                                <legend class="h5 mb-3 text-primary">{{ 'profile.change_password'|trans }}</legend>
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.plainPassword.first) }}
+                                    {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.first.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.plainPassword.first) }}
+                                    <div class="form-text">{{ 'auth.password_help'|trans }}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.plainPassword.second) }}
+                                    {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.second.vars.valid ? '' : ' is-invalid')}}) }}
+                                    {{ form_errors(registrationForm.plainPassword.second) }}
+                                </div>
+                            </fieldset>
 
                             <div class="mb-3 form-check">
                                 {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input' ~ (registrationForm.agreeTerms.vars.valid ? '' : ' is-invalid')}}) }}

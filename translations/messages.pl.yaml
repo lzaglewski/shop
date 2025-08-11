@@ -348,3 +348,14 @@ form:
     # Registration fields
     agree_terms: 'Akceptuję regulamin'
     terms_required: 'Musisz zaakceptować regulamin.'
+
+    # User contact and address fields
+    contact_number: 'Numer kontaktowy'
+    delivery_street: 'Ulica dostawy'
+    delivery_postal_code: 'Kod pocztowy dostawy'
+    delivery_city: 'Miasto dostawy'
+    billing_company_name: 'Nazwa firmy (faktura)'
+    billing_street: 'Ulica (faktura)'
+    billing_postal_code: 'Kod pocztowy (faktura)'
+    billing_city: 'Miasto (faktura)'
+    billing_tax_id: 'NIP (faktura)'
