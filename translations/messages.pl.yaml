@@ -8,7 +8,7 @@ welcome:
 featured_products:
     title: 'Nowe propozycje'
     no_products: 'Brak polecanych produktów w tym momencie.'
-    view_details: 'Zobacz szczegóły'
+    view_all: 'Zobacz wszystkie'
 
 features:
     custom_pricing:

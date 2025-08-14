@@ -3,87 +3,210 @@
 {% block title %}{{ 'welcome.title'|trans }} - B2B Shop{% endblock %}
 
 {% block body %}
-    <div class="jumbotron bg-light p-5 mb-4 rounded">
-        <div class="container">
-            <h1 class="display-4">{{ 'welcome.title'|trans }}</h1>
-            <p class="lead">{{ 'welcome.subtitle'|trans }}</p>
-            <hr class="my-4">
-            <p>{{ 'welcome.description'|trans }}</p>
-            <a class="btn btn-primary btn-lg" href="{{ path('product_list') }}" role="button">{{ 'welcome.view_products'|trans }}</a>
+
+    <section id="billboard" class="position-relative d-flex align-items-center py-5 bg-light-gray"
+             style="background-image: url(images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
+        <div class="position-absolute end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next main-slider-button-next">
+            <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80"
+                 height="80">
+                <use xlink:href="#alt-arrow-right-outline"></use>
+            </svg>
         </div>
-    </div>
+        <div class="position-absolute start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-prev main-slider-button-prev">
+            <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80"
+                 height="80">
+                <use xlink:href="#alt-arrow-left-outline"></use>
+            </svg>
+        </div>
+        <div class="swiper main-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="container">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-6">
+                                <div class="banner-content">
+                                    <h1 class="display-2 text-uppercase text-dark pb-5">{{ 'welcome.title'|trans }}</h1>
+                                    <p class="lead">{{ 'welcome.subtitle'|trans }}</p>
+                                    <p class="fs-5 text-muted">{{ 'welcome.description'|trans }}</p>
+                                    <a href="{{ path('product_list') }}"
+                                       class="btn btn-primary-big mt-3">{{ 'welcome.view_products'|trans }}</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="image-holder">
+                                    <img src="{{ asset('images/banner-image.png') }}" alt="banner" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="container">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-6">
+                                <div class="banner-content">
+                                    <h1 class="display-2 text-uppercase text-dark pb-5">{{ 'welcome.title'|trans }}</h1>
+                                    <p class="lead">{{ 'welcome.subtitle'|trans }}</p>
+                                    <p class="fs-5 text-muted">{{ 'welcome.description'|trans }}</p>
+                                    <a href="{{ path('product_list') }}"
+                                       class="btn btn-medium btn-dark text-uppercase btn-rounded-none">{{ 'welcome.view_products'|trans }}</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="image-holder">
+                                    <img src="{{ asset('images/banner-image.png') }}" alt="banner" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section id="company-services" class="padding-large">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="price-tag">
+                                <use xlink:href="#price-tag"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.custom_pricing.title'|trans }}</h4>
+                            <p>{{ 'features.custom_pricing.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="shield-plus">
+                                <use xlink:href="#shield-plus"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h4>
+                            <p>{{ 'features.fast_delivery.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="quality">
+                                <use xlink:href="#quality"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.support.title'|trans }}</h4>
+                            <p>{{ 'features.support.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="shield-plus">
+                                <use xlink:href="#shield-plus"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">Bezpieczeństwo</h4>
+                            <p>Bezpieczne transakcje i ochrona danych klientów</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     {% if is_granted('ROLE_CLIENT') %}
-        <div class="container">
-            <h2 class="mb-4">{{ 'featured_products.title'|trans }}</h2>
-            
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                {% for product in featuredProducts %}
-                    <div class="col">
-                        <div class="card product-card h-100">
-                            {% if product.imageFilename %}
-                                <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
-                            {% else %}
-                                <div class="bg-light text-center p-5">
-                                    <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
-                                </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text">{{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}</p>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between align-items-center">
-                                <span class="fw-bold">
-                                    {% if app.user %}
-                                        {{ app.user.clientPrices.filter(p => p.product.id == product.id).first ? app.user.clientPrices.filter(p => p.product.id == product.id).first.price : product.basePrice }}€
+        <section id="best-selling-items" class="position-relative padding-large">
+            <div class="container">
+                <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+                    <h3 class="d-flex align-items-center">{{ 'featured_products.title'|trans }}</h3>
+                    <a href="{{ path('product_list') }}"
+                       class="btn btn-primary-big ">{{ 'featured_products.view_all'|trans|default('Zobacz wszystkie') }}</a>
+                </div>
+                <div
+                    class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next product-slider-button-next">
+                    <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80"
+                         height="80">
+                        <use xlink:href="#alt-arrow-right-outline"></use>
+                    </svg>
+                </div>
+                <div
+                    class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-prev product-slider-button-prev">
+                    <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80"
+                         height="80">
+                        <use xlink:href="#alt-arrow-left-outline"></use>
+                    </svg>
+                </div>
+                <div class="swiper product-swiper">
+                    <div class="swiper-wrapper">
+                        {% for product in featuredProducts %}
+                            <div class="swiper-slide">
+                                <div class="card position-relative p-4 border rounded-3">
+                                    {% if product.imageFilename %}
+                                        <div class="product-image-container">
+                                            <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}"
+                                                 class="img-fluid shadow-sm" alt="{{ product.name }}">
+                                        </div>
                                     {% else %}
-                                        {{ product.basePrice }}€
+                                        <div class="product-image-container">
+                                            <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
+                                        </div>
                                     {% endif %}
-                                </span>
-                                <a href="{{ path('product_show', {'id': product.id}) }}" class="btn btn-sm btn-outline-primary">{{ 'featured_products.view_details'|trans }}</a>
+                                    <h6 class="mt-4 mb-0 fw-bold"><a
+                                            href="{{ path('product_show', {'id': product.id}) }}">{{ product.name }}</a>
+                                    </h6>
+                                    <div class="review-content d-flex">
+                                    </div>
+                                    <span class="price text-primary fw-bold mb-2 fs-5">
+                                        {% if app.user %}
+                                            {{ app.user.clientPrices.filter(p => p.product.id == product.id).first ? app.user.clientPrices.filter(p => p.product.id == product.id).first.price : product.basePrice }}€
+                                        {% else %}
+                                            {{ product.basePrice }}€
+                                        {% endif %}
+                                    </span>
+                                    <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                                        <a href="{{ path('product_show', {'id': product.id}) }}"
+                                           class="btn btn-primary-big  btn-dark" data-bs-toggle="tooltip"
+                                           data-bs-placement="top" data-bs-title="Zobacz szczegóły">
+                                            <svg class="cart">
+                                                <use xlink:href="#cart"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="{{ path('product_show', {'id': product.id}) }}"
+                                           class="btn btn-primary-big  btn-dark">
+                                            <span>
+                                                <svg class="wishlist">
+                                                    <use xlink:href="#heart"></use>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        {% else %}
+                            <div class="swiper-slide">
+                                <div class="card position-relative p-4 border rounded-3">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">{{ 'featured_products.no_products'|trans }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% else %}
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            {{ 'featured_products.no_products'|trans }}
-                        </div>
-                    </div>
-                {% endfor %}
+                </div>
             </div>
-        </div>
+        </section>
     {% endif %}
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-tags-fill text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">{{ 'features.custom_pricing.title'|trans }}</h3>
-                        <p class="card-text">{{ 'features.custom_pricing.description'|trans }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-truck text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h3>
-                        <p class="card-text">{{ 'features.fast_delivery.description'|trans }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-headset text-primary mb-3" style="font-size: 2.5rem;"></i>
-                        <h3 class="card-title">{{ 'features.support.title'|trans }}</h3>
-                        <p class="card-text">{{ 'features.support.description'|trans }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

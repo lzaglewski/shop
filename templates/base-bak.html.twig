@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}B2B Shop{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+            <style>
+                .navbar-brand {
+                    font-weight: bold;
+                }
+                .footer {
+                    margin-top: 3rem;
+                    padding: 2rem 0;
+                    background-color: #f8f9fa;
+                    border-top: 1px solid #e9ecef;
+                }
+                .product-card {
+                    height: 100%;
+                    transition: transform 0.3s;
+                }
+                .product-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                }
+            </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    <a class="navbar-brand" href="{{ path('homepage') }}">B2B Shop</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a>
+                            </li>
+                            {% if is_granted('ROLE_CLIENT') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('product_new_order') }}">{{ 'navigation.new_order'|trans }}</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('about') }}">{{ 'navigation.about'|trans }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('contact') }}">{{ 'navigation.contact'|trans }}</a>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ 'navigation.admin'|trans }}
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">{{ 'navigation.dashboard'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_statistics') }}"><i class="bi bi-bar-chart-line me-1"></i>Statistics</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_order_list') }}">{{ 'navigation.orders'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_index') }}">{{ 'navigation.users'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('product_admin_list') }}">{{ 'navigation.products'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('category_list') }}">{{ 'navigation.categories'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('client_price_index') }}">{{ 'navigation.client_prices'|trans }}</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" href="{{ path('cart_index') }}">
+                                    <i class="bi bi-cart"></i> {{ 'navigation.cart'|trans }}
+                                    {% if app.session.has('cart_id') or app.user %}
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                                            {{ render(controller('App\\Application\\Cart\\CartController::cartItemCount')) }}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                            {% if app.user %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ app.user.companyName }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'navigation.profile'|trans }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('user_orders') }}">{{ 'navigation.my_orders'|trans }}</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'navigation.logout'|trans }}</a></li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_login') }}">{{ 'navigation.login'|trans }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_register') }}">{{ 'navigation.register'|trans }}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container py-4">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>B2B Shop</h5>
+                        <p>{{ 'footer.description'|trans }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>{{ 'footer.quick_links'|trans }}</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a></li>
+                            <li><a href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a></li>
+                            <li><a href="{{ path('about') }}">{{ 'navigation.about'|trans }}</a></li>
+                            <li><a href="{{ path('contact') }}">{{ 'navigation.contact'|trans }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>{{ 'footer.contact'|trans }}</h5>
+                        <address>
+                            <strong>B2B Shop, Inc.</strong><br>
+                            123 Business Street<br>
+                            Business District, BD 12345<br>
+                            <i class="bi bi-telephone"></i> (123) 456-7890<br>
+                            <i class="bi bi-envelope"></i> info@b2bshop.com
+                        </address>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <p>&copy; {{ 'now'|date('Y') }} B2B Shop. {{ 'footer.all_rights_reserved'|trans }}</p>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- Universal Flash Messages Handler -->
+        <script>
+            // Global function to show fixed position messages
+            window.showMessage = function(message, type) {
+                // Calculate position based on existing alerts
+                const existingAlerts = document.querySelectorAll('.alert[style*="position: fixed"]');
+                let topPosition = 20;
+                existingAlerts.forEach(alert => {
+                    topPosition += alert.offsetHeight + 10; // 10px margin between alerts
+                });
+                
+                // Create alert div
+                const alertDiv = document.createElement('div');
+                const alertType = type === 'danger' ? 'danger' : (type === 'error' ? 'danger' : type);
+                alertDiv.className = `alert alert-${alertType} alert-dismissible fade show`;
+                alertDiv.style.position = 'fixed';
+                alertDiv.style.top = topPosition + 'px';
+                alertDiv.style.right = '20px';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.style.minWidth = '300px';
+                alertDiv.style.maxWidth = '400px';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Add to body
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 4 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                        // Reposition remaining alerts
+                        repositionAlerts();
+                    }
+                }, 4000);
+                
+                // Add click handler for close button
+                const closeBtn = alertDiv.querySelector('.btn-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        alertDiv.remove();
+                        repositionAlerts();
+                    });
+                }
+            };
+            
+            // Function to reposition alerts after one is removed
+            function repositionAlerts() {
+                const alerts = document.querySelectorAll('.alert[style*="position: fixed"]');
+                let topPosition = 20;
+                alerts.forEach(alert => {
+                    alert.style.top = topPosition + 'px';
+                    topPosition += alert.offsetHeight + 10;
+                });
+            }
+
+            // Show flash messages on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        showMessage('{{ message|e('js') }}', '{{ label }}');
+                    {% endfor %}
+                {% endfor %}
+            });
+        </script>
+    </body>
+</html>
