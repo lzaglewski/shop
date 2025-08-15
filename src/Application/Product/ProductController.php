@@ -79,6 +79,11 @@ class ProductController extends AbstractController
             $this->productRepository->addClientVisibilityFilter($queryBuilder, $user);
         }
 
+        // Add client price join for efficient price loading
+        if ($user && $user->getRole() === UserRole::CLIENT) {
+            $this->productRepository->addClientPriceJoin($queryBuilder, $user);
+        }
+
         // Get paginated results
         $pagination = $this->productRepository->getPaginatedProducts(
             $queryBuilder,
@@ -158,6 +163,11 @@ class ProductController extends AbstractController
         // Filter by client visibility if user is a client
         if ($user && $this->productVisibilityService->shouldFilterForClient($user)) {
             $this->productRepository->addClientVisibilityFilter($queryBuilder, $user);
+        }
+
+        // Add client price join for efficient price loading
+        if ($user && $user->getRole() === UserRole::CLIENT) {
+            $this->productRepository->addClientPriceJoin($queryBuilder, $user);
         }
 
         // Get paginated results

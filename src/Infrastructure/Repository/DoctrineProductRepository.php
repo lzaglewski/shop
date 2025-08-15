@@ -158,6 +158,17 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         return $queryBuilder;
     }
 
+    public function addClientPriceJoin(QueryBuilder $queryBuilder, User $client): QueryBuilder
+    {
+        $queryBuilder
+            ->leftJoin('p.clientPrices', 'client_price', 'WITH', 'client_price.client = :client AND client_price.isActive = :clientPriceActive')
+            ->addSelect('client_price')
+            ->setParameter('client', $client)
+            ->setParameter('clientPriceActive', true);
+
+        return $queryBuilder;
+    }
+
     public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface
     {
         return $this->paginator->paginate(
