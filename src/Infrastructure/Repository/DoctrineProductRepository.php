@@ -162,7 +162,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
     {
         $queryBuilder
             ->leftJoin('p.clientPrices', 'client_price', 'WITH', 'client_price.client = :client AND client_price.isActive = :clientPriceActive')
-            ->addSelect('client_price')
+            ->addSelect('PARTIAL client_price.{id, price}')  // Only select needed fields
             ->setParameter('client', $client)
             ->setParameter('clientPriceActive', true);
 
