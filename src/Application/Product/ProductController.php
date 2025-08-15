@@ -88,7 +88,7 @@ class ProductController extends AbstractController
         $pagination = $this->productRepository->getPaginatedProducts(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            1  // Force limit to 1 product for debugging
+            2  // Testing with 2 products
         );
 
 //        $categories = $this->categoryRepository->findAll();
