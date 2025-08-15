@@ -92,6 +92,8 @@ class ProductController extends AbstractController
         );
 
         $categories = $this->categoryRepository->findAll();
+        $categories= "";
+        $pagination = "";
 
         return $this->render('product/list.html.twig', [
             'products' => $pagination,
