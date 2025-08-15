@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ustawienia email - Admin{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <h1 class="mb-4">Ustawienia systemu</h1>
+    
+    <!-- Navigation tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('admin_settings') }}">Strona główna</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ path('admin_settings_email') }}">Ustawienia email</a>
+        </li>
+    </ul>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="bi bi-envelope"></i> Konfiguracja SMTP</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            {{ form_row(form.smtp_host) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.smtp_port) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            {{ form_row(form.smtp_username) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.smtp_encryption) }}
+                        </div>
+                    </div>
+                    
+                    {{ form_row(form.smtp_password) }}
+                    
+                    <hr>
+                    
+                    <h6><i class="bi bi-gear"></i> Ustawienia email</h6>
+                    
+                    {{ form_row(form.mail_from_email) }}
+                    {{ form_row(form.mail_from_name) }}
+                    {{ form_row(form.mail_admin_emails) }}
+                    
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.mail_notifications_enabled) }}
+                        {{ form_label(form.mail_notifications_enabled) }}
+                        {{ form_help(form.mail_notifications_enabled) }}
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        {{ form_widget(form.save) }}
+                        {{ form_widget(form.test_connection) }}
+                    </div>
+                    
+                    {{ form_end(form) }}
+                    
+                    <!-- Alternative OVH test -->
+                    <hr>
+                    <h6><i class="bi bi-wrench"></i> Test alternatywny OVH</h6>
+                    <form method="post" action="{{ path('admin_settings_test_ovh_smtp') }}">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-lightning"></i> Test OVH Direct
+                        </button>
+                        <small class="text-muted d-block mt-1">
+                            Używa innej metody połączenia z OVH SMTP
+                        </small>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0"><i class="bi bi-info-circle"></i> Informacje</h6>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-primary">Konfiguracja OVH:</h6>
+                    
+                    <strong class="small">Opcja 1 (SSL):</strong>
+                    <ul class="small">
+                        <li><strong>Host:</strong> ssl0.ovh.net</li>
+                        <li><strong>Port:</strong> 465</li>
+                        <li><strong>Szyfrowanie:</strong> SSL/TLS</li>
+                    </ul>
+                    
+                    <strong class="small">Opcja 2 (STARTTLS):</strong>
+                    <ul class="small">
+                        <li><strong>Host:</strong> ssl0.ovh.net</li>
+                        <li><strong>Port:</strong> 587</li>
+                        <li><strong>Szyfrowanie:</strong> STARTTLS</li>
+                    </ul>
+                    
+                    <div class="alert alert-info small p-2 mt-2">
+                        <strong>💡 Wskazówka:</strong> Znaki specjalne w haśle są automatycznie kodowane URL. Spróbuj port 587 jeśli 465 nie działa.
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6 class="text-primary">Test połączenia:</h6>
+                    <p class="small text-muted">
+                        Kliknij "Testuj połączenie" aby sprawdzić konfigurację SMTP.
+                    </p>
+                    <ul class="small text-muted">
+                        <li>Jeśli podasz "Email nadawcy" - zostanie wysłany testowy email</li>
+                        <li>Jeśli nie podasz - test sprawdzi tylko połączenie z serwerem</li>
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h6 class="text-primary">Powiadomienia email:</h6>
+                    <p class="small text-muted">
+                        System wysyła automatyczne powiadomienia o:
+                    </p>
+                    <ul class="small text-muted">
+                        <li>Nowych zamówieniach (do adminów)</li>
+                        <li>Potwierdzeniu zamówienia (do klienta)</li>
+                        <li>Zmianie statusu zamówienia</li>
+                        <li>Wysyłce zamówienia</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

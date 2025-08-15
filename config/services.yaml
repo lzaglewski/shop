@@ -11,6 +11,11 @@ parameters:
     product_images_directory: '%kernel.project_dir%/public/uploads/products'
     pagination.products_per_page: 9
     pagination.new_order_products_per_page: 20
+    # Email configuration
+    email.from_email: '%env(MAIL_FROM_EMAIL)%'
+    email.from_name: '%env(MAIL_FROM_NAME)%'
+    email.admin_emails: '%env(csv:MAIL_ADMIN_EMAILS)%'
+    email.notifications_enabled: '%env(bool:MAIL_NOTIFICATIONS_ENABLED)%'
 
 services:
     # default configuration for services in *this* file
@@ -48,6 +53,26 @@ services:
         arguments:
             $productsPerPage: '%pagination.products_per_page%'
             $newOrderProductsPerPage: '%pagination.new_order_products_per_page%'
+
+    # Email service configuration
+    App\Application\Email\EmailService:
+        arguments:
+            $fromEmail: '%email.from_email%'
+            $fromName: '%email.from_name%'
+            $adminEmails: '%email.admin_emails%'
+
+    # Email event listeners configuration
+    App\Application\EventListener\OrderCreatedEmailListener:
+        arguments:
+            $emailNotificationsEnabled: '%email.notifications_enabled%'
+
+    App\Application\EventListener\OrderStatusChangedEmailListener:
+        arguments:
+            $emailNotificationsEnabled: '%email.notifications_enabled%'
+
+    App\Application\EventListener\OrderShippedEmailListener:
+        arguments:
+            $emailNotificationsEnabled: '%email.notifications_enabled%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

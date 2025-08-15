@@ -1,0 +1,83 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}Zamówienie {{ orderNumber }} zostało wysłane{% endblock %}
+
+{% block header_title %}Zamówienie wysłane{% endblock %}
+
+{% block content %}
+    <h2>Państwa zamówienie jest w drodze!</h2>
+    
+    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>
+    
+    <p>
+        Z przyjemnością informujemy, że Państwa zamówienie zostało wysłane 
+        i jest już w drodze do Państwa.
+    </p>
+
+    <div class="order-details">
+        <h3>Szczegóły wysyłki</h3>
+        <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
+        <p><strong>Data wysyłki:</strong> {{ order.updatedAt|date('d.m.Y H:i') }}</p>
+        <p><strong>Status:</strong> 
+            <span class="status-badge status-shipped">Wysłane</span>
+        </p>
+        
+        {% if trackingNumber %}
+            <p><strong>Numer śledzenia:</strong> {{ trackingNumber }}</p>
+            <p>
+                <em>Możesz śledzić status przesyłki używając powyższego numeru na stronie kuriera.</em>
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="order-details">
+        <h3>Adres dostawy</h3>
+        <p>{{ order.shippingAddress|nl2br }}</p>
+    </div>
+
+    <div class="order-details">
+        <h3>Wysłane produkty</h3>
+        <table class="order-items">
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>SKU</th>
+                    <th>Ilość</th>
+                    <th>Cena</th>
+                    <th>Suma</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.productName }}</td>
+                        <td>{{ item.productSku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price|number_format(2, ',', ' ') }} zł</td>
+                        <td>{{ item.subtotal|number_format(2, ',', ' ') }} zł</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="order-total">
+            <strong>Razem: {{ order.totalAmount|number_format(2, ',', ' ') }} zł</strong>
+        </div>
+    </div>
+
+    <p>
+        <strong>Szacowany czas dostawy:</strong> 1-3 dni robocze od daty wysyłki.
+    </p>
+
+    <p>
+        Gdy paczka zostanie dostarczona, otrzymają Państwo kolejne powiadomienie email.
+    </p>
+
+    <p>
+        W razie pytań dotyczących wysyłki prosimy o kontakt z naszym działem obsługi klienta.
+    </p>
+
+    <p>
+        Dziękujemy za zakupy w B2B Shop!<br>
+        <strong>Zespół B2B Shop</strong>
+    </p>
+{% endblock %}

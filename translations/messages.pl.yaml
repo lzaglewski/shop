@@ -359,3 +359,67 @@ form:
     billing_postal_code: 'Kod pocztowy (faktura)'
     billing_city: 'Miasto (faktura)'
     billing_tax_id: 'NIP (faktura)'
+
+email:
+    # Email subjects
+    order_created_subject: 'Potwierdzenie zamówienia - %orderNumber%'
+    order_status_changed_subject: 'Zmiana statusu zamówienia - %orderNumber%'
+    order_shipped_subject: 'Zamówienie zostało wysłane - %orderNumber%'
+    new_order_admin_subject: 'Nowe zamówienie - %orderNumber%'
+    
+    # Email content
+    thank_you_for_order: 'Dziękujemy za złożenie zamówienia!'
+    dear_customer: 'Szanowni Państwo %customerName%'
+    order_registered: 'Dziękujemy za złożenie zamówienia w naszym sklepie B2B. Zamówienie zostało pomyślnie zarejestrowane w naszym systemie.'
+    order_details: 'Szczegóły zamówienia'
+    order_items: 'Pozycje zamówienia'
+    shipping_details: 'Adres dostawy'
+    billing_details: 'Adres rozliczeniowy'
+    order_notes: 'Notatki'
+    
+    # Order status updates
+    status_updated: 'Status Państwa zamówienia został zaktualizowany'
+    previous_status: 'Poprzedni status'
+    new_status: 'Nowy status'
+    status_processing_message: 'Zamówienie jest obecnie w trakcie realizacji. Przygotowujemy Państwa produkty do wysyłki.'
+    status_shipped_message: 'Zamówienie zostało wysłane! Paczka jest w drodze do Państwa. Wkrótce otrzymają Państwo dodatkowe informacje o wysyłce.'
+    status_delivered_message: 'Zamówienie zostało dostarczone. Dziękujemy za skorzystanie z naszych usług!'
+    status_cancelled_message: 'Zamówienie zostało anulowane. W razie pytań prosimy o kontakt z naszym działem obsługi klienta.'
+    
+    # Shipping notifications
+    order_shipped: 'Państwa zamówienie jest w drodze!'
+    shipping_details_title: 'Szczegóły wysyłki'
+    shipping_date: 'Data wysyłki'
+    tracking_number: 'Numer śledzenia'
+    tracking_info: 'Możesz śledzić status przesyłki używając powyższego numeru na stronie kuriera.'
+    estimated_delivery: 'Szacowany czas dostawy: 1-3 dni robocze od daty wysyłki.'
+    delivery_notification: 'Gdy paczka zostanie dostarczona, otrzymają Państwo kolejne powiadomienie email.'
+    shipping_questions: 'W razie pytań dotyczących wysyłki prosimy o kontakt z naszym działem obsługi klienta.'
+    thank_you_shopping: 'Dziękujemy za zakupy w B2B Shop!'
+    
+    # Admin notifications
+    new_order_received: 'Otrzymano nowe zamówienie'
+    new_order_description: 'W systemie zostało złożone nowe zamówienie wymagające realizacji.'
+    customer_data: 'Dane klienta'
+    order_value: 'Wartość zamówienia'
+    user_account: 'Konto użytkownika'
+    yes_user_id: 'Tak (ID: %id%)'
+    no_guest_order: 'Nie (zamówienie gościa)'
+    customer_notes: 'Notatki klienta'
+    order_requires_processing: 'Zamówienie wymaga realizacji. Prosimy o sprawdzenie dostępności produktów i aktualizację statusu zamówienia.'
+    
+    # Email footer
+    b2b_shop_name: 'B2B Shop'
+    footer_description: 'Twój zaufany partner w zakresie dostaw biznesowych'
+    automatic_email: 'Ten email został wysłany automatycznie. Prosimy nie odpowiadać na tę wiadomość.'
+    contact_support: 'W razie pytań prosimy o kontakt z naszym działem obsługi klienta.'
+    best_regards: 'Pozdrawiamy,'
+    team_signature: 'Zespół B2B Shop'
+    
+    # Email table headers
+    product_name: 'Produkt'
+    product_sku: 'SKU'
+    quantity: 'Ilość'
+    unit_price: 'Cena'
+    subtotal: 'Suma'
+    total_amount: 'Razem'

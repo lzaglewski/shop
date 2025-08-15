@@ -1,0 +1,85 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}Potwierdzenie zamówienia {{ orderNumber }}{% endblock %}
+
+{% block header_title %}Potwierdzenie zamówienia{% endblock %}
+
+{% block content %}
+    <h2>Dziękujemy za złożenie zamówienia!</h2>
+    
+    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>
+    
+    <p>
+        Dziękujemy za złożenie zamówienia w naszym sklepie B2B. 
+        Zamówienie zostało pomyślnie zarejestrowane w naszym systemie.
+    </p>
+
+    <div class="order-details">
+        <h3>Szczegóły zamówienia</h3>
+        <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
+        <p><strong>Data zamówienia:</strong> {{ order.createdAt|date('d.m.Y H:i') }}</p>
+        <p><strong>Status:</strong> 
+            <span class="status-badge status-{{ order.statusKey }}">{{ order.status }}</span>
+        </p>
+        
+        {% if order.customerTaxId %}
+            <p><strong>NIP:</strong> {{ order.customerTaxId }}</p>
+        {% endif %}
+    </div>
+
+    <div class="order-details">
+        <h3>Pozycje zamówienia</h3>
+        <table class="order-items">
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>SKU</th>
+                    <th>Ilość</th>
+                    <th>Cena</th>
+                    <th>Suma</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.productName }}</td>
+                        <td>{{ item.productSku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price|number_format(2, ',', ' ') }} zł</td>
+                        <td>{{ item.subtotal|number_format(2, ',', ' ') }} zł</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="order-total">
+            <strong>Razem: {{ order.totalAmount|number_format(2, ',', ' ') }} zł</strong>
+        </div>
+    </div>
+
+    <div class="order-details">
+        <h3>Adres dostawy</h3>
+        <p>{{ order.shippingAddress|nl2br }}</p>
+        
+        <h3>Adres rozliczeniowy</h3>
+        <p>{{ order.billingAddress|nl2br }}</p>
+        
+        {% if order.notes %}
+            <h3>Notatki</h3>
+            <p>{{ order.notes|nl2br }}</p>
+        {% endif %}
+    </div>
+
+    <p>
+        Zamówienie zostanie przekazane do realizacji w najbliższym czasie. 
+        O każdej zmianie statusu zamówienia będą Państwo informowani automatycznie.
+    </p>
+
+    <p>
+        W razie pytań prosimy o kontakt z naszym działem obsługi klienta.
+    </p>
+
+    <p>
+        Pozdrawiamy,<br>
+        <strong>Zespół B2B Shop</strong>
+    </p>
+{% endblock %}

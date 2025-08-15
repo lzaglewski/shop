@@ -1,0 +1,83 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}Nowe zamówienie {{ orderNumber }}{% endblock %}
+
+{% block header_title %}Nowe zamówienie{% endblock %}
+
+{% block content %}
+    <h2>Otrzymano nowe zamówienie</h2>
+    
+    <p>W systemie zostało złożone nowe zamówienie wymagające realizacji.</p>
+
+    <div class="order-details">
+        <h3>Szczegóły zamówienia</h3>
+        <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
+        <p><strong>Data zamówienia:</strong> {{ order.createdAt|date('d.m.Y H:i') }}</p>
+        <p><strong>Status:</strong> 
+            <span class="status-badge status-{{ order.statusKey }}">{{ order.status }}</span>
+        </p>
+        <p><strong>Wartość zamówienia:</strong> {{ order.totalAmount|number_format(2, ',', ' ') }} zł</p>
+    </div>
+
+    <div class="order-details">
+        <h3>Dane klienta</h3>
+        <p><strong>Firma:</strong> {{ order.customerCompanyName }}</p>
+        <p><strong>Email:</strong> {{ order.customerEmail }}</p>
+        {% if order.customerTaxId %}
+            <p><strong>NIP:</strong> {{ order.customerTaxId }}</p>
+        {% endif %}
+        
+        {% if order.user %}
+            <p><strong>Konto użytkownika:</strong> Tak (ID: {{ order.user.id }})</p>
+        {% else %}
+            <p><strong>Konto użytkownika:</strong> Nie (zamówienie gościa)</p>
+        {% endif %}
+    </div>
+
+    <div class="order-details">
+        <h3>Pozycje zamówienia</h3>
+        <table class="order-items">
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>SKU</th>
+                    <th>Ilość</th>
+                    <th>Cena</th>
+                    <th>Suma</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.productName }}</td>
+                        <td>{{ item.productSku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price|number_format(2, ',', ' ') }} zł</td>
+                        <td>{{ item.subtotal|number_format(2, ',', ' ') }} zł</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="order-total">
+            <strong>Razem: {{ order.totalAmount|number_format(2, ',', ' ') }} zł</strong>
+        </div>
+    </div>
+
+    <div class="order-details">
+        <h3>Adres dostawy</h3>
+        <p>{{ order.shippingAddress|nl2br }}</p>
+        
+        <h3>Adres rozliczeniowy</h3>
+        <p>{{ order.billingAddress|nl2br }}</p>
+        
+        {% if order.notes %}
+            <h3>Notatki klienta</h3>
+            <p>{{ order.notes|nl2br }}</p>
+        {% endif %}
+    </div>
+
+    <p>
+        <strong>Zamówienie wymaga realizacji.</strong> 
+        Prosimy o sprawdzenie dostępności produktów i aktualizację statusu zamówienia.
+    </p>
+{% endblock %}

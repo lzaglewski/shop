@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}B2B Shop{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .email-footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        .order-details {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .order-details h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .order-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .order-items th,
+        .order-items td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .order-items th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .order-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+            margin-top: 15px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-new { background-color: #28a745; color: white; }
+        .status-processing { background-color: #ffc107; color: black; }
+        .status-shipped { background-color: #17a2b8; color: white; }
+        .status-delivered { background-color: #6f42c1; color: white; }
+        .status-cancelled { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>{% block header_title %}B2B Shop{% endblock %}</h1>
+        </div>
+        
+        <div class="email-body">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <div class="email-footer">
+            <p>
+                <strong>B2B Shop</strong><br>
+                Twój zaufany partner w zakresie dostaw biznesowych
+            </p>
+            <p>
+                Ten email został wysłany automatycznie. Prosimy nie odpowiadać na tę wiadomość.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

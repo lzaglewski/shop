@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace App\Application\Order;
 
 use App\Application\Cart\CartService;
+use App\Domain\Event\OrderCreatedEvent;
+use App\Domain\Event\OrderStatusChangedEvent;
+use App\Domain\Event\OrderShippedEvent;
 use App\Domain\Order\Model\Order;
 use App\Domain\Order\Model\OrderItem;
 use App\Domain\Order\Model\OrderStatus;
 use App\Domain\Order\Repository\OrderRepository;
 use App\Domain\User\Model\User;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderService
 {
     public function __construct(
         private readonly OrderRepository $orderRepository,
-        private readonly CartService $cartService
+        private readonly CartService $cartService,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -58,6 +63,9 @@ class OrderService
         // Save the order
         $this->orderRepository->save($order);
         
+        // Dispatch order created event
+        $this->eventDispatcher->dispatch(new OrderCreatedEvent($order), OrderCreatedEvent::NAME);
+        
         // Clear the cart after successful order creation
         $this->cartService->clearCart();
 
@@ -87,6 +95,8 @@ class OrderService
             throw new \InvalidArgumentException('Invalid order status: ' . $status);
         }
         
+        $previousStatus = $order->getStatus();
+        
         $orderStatus = match($status) {
             'new' => OrderStatus::NEW,
             'processing' => OrderStatus::PROCESSING,
@@ -96,7 +106,24 @@ class OrderService
             default => throw new \InvalidArgumentException('Invalid order status: ' . $status)
         };
         
-        $order->setStatus($orderStatus);
-        $this->orderRepository->save($order);
+        // Only update and dispatch event if status actually changed
+        if ($previousStatus !== $orderStatus) {
+            $order->setStatus($orderStatus);
+            $this->orderRepository->save($order);
+            
+            // Dispatch status changed event
+            $this->eventDispatcher->dispatch(
+                new OrderStatusChangedEvent($order, $previousStatus, $orderStatus),
+                OrderStatusChangedEvent::NAME
+            );
+            
+            // If status changed to shipped, also dispatch shipped event
+            if ($orderStatus === OrderStatus::SHIPPED) {
+                $this->eventDispatcher->dispatch(
+                    new OrderShippedEvent($order),
+                    OrderShippedEvent::NAME
+                );
+            }
+        }
     }
 }

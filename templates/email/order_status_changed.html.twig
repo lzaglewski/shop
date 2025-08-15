@@ -1,0 +1,87 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}Zmiana statusu zamówienia {{ orderNumber }}{% endblock %}
+
+{% block header_title %}Zmiana statusu zamówienia{% endblock %}
+
+{% block content %}
+    <h2>Status Państwa zamówienia został zaktualizowany</h2>
+    
+    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>
+    
+    <p>
+        Informujemy, że status Państwa zamówienia został zmieniony.
+    </p>
+
+    <div class="order-details">
+        <h3>Szczegóły zamówienia</h3>
+        <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
+        <p><strong>Data zamówienia:</strong> {{ order.createdAt|date('d.m.Y H:i') }}</p>
+        <p><strong>Poprzedni status:</strong> 
+            <span class="status-badge">{{ oldStatus }}</span>
+        </p>
+        <p><strong>Nowy status:</strong> 
+            <span class="status-badge status-{{ order.statusKey }}">{{ newStatus }}</span>
+        </p>
+    </div>
+
+    {% if order.statusKey == 'processing' %}
+        <p>
+            <strong>Zamówienie jest obecnie w trakcie realizacji.</strong> 
+            Przygotowujemy Państwa produkty do wysyłki.
+        </p>
+    {% elseif order.statusKey == 'shipped' %}
+        <p>
+            <strong>Zamówienie zostało wysłane!</strong> 
+            Paczka jest w drodze do Państwa. Wkrótce otrzymają Państwo dodatkowe informacje o wysyłce.
+        </p>
+    {% elseif order.statusKey == 'delivered' %}
+        <p>
+            <strong>Zamówienie zostało dostarczone.</strong> 
+            Dziękujemy za skorzystanie z naszych usług!
+        </p>
+    {% elseif order.statusKey == 'cancelled' %}
+        <p>
+            <strong>Zamówienie zostało anulowane.</strong> 
+            W razie pytań prosimy o kontakt z naszym działem obsługi klienta.
+        </p>
+    {% endif %}
+
+    <div class="order-details">
+        <h3>Pozycje zamówienia</h3>
+        <table class="order-items">
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>SKU</th>
+                    <th>Ilość</th>
+                    <th>Cena</th>
+                    <th>Suma</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.productName }}</td>
+                        <td>{{ item.productSku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price|number_format(2, ',', ' ') }} zł</td>
+                        <td>{{ item.subtotal|number_format(2, ',', ' ') }} zł</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="order-total">
+            <strong>Razem: {{ order.totalAmount|number_format(2, ',', ' ') }} zł</strong>
+        </div>
+    </div>
+
+    <p>
+        W razie pytań prosimy o kontakt z naszym działem obsługi klienta.
+    </p>
+
+    <p>
+        Pozdrawiamy,<br>
+        <strong>Zespół B2B Shop</strong>
+    </p>
+{% endblock %}
