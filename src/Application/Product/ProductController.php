@@ -84,19 +84,23 @@ class ProductController extends AbstractController
             $this->productRepository->addClientPriceJoin($queryBuilder, $user);
         }
 
-        // Get paginated results - LIMIT TO 1 FOR DEBUGGING
+        // DEBUG: Log SQL query to see what's happening
+        $query = $queryBuilder->getQuery();
+        error_log("SQL Query: " . $query->getSQL());
+        error_log("Parameters: " . json_encode($query->getParameters()));
+
+        // Get paginated results
         $pagination = $this->productRepository->getPaginatedProducts(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            2  // Testing with 2 products
+            $this->productsPerPage
         );
 
-//        $categories = $this->categoryRepository->findAll();
-
+        $categories = $this->categoryRepository->findAll();
 
         return $this->render('product/list.html.twig', [
             'products' => $pagination,
-            'categories' =>"",
+            'categories' => $categories,
         ]);
     }
 
