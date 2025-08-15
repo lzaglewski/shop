@@ -84,11 +84,6 @@ class ProductController extends AbstractController
             $this->productRepository->addClientPriceJoin($queryBuilder, $user);
         }
 
-        // DEBUG: Log SQL query to see what's happening
-        $query = $queryBuilder->getQuery();
-        error_log("SQL Query: " . $query->getSQL());
-        error_log("Parameters: " . json_encode($query->getParameters()));
-
         // Get paginated results
         $pagination = $this->productRepository->getPaginatedProducts(
             $queryBuilder,
