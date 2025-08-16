@@ -1,8 +1,6 @@
 # Polish translations
 welcome:
-    title: 'Witamy w B2B Shop'
-    subtitle: 'Twój zaufany partner w zakresie dostaw biznesowych z indywidualną wyceną dla każdego klienta.'
-    description: 'Przeglądaj nasz obszerny katalog produktów z Twoją indywidualną wyceną.'
+    title: 'Złóż zamówienie lub przjrzyj katalog produktów'
     view_products: 'Zobacz produkty'
 
 featured_products:
@@ -37,7 +35,7 @@ navigation:
     orders: 'Zamówienia'
     users: 'Użytkownicy'
     client_prices: 'Ceny klientów'
-    my_orders: 'Moje zamówienia'
+    my_orders: 'Historia zamówień'
     new_order: 'Nowe zamówienie'
 
 auth:

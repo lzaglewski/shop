@@ -1284,7 +1284,7 @@ th {
 }
 
 .navbar-nav .nav-item a.nav-link {
-    font-size: 0.7619em;
+    font-size: 0.7em;
     font-weight: 600;
     letter-spacing: 0.09em;
     color: var(--black-color);

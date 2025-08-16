@@ -179,14 +179,16 @@
                                 <a class="nav-link me-4" href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link me-4" href="{{ path('about') }}">{{ 'navigation.about'|trans }}</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link me-4" href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a>
                             </li>
                             {% if is_granted('ROLE_CLIENT') %}
                                 <li class="nav-item">
                                     <a class="nav-link me-4" href="{{ path('product_new_order') }}">{{ 'navigation.new_order'|trans }}</a>
+                                </li>
+                            {% endif %}
+                            {% if is_granted('ROLE_CLIENT') %}
+                                <li class="nav-item">
+                                    <a class="nav-link me-4" href="{{ path('user_orders') }}">{{ 'navigation.my_orders'|trans }}</a>
                                 </li>
                             {% endif %}
                             <li class="nav-item">
