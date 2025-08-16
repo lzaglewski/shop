@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Cart;
 
-use App\Domain\Product\Repository\ProductRepository;
+use App\Domain\Product\Repository\ProductRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ class CartController extends AbstractController
 {
     public function __construct(
         private readonly CartService $cartService,
-        private readonly ProductRepository $productRepository
+        private readonly ProductRepositoryInterface $productRepository
     ) {
     }
 

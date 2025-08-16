@@ -20,12 +20,12 @@ class ProductCategory
     private string $name;
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private Collection $products;
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
     private ?ProductCategory $parent;
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: ProductCategory::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: ProductCategory::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $children;
 
     public function __construct(

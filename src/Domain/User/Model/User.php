@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $billingCity;
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $billingTaxId;
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientPrice::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientPrice::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $clientPrices;
 
     public function __construct(

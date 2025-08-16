@@ -37,7 +37,7 @@ class Product
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: true)]
     private ?ProductCategory $category;
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ClientPrice::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ClientPrice::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $clientPrices;
 
     public function __construct(

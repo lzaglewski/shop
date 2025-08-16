@@ -93,17 +93,8 @@
                                 <div class="card-footer">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fw-bold">
-                                            {% set clientPrice = null %}
-                                            {% if app.user and app.user.role.value == 'CLIENT' %}
-                                                {% for cp in product.clientPrices %}
-                                                    {% if cp.client.id == app.user.id and cp.isActive %}
-                                                        {% set clientPrice = cp %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}
-
-                                            {% if clientPrice %}
-                                                {{ clientPrice.price }}€
+                                            {% if clientPrices[product.id] is defined %}
+                                                {{ clientPrices[product.id] }}€
                                             {% else %}
                                                 {{ product.basePrice }}€
                                             {% endif %}

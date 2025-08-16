@@ -38,7 +38,6 @@ interface ProductRepositoryInterface
 
     public function addClientVisibilityFilter(QueryBuilder $queryBuilder, User $client): QueryBuilder;
 
-    public function addClientPriceJoin(QueryBuilder $queryBuilder, User $client): QueryBuilder;
 
     public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface;
 }

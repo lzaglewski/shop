@@ -77,15 +77,7 @@
                         </thead>
                         <tbody>
                             {% for product in products %}
-                                {% set clientPrice = null %}
-                                {% if app.user and app.user.role.value == 'CLIENT' %}
-                                    {% for price in app.user.clientPrices %}
-                                        {% if price.product.id == product.id %}
-                                            {% set clientPrice = price %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                                {% set finalPrice = clientPrice ? clientPrice.price : product.basePrice %}
+                                {% set finalPrice = clientPrices[product.id] is defined ? clientPrices[product.id] : product.basePrice %}
                                 
                                 <tr data-product-id="{{ product.id }}" data-price="{{ finalPrice }}">
                                     <td>

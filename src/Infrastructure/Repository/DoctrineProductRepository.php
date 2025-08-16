@@ -35,7 +35,16 @@ class DoctrineProductRepository implements ProductRepositoryInterface
 
     public function findById(int $id): ?Product
     {
-        return $this->repository->find($id);
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('p', 'c', 'cp')
+            ->from(Product::class, 'p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.clientPrices', 'cp')
+            ->where('p.id = :id')
+            ->setParameter('id', $id);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function findBySku(string $sku): ?Product
@@ -68,8 +77,9 @@ class DoctrineProductRepository implements ProductRepositoryInterface
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder
-            ->select('p')
+            ->select('p', 'c')
             ->from(Product::class, 'p')
+            ->leftJoin('p.category', 'c')
             ->where('p.isActive = :active')
             ->setParameter('active', true)
             ->orderBy('p.name', 'ASC');
@@ -81,8 +91,9 @@ class DoctrineProductRepository implements ProductRepositoryInterface
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder
-            ->select('p')
+            ->select('p', 'c')
             ->from(Product::class, 'p')
+            ->leftJoin('p.category', 'c')
             ->orderBy('p.name', 'ASC');
 
         return $queryBuilder;
@@ -158,16 +169,6 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         return $queryBuilder;
     }
 
-    public function addClientPriceJoin(QueryBuilder $queryBuilder, User $client): QueryBuilder
-    {
-        $queryBuilder
-            ->leftJoin('p.clientPrices', 'client_price', 'WITH', 'client_price.client = :client AND client_price.isActive = :clientPriceActive')
-            ->addSelect('PARTIAL client_price.{id, price}')  // Only select needed fields
-            ->setParameter('client', $client)
-            ->setParameter('clientPriceActive', true);
-
-        return $queryBuilder;
-    }
 
     public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface
     {
