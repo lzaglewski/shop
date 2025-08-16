@@ -41,7 +41,7 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
     {
         return $this->repository->findAll();
     }
-    
+
     public function findRootCategories(): array
     {
         return $this->repository->findBy(['parent' => null], ['name' => 'ASC']);
@@ -82,6 +82,7 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
 
     public function findCategoriesWithVisibleProducts(User $user): array
     {
+        // First get categories that directly have visible products
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder
             ->select('DISTINCT c')
@@ -91,9 +92,39 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
             ->where('p.isActive = :isActive')
             ->andWhere('cp.client = :client')
             ->setParameter('isActive', true)
-            ->setParameter('client', $user)
+            ->setParameter('client', $user);
+
+        $categoriesWithProducts = $queryBuilder->getQuery()->getResult();
+
+        if (empty($categoriesWithProducts)) {
+            return [];
+        }
+
+        // Collect all categories that should be visible (including parent hierarchies)
+        $visibleCategoryIds = [];
+        foreach ($categoriesWithProducts as $category) {
+            $this->addCategoryAndParents($category, $visibleCategoryIds);
+        }
+
+        // Return only categories that should be visible
+        $queryBuilder2 = $this->entityManager->createQueryBuilder();
+        $queryBuilder2
+            ->select('c')
+            ->from(ProductCategory::class, 'c')
+            ->where('c.id IN (:categoryIds)')
+            ->setParameter('categoryIds', array_unique($visibleCategoryIds))
             ->orderBy('c.name', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder2->getQuery()->getResult();
+    }
+
+    private function addCategoryAndParents(ProductCategory $category, array &$visibleCategoryIds): void
+    {
+        $visibleCategoryIds[] = $category->getId();
+
+        $parent = $category->getParent();
+        if ($parent !== null && !in_array($parent->getId(), $visibleCategoryIds)) {
+            $this->addCategoryAndParents($parent, $visibleCategoryIds);
+        }
     }
 }

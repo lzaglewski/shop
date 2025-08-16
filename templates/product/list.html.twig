@@ -47,20 +47,22 @@
                                             </option>
 
                                             {# Render subcategories recursively #}
-                                            {% macro renderSubcategories(category, level, selectedCategory) %}
-                                                {% for subcategory in category.children %}
-                                                    <option value="{{ subcategory.id }}" {% if selectedCategory == subcategory.id ~ '' %}selected{% endif %}>
-                                                        {% set prefix = '' %}
-                                                        {% for i in 1..level %}
-                                                            {% set prefix = prefix ~ '— ' %}
-                                                        {% endfor %}
-                                                        {{ prefix }}{{ subcategory.name }}
-                                                    </option>
-                                                    {{ _self.renderSubcategories(subcategory, level + 1, selectedCategory) }}
+                                            {% macro renderSubcategories(category, level, selectedCategory, allCategories) %}
+                                                {% for subcategory in allCategories %}
+                                                    {% if subcategory.parent and subcategory.parent.id == category.id %}
+                                                        <option value="{{ subcategory.id }}" {% if selectedCategory == subcategory.id ~ '' %}selected{% endif %}>
+                                                            {% set prefix = '' %}
+                                                            {% for i in 1..level %}
+                                                                {% set prefix = prefix ~ '— ' %}
+                                                            {% endfor %}
+                                                            {{ prefix }}{{ subcategory.name }}
+                                                        </option>
+                                                        {{ _self.renderSubcategories(subcategory, level + 1, selectedCategory, allCategories) }}
+                                                    {% endif %}
                                                 {% endfor %}
                                             {% endmacro %}
 
-                                            {{ _self.renderSubcategories(rootCategory, 1, app.request.query.get('category')) }}
+                                            {{ _self.renderSubcategories(rootCategory, 1, app.request.query.get('category'), categories) }}
                                         </optgroup>
                                     {% endfor %}
                                 </select>
