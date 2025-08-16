@@ -10,21 +10,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/checkout', name: 'checkout_')]
+#[IsGranted('ROLE_CLIENT')]
 class CheckoutController extends AbstractController
 {
     public function __construct(
-        private readonly CartService $cartService,
+        private readonly CartService  $cartService,
         private readonly OrderService $orderService
-    ) {
+    )
+    {
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
         $cart = $this->cartService->getCart();
-        
+
         if ($cart->getItems()->isEmpty()) {
             $this->addFlash('error', 'Your cart is empty. Please add some products before checkout.');
             return $this->redirectToRoute('product_list');
@@ -32,7 +35,7 @@ class CheckoutController extends AbstractController
 
         /** @var User|null $user */
         $user = $this->getUser();
-        
+
         return $this->render('checkout/index.html.twig', [
             'cart' => $cart,
             'user' => $user,
@@ -43,7 +46,7 @@ class CheckoutController extends AbstractController
     public function placeOrder(Request $request): Response
     {
         $cart = $this->cartService->getCart();
-        
+
         if ($cart->getItems()->isEmpty()) {
             $this->addFlash('error', 'Your cart is empty. Please add some products before checkout.');
             return $this->redirectToRoute('product_list');
@@ -73,7 +76,7 @@ class CheckoutController extends AbstractController
                 $notes,
                 $this->getUser()
             );
-            
+
             return $this->redirectToRoute('checkout_success', ['orderNumber' => $order->getOrderNumber()]);
         } catch (\Exception $e) {
             $this->addFlash('error', 'An error occurred while processing your order: ' . $e->getMessage());
@@ -85,9 +88,15 @@ class CheckoutController extends AbstractController
     public function success(string $orderNumber): Response
     {
         $order = $this->orderService->getOrderByNumber($orderNumber);
-        
+
         if (!$order) {
             throw $this->createNotFoundException('Order not found');
+        }
+
+        $currentUser = $this->getUser();
+
+        if (!$this->isGranted('ROLE_ADMIN') && $order->getUser() !== $currentUser) {
+            throw $this->createAccessDeniedException('You do not have access to this order');
         }
 
         return $this->render('checkout/success.html.twig', [
