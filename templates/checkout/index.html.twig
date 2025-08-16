@@ -44,9 +44,38 @@
                                        value="{{ user ? user.taxId : '' }}">
                             </div>
                             
-                            <div class="mb-3">
-                                <label for="shipping_address" class="form-label">{{ 'checkout.shipping_address'|trans }} *</label>
-                                <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6 class="mb-3">{{ 'checkout.delivery_address'|trans }}</h6>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="delivery_street" class="form-label">{{ 'checkout.street_address'|trans }} *</label>
+                                        <input type="text" class="form-control" id="delivery_street" name="delivery_street" required
+                                               value="{{ user and user.deliveryStreet ? user.deliveryStreet : '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="delivery_postal_code" class="form-label">{{ 'checkout.postal_code'|trans }} *</label>
+                                        <input type="text" class="form-control" id="delivery_postal_code" name="delivery_postal_code" required
+                                               value="{{ user and user.deliveryPostalCode ? user.deliveryPostalCode : '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label for="delivery_city" class="form-label">{{ 'checkout.city'|trans }} *</label>
+                                        <input type="text" class="form-control" id="delivery_city" name="delivery_city" required
+                                               value="{{ user and user.deliveryCity ? user.deliveryCity : '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="contact_number" class="form-label">{{ 'checkout.contact_number'|trans }}</label>
+                                        <input type="text" class="form-control" id="contact_number" name="contact_number"
+                                               value="{{ user and user.contactNumber ? user.contactNumber : '' }}">
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="mb-3">
@@ -58,9 +87,47 @@
                                 </div>
                             </div>
                             
-                            <div class="mb-3" id="billing_address_container" style="display: none;">
-                                <label for="billing_address" class="form-label">{{ 'checkout.billing_address'|trans }} *</label>
-                                <textarea class="form-control" id="billing_address" name="billing_address" rows="3" required></textarea>
+                            <div id="billing_address_container" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6 class="mb-3">{{ 'checkout.billing_address'|trans }}</h6>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="billing_company_name" class="form-label">{{ 'checkout.billing_company_name'|trans }}</label>
+                                            <input type="text" class="form-control" id="billing_company_name" name="billing_company_name"
+                                                   value="{{ user and user.billingCompanyName ? user.billingCompanyName : '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="billing_street" class="form-label">{{ 'checkout.street_address'|trans }} *</label>
+                                            <input type="text" class="form-control" id="billing_street" name="billing_street" required
+                                                   value="{{ user and user.billingStreet ? user.billingStreet : '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="billing_postal_code" class="form-label">{{ 'checkout.postal_code'|trans }} *</label>
+                                            <input type="text" class="form-control" id="billing_postal_code" name="billing_postal_code" required
+                                                   value="{{ user and user.billingPostalCode ? user.billingPostalCode : '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label for="billing_city" class="form-label">{{ 'checkout.city'|trans }} *</label>
+                                            <input type="text" class="form-control" id="billing_city" name="billing_city" required
+                                                   value="{{ user and user.billingCity ? user.billingCity : '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="billing_tax_id" class="form-label">{{ 'checkout.billing_tax_id'|trans }}</label>
+                                            <input type="text" class="form-control" id="billing_tax_id" name="billing_tax_id"
+                                                   value="{{ user and user.billingTaxId ? user.billingTaxId : '' }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="mb-3">
@@ -125,23 +192,46 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sameAddressCheckbox = document.getElementById('same_address');
             const billingAddressContainer = document.getElementById('billing_address_container');
-            const shippingAddressInput = document.getElementById('shipping_address');
-            const billingAddressInput = document.getElementById('billing_address');
+            
+            // Delivery address fields
+            const deliveryStreet = document.getElementById('delivery_street');
+            const deliveryPostalCode = document.getElementById('delivery_postal_code');
+            const deliveryCity = document.getElementById('delivery_city');
+            const contactNumber = document.getElementById('contact_number');
+            const companyName = document.getElementById('company_name');
+            
+            // Billing address fields  
+            const billingCompanyName = document.getElementById('billing_company_name');
+            const billingStreet = document.getElementById('billing_street');
+            const billingPostalCode = document.getElementById('billing_postal_code');
+            const billingCity = document.getElementById('billing_city');
+            const billingTaxId = document.getElementById('billing_tax_id');
             
             function updateBillingAddressVisibility() {
                 if (sameAddressCheckbox.checked) {
                     billingAddressContainer.style.display = 'none';
-                    billingAddressInput.value = shippingAddressInput.value;
+                    // Copy delivery address to billing address
+                    copyDeliveryToBilling();
                 } else {
                     billingAddressContainer.style.display = 'block';
                 }
             }
             
-            sameAddressCheckbox.addEventListener('change', updateBillingAddressVisibility);
-            shippingAddressInput.addEventListener('input', function() {
+            function copyDeliveryToBilling() {
                 if (sameAddressCheckbox.checked) {
-                    billingAddressInput.value = shippingAddressInput.value;
+                    billingCompanyName.value = companyName.value;
+                    billingStreet.value = deliveryStreet.value;
+                    billingPostalCode.value = deliveryPostalCode.value;
+                    billingCity.value = deliveryCity.value;
                 }
+            }
+            
+            // Event listeners
+            sameAddressCheckbox.addEventListener('change', updateBillingAddressVisibility);
+            
+            // Auto-copy delivery address to billing when same address is checked
+            [deliveryStreet, deliveryPostalCode, deliveryCity, companyName].forEach(function(field) {
+                field.addEventListener('input', copyDeliveryToBilling);
             });
             
             updateBillingAddressVisibility();
