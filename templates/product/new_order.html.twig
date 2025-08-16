@@ -18,7 +18,7 @@
                         <label for="category" class="form-label">{{ 'common.category'|trans }}</label>
                         <select name="category" id="category" class="form-select">
                             <option value="">{{ 'product.all_categories'|trans }}</option>
-                            
+
                             {# First, find all root categories #}
                             {% set rootCategories = [] %}
                             {% for category in categories %}
@@ -26,14 +26,14 @@
                                     {% set rootCategories = rootCategories|merge([category]) %}
                                 {% endif %}
                             {% endfor %}
-                            
+
                             {# Group options by root category #}
                             {% for rootCategory in rootCategories %}
                                 <optgroup label="{{ rootCategory.name }}">
                                     <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
                                         {{ rootCategory.name }}
                                     </option>
-                                    
+
                                     {# Render subcategories recursively #}
                                     {% macro renderSubcategories(category, level, selectedCategory, allCategories) %}
                                         {% for subcategory in allCategories %}
@@ -49,7 +49,7 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% endmacro %}
-                                    
+
                                     {{ _self.renderSubcategories(rootCategory, 1, selectedCategory, categories) }}
                                 </optgroup>
                             {% endfor %}
@@ -80,23 +80,25 @@
                         <tbody>
                             {% for product in products %}
                                 {% set finalPrice = clientPrices[product.id] is defined ? clientPrices[product.id] : product.basePrice %}
-                                
+
                                 <tr data-product-id="{{ product.id }}" data-price="{{ finalPrice }}">
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if product.imageFilename %}
-                                                <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" 
-                                                     class="img-thumbnail me-3" 
-                                                     style="width: 60px; height: 60px; object-fit: cover;" 
-                                                     alt="{{ product.name }}">
+                                                <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}"
+                                                     class="img-thumbnail me-3"
+                                                     style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+                                                     alt="{{ product.name }}"
+                                                     onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">
                                             {% else %}
-                                                <div class="bg-light d-flex align-items-center justify-content-center me-3" 
-                                                     style="width: 60px; height: 60px;">
+                                                <div class="bg-light d-flex align-items-center justify-content-center me-3"
+                                                     style="width: 60px; height: 60px; cursor: pointer;"
+                                                     onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">
                                                     <i class="bi bi-image text-secondary"></i>
                                                 </div>
                                             {% endif %}
                                             <div>
-                                                <strong>{{ product.name }}</strong>
+                                                <strong style="cursor: pointer;" onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">{{ product.name }}</strong>
                                                 <br>
                                                 <small class="text-muted">{{ product.sku }}</small>
                                             </div>
@@ -111,11 +113,11 @@
                                     </td>
                                     <td class="product-price">{{ finalPrice }}€</td>
                                     <td>
-                                        <input type="number" 
-                                               class="form-control quantity-input" 
-                                               min="0" 
+                                        <input type="number"
+                                               class="form-control quantity-input"
+                                               min="0"
                                                max="{{ product.stock }}"
-                                               value="0" 
+                                               value="0"
                                                style="width: 80px;"
                                                data-product-id="{{ product.id }}">
                                         <small class="text-muted">Max: {{ product.stock }}</small>
@@ -127,7 +129,7 @@
                                                 <i class="bi bi-cart-check"></i> {{ 'buttons.in_cart'|trans }}
                                             </button>
                                         {% else %}
-                                            <button class="btn btn-success btn-sm add-to-cart-btn" 
+                                            <button class="btn btn-success btn-sm add-to-cart-btn"
                                                     data-product-id="{{ product.id }}"
                                                     disabled>
                                                 <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
@@ -164,10 +166,10 @@
                     const price = parseFloat(row.getAttribute('data-price'));
                     const quantity = parseInt(this.value) || 0;
                     const subtotal = price * quantity;
-                    
+
                     // Update subtotal
                     row.querySelector('.subtotal').textContent = subtotal.toFixed(2) + '€';
-                    
+
                     // Enable/disable add to cart button (only for products not in cart)
                     const addBtn = row.querySelector('.add-to-cart-btn');
                     if (addBtn) {
@@ -183,16 +185,16 @@
                     const row = this.closest('tr');
                     const quantityInput = row.querySelector('.quantity-input');
                     const quantity = parseInt(quantityInput.value) || 0;
-                    
+
                     if (quantity <= 0) {
                         alert('Please enter a valid quantity');
                         return;
                     }
-                    
+
                     // Disable button to prevent double clicks
                     this.disabled = true;
                     this.innerHTML = '<i class="bi bi-hourglass-split"></i> Adding...';
-                    
+
                     // Send AJAX request to add to cart
                     fetch('{{ path('cart_ajax_add') }}', {
                         method: 'POST',
@@ -207,18 +209,18 @@
                             // Reset quantity to 0 and update subtotal
                             quantityInput.value = 0;
                             row.querySelector('.subtotal').textContent = '0.00€';
-                            
+
                             // Change button to "In Cart" state
                             this.className = 'btn btn-secondary btn-sm';
                             this.innerHTML = '<i class="bi bi-cart-check"></i> {{ 'buttons.in_cart'|trans }}';
                             this.disabled = true;
-                            
+
                             // Update cart counter in navbar if exists
                             const cartCounter = document.querySelector('.cart-count');
                             if (cartCounter && data.itemCount) {
                                 cartCounter.textContent = data.itemCount;
                             }
-                            
+
                             // Show success message
                             showMessage('{{ 'cart.product_added_successfully'|trans }}', 'success');
                         } else {
@@ -237,7 +239,7 @@
                     });
                 });
             });
-            
+
             // Function showMessage is now available globally from base.html.twig
         });
     </script>
