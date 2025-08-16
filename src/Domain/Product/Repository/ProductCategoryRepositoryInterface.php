@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Product\Repository;
 
 use App\Domain\Product\Model\ProductCategory;
+use App\Domain\User\Model\User;
 
 interface ProductCategoryRepositoryInterface
 {
@@ -29,4 +30,9 @@ interface ProductCategoryRepositoryInterface
      * Find all categories with parent/children relations eagerly loaded
      */
     public function findAllWithRelations(): array;
+
+    /**
+     * Find categories that have products visible to the given user
+     */
+    public function findCategoriesWithVisibleProducts(User $user): array;
 }

@@ -78,4 +78,13 @@ class ProductQueryService
     {
         return $this->categoryRepository->findAll();
     }
+
+    public function getCategoriesWithVisibleProducts(?User $user = null): array
+    {
+        if (!$user || !$this->productVisibilityService->shouldFilterForClient($user)) {
+            return $this->getAllCategories();
+        }
+
+        return $this->categoryRepository->findCategoriesWithVisibleProducts($user);
+    }
 }

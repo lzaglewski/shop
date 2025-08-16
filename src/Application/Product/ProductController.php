@@ -61,7 +61,7 @@ class ProductController extends AbstractController
             true
         );
 
-        $categories = $this->productApplicationService->getAllCategories();
+        $categories = $this->productApplicationService->getCategoriesWithVisibleProducts($user);
 
         // Get client prices for current user if they are a client
         $clientPrices = [];
@@ -123,7 +123,7 @@ class ProductController extends AbstractController
             true
         );
 
-        $categories = $this->productApplicationService->getAllCategories();
+        $categories = $this->productApplicationService->getCategoriesWithVisibleProducts($user);
 
         // Get client prices for current user if they are a client
         $clientPrices = [];

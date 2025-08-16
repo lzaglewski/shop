@@ -6,6 +6,7 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Product\Model\ProductCategory;
 use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
+use App\Domain\User\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -74,6 +75,23 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
             ->from(ProductCategory::class, 'c')
             ->leftJoin('c.parent', 'parent')
             ->leftJoin('c.children', 'children')
+            ->orderBy('c.name', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findCategoriesWithVisibleProducts(User $user): array
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('DISTINCT c')
+            ->from(ProductCategory::class, 'c')
+            ->join('c.products', 'p')
+            ->join('p.clientPrices', 'cp')
+            ->where('p.isActive = :isActive')
+            ->andWhere('cp.client = :client')
+            ->setParameter('isActive', true)
+            ->setParameter('client', $user)
             ->orderBy('c.name', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();

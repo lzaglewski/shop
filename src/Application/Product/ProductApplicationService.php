@@ -91,4 +91,9 @@ class ProductApplicationService
     {
         return $this->productQueryService->getAllCategories();
     }
+
+    public function getCategoriesWithVisibleProducts(?User $user = null): array
+    {
+        return $this->productQueryService->getCategoriesWithVisibleProducts($user);
+    }
 }
