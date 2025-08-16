@@ -80,43 +80,55 @@
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     {% for product in products %}
                         <div class="col">
-                            <div class="card product-card h-100" style="cursor: pointer;" onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">
+                            <div class="card position-relative p-4 border rounded-3 h-100" style="cursor: pointer;" onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">
                                 {% if product.imageFilename %}
-                                    <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" class="card-img-top" alt="{{ product.name }}">
+                                    <div class="product-image-container" style="height: 240px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                        <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}"
+                                             class="img-fluid shadow-sm" alt="{{ product.name }}" style="max-height: 100%; width: auto; object-fit: contain;">
+                                    </div>
                                 {% else %}
-                                    <div class="bg-light text-center p-5">
+                                    <div class="product-image-container text-center" style="height: 200px; display: flex; align-items: center; justify-content: center;">
                                         <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
                                     </div>
                                 {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ product.name }}</h5>
-                                    <p class="card-text text-muted">{{ 'product.sku'|trans }}: {{ product.sku }}</p>
+                                <h6 class="mt-4 mb-0 fw-bold">{{ product.name }}</h6>
+                                <div class="review-content d-flex">
                                 </div>
-                                <div class="card-footer">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold">
-                                            {% if clientPrices[product.id] is defined %}
-                                                {{ clientPrices[product.id] }}€
-                                            {% else %}
-                                                {{ product.basePrice }}€
-                                            {% endif %}
-                                        </span>
-                                        <div>
-                                            {% if is_granted('ROLE_CLIENT') %}
-                                                <button type="button" class="btn btn-sm btn-success add-to-cart-btn" data-product-id="{{ product.id }}" onclick="event.stopPropagation();">
-                                                    <i class="bi bi-cart-plus"></i> {{ 'buttons.add_to_cart'|trans }}
-                                                </button>
-                                            {% endif %}
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn btn-sm btn-outline-secondary" onclick="event.stopPropagation();">
-                                                    <i class="bi bi-pencil"></i> {{ 'buttons.edit'|trans }}
-                                                </a>
-                                                <a href="{{ path('client_price_bulk_edit_for_product', {'id': product.id}) }}" class="btn btn-sm btn-outline-info" title="Manage client prices for this product" onclick="event.stopPropagation();">
-                                                    <i class="bi bi-tags"></i> {{ 'product.prices'|trans }}
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                                <span class="price text-primary fw-bold mb-2 fs-5">
+                                    {% if clientPrices[product.id] is defined %}
+                                        {{ clientPrices[product.id] }}€
+                                    {% else %}
+                                        {{ product.basePrice }}€
+                                    {% endif %}
+                                </span>
+                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                                    {% if is_granted('ROLE_CLIENT') %}
+                                        <button type="button" class="btn btn-dark add-to-cart-btn"
+                                                data-product-id="{{ product.id }}" onclick="event.stopPropagation();"
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-title="{{ 'buttons.add_to_cart'|trans }}"
+                                                style="width: 63px; height: 63px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <svg class="cart">
+                                                <use xlink:href="#cart"></use>
+                                            </svg>
+                                        </button>
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('product_edit', {'id': product.id}) }}"
+                                           class="btn btn-dark" onclick="event.stopPropagation();"
+                                           data-bs-toggle="tooltip" data-bs-placement="top"
+                                           data-bs-title="{{ 'buttons.edit'|trans }}"
+                                           style="width: 63px; height: 63px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{{ path('client_price_bulk_edit_for_product', {'id': product.id}) }}"
+                                           class="btn btn-dark" onclick="event.stopPropagation();"
+                                           data-bs-toggle="tooltip" data-bs-placement="top"
+                                           data-bs-title="{{ 'product.prices'|trans }}"
+                                           style="width: 63px; height: 63px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-tags"></i>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
