@@ -32,13 +32,14 @@ class ProductController extends AbstractController
 
     public function __construct(
         ProductApplicationService $productApplicationService,
-        ClientPriceService $clientPriceService,
-        ProductImageService $productImageService,
-        CartService $cartService,
-        TranslatorInterface $translator,
-        int $productsPerPage,
-        int $newOrderProductsPerPage
-    ) {
+        ClientPriceService        $clientPriceService,
+        ProductImageService       $productImageService,
+        CartService               $cartService,
+        TranslatorInterface       $translator,
+        int                       $productsPerPage,
+        int                       $newOrderProductsPerPage
+    )
+    {
         $this->productApplicationService = $productApplicationService;
         $this->clientPriceService = $clientPriceService;
         $this->productImageService = $productImageService;
@@ -209,7 +210,7 @@ class ProductController extends AbstractController
     public function show($id): Response
     {
         $user = $this->getUser();
-        
+
         // If user is a client, check access permissions
         if ($user && $user->getRole() === UserRole::CLIENT) {
             $product = $this->productApplicationService->getProductWithClientAccess((int)$id, $user);
@@ -284,6 +285,7 @@ class ProductController extends AbstractController
     public function delete($id, Request $request): Response
     {
         $product = $this->productApplicationService->getProductById((int)$id);
+        $isActive = $product ? $product->isActive() : false;
 
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
@@ -291,15 +293,21 @@ class ProductController extends AbstractController
 
         // Validate CSRF token
         $submittedToken = $request->request->get('_token');
-        if (!$this->isCsrfTokenValid('delete-product-'.$id, $submittedToken)) {
+        if (!$this->isCsrfTokenValid('delete-product-' . $id, $submittedToken)) {
             $this->addFlash('danger', 'common.invalid_csrf_token');
             return $this->redirectToRoute('product_list');
         }
 
         $this->productApplicationService->deleteProduct($product);
-        $this->addFlash('success', 'product.has_been_deactivated');
 
-        return $this->redirectToRoute('product_list');
+        if ($isActive) {
+            $this->addFlash('success', 'product.has_been_deactivated');
+        } else {
+            $this->addFlash('success', 'product.has_been_deleted');
+        }
+
+
+        return $this->redirectToRoute('product_admin_list');
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -314,7 +322,7 @@ class ProductController extends AbstractController
 
         // Validate CSRF token
         $submittedToken = $request->request->get('_token');
-        if (!$this->isCsrfTokenValid('delete-image-'.$id, $submittedToken)) {
+        if (!$this->isCsrfTokenValid('delete-image-' . $id, $submittedToken)) {
             $this->addFlash('danger', 'common.invalid_csrf_token');
             return $this->redirectToRoute('product_edit', ['id' => $id]);
         }

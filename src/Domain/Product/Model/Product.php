@@ -31,7 +31,7 @@ class Product
     private bool $isActive;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename;
-    
+
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $images = null;
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
@@ -41,18 +41,19 @@ class Product
     private Collection $clientPrices;
 
     public function __construct(
-        string $name,
-        string $sku,
-        string $description,
-        float $basePrice,
-        int $stock,
+        string           $name,
+        string           $sku,
+        string           $description,
+        float            $basePrice,
+        int              $stock,
         ?ProductCategory $category = null,
-        ?string $imageFilename = null
-    ) {
+        ?string          $imageFilename = null
+    )
+    {
         $this->name = $name;
         $this->sku = $sku;
         $this->description = $description;
-        $this->basePrice = (string) $basePrice;
+        $this->basePrice = (string)$basePrice;
         $this->stock = $stock;
         $this->category = $category;
         $this->imageFilename = $imageFilename;
@@ -98,12 +99,12 @@ class Product
 
     public function getBasePrice(): float
     {
-        return (float) $this->basePrice;
+        return (float)$this->basePrice;
     }
 
     public function setBasePrice(float $basePrice): void
     {
-        $this->basePrice = (string) $basePrice;
+        $this->basePrice = (string)$basePrice;
     }
 
     public function getStock(): int
@@ -151,7 +152,7 @@ class Product
         if ($this->images === null) {
             $this->images = [];
         }
-        
+
         if (!in_array($filename, $this->images)) {
             $this->images[] = $filename;
         }
@@ -196,4 +197,5 @@ class Product
             }
         }
     }
+
 }

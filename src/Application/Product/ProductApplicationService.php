@@ -63,7 +63,7 @@ class ProductApplicationService
     public function getProductWithClientAccess(int $id, User $user): ?Product
     {
         $product = $this->getProductById($id);
-        
+
         if (!$product) {
             return null;
         }
@@ -83,8 +83,14 @@ class ProductApplicationService
 
     public function deleteProduct(Product $product): void
     {
-        $product->setIsActive(false);
-        $this->productRepository->save($product);
+        if ($product->isActive()) {
+            // Soft delete for active products
+            $product->setIsActive(false);
+            $this->productRepository->save($product);
+        } else {
+            // Hard delete for inactive products
+            $this->productRepository->remove($product);
+        }
     }
 
     public function getAllCategories(): array

@@ -140,6 +140,21 @@
                                                title="Manage client prices">
                                                 <i class="bi bi-tags"></i>
                                             </a>
+                                            <form method="post" 
+                                                  action="{{ path('product_delete', {'id': product.id}) }}" 
+                                                  onsubmit="return confirm('{{ product.isActive ? 'Are you sure you want to deactivate this product?' : 'Are you sure you want to permanently delete this product?' }}')" 
+                                                  class="d-inline">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete-product-' ~ product.id) }}">
+                                                <button type="submit" 
+                                                        class="btn btn-sm {% if product.isActive %}btn-outline-warning{% else %}btn-outline-danger{% endif %}" 
+                                                        title="{% if product.isActive %}Deactivate product{% else %}Delete product permanently{% endif %}">
+                                                    {% if product.isActive %}
+                                                        <i class="bi bi-eye-slash"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-trash"></i>
+                                                    {% endif %}
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

@@ -137,10 +137,14 @@
                         <a href="{{ path('product_edit', {'id': product.id}) }}" class="btn btn-primary me-2">
                             <i class="bi bi-pencil"></i> {{ 'buttons.edit'|trans }}
                         </a>
-                        <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('{{ 'product.confirm_delete'|trans }}');">
+                        <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('{{ product.isActive ? 'product.confirm_deactivate'|trans : 'product.confirm_delete_permanently'|trans }}');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete-product-' ~ product.id) }}">
                             <button class="btn btn-danger">
-                                <i class="bi bi-trash"></i> {{ 'buttons.delete'|trans }}
+                                {% if product.isActive %}
+                                    <i class="bi bi-eye-slash"></i> {{ 'buttons.deactivate'|trans }}
+                                {% else %}
+                                    <i class="bi bi-trash"></i> {{ 'buttons.delete_permanently'|trans }}
+                                {% endif %}
                             </button>
                         </form>
                     </div>
