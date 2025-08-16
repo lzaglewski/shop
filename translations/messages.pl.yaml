@@ -85,6 +85,7 @@ common:
     status: 'Status'
     date: 'Data'
     product: 'Produkt'
+    invalid_csrf_token: 'Nieprawidłowy token CSRF'
 
 footer:
     description: 'Twój zaufany partner w zakresie dostaw biznesowych.'
@@ -143,6 +144,15 @@ product:
     is_active_help: 'Przełącz widoczność produktu w katalogu.'
     back_to_list: 'Powrót do listy'
     confirm_delete_image: 'Czy na pewno chcesz usunąć to zdjęcie?'
+    form_validation_errors: 'Formularz zawiera błędy walidacji. Sprawdź wprowadzone dane.'
+    created_successfully: 'Produkt został utworzony pomyślnie.'
+    error_creating_product: 'Błąd podczas tworzenia produktu: %message%'
+    updated_successfully: 'Produkt został zaktualizowany pomyślnie.'
+    error_updating_product: 'Błąd podczas aktualizacji produktu: %message%'
+    has_been_deactivated: 'Produkt został dezaktywowany.'
+    main_image_deleted_successfully: 'Główne zdjęcie zostało usunięte pomyślnie.'
+    additional_image_deleted_successfully: 'Dodatkowe zdjęcie zostało usunięte pomyślnie.'
+    invalid_image_specified: 'Podano nieprawidłowe zdjęcie.'
 
 cart:
     shopping_cart: 'Koszyk'
@@ -154,6 +164,13 @@ cart:
     clear_cart: 'Wyczyść koszyk'
     proceed_to_checkout: 'Przejdź do kasy'
     product_added_successfully: 'Produkt został dodany do koszyka'
+    cart_updated_successfully: 'Koszyk został zaktualizowany.'
+    item_removed_from_cart: 'Produkt został usunięty z koszyka.'
+    cart_cleared_successfully: 'Koszyk został wyczyszczony.'
+    invalid_quantity: 'Nieprawidłowa ilość'
+    error_adding_product_to_cart: 'Błąd podczas dodawania produktu do koszyka'
+    added: 'Dodano!'
+    error: 'Błąd'
 
 checkout:
     checkout: 'Kasa'
@@ -373,7 +390,7 @@ email:
     order_status_changed_subject: 'Zmiana statusu zamówienia - %orderNumber%'
     order_shipped_subject: 'Zamówienie zostało wysłane - %orderNumber%'
     new_order_admin_subject: 'Nowe zamówienie - %orderNumber%'
-    
+
     # Email content
     thank_you_for_order: 'Dziękujemy za złożenie zamówienia!'
     dear_customer: 'Szanowni Państwo %customerName%'
@@ -383,7 +400,7 @@ email:
     shipping_details: 'Adres dostawy'
     billing_details: 'Adres rozliczeniowy'
     order_notes: 'Notatki'
-    
+
     # Order status updates
     status_updated: 'Status Państwa zamówienia został zaktualizowany'
     previous_status: 'Poprzedni status'
@@ -392,7 +409,7 @@ email:
     status_shipped_message: 'Zamówienie zostało wysłane! Paczka jest w drodze do Państwa. Wkrótce otrzymają Państwo dodatkowe informacje o wysyłce.'
     status_delivered_message: 'Zamówienie zostało dostarczone. Dziękujemy za skorzystanie z naszych usług!'
     status_cancelled_message: 'Zamówienie zostało anulowane. W razie pytań prosimy o kontakt z naszym działem obsługi klienta.'
-    
+
     # Shipping notifications
     order_shipped: 'Państwa zamówienie jest w drodze!'
     shipping_details_title: 'Szczegóły wysyłki'
@@ -403,7 +420,7 @@ email:
     delivery_notification: 'Gdy paczka zostanie dostarczona, otrzymają Państwo kolejne powiadomienie email.'
     shipping_questions: 'W razie pytań dotyczących wysyłki prosimy o kontakt z naszym działem obsługi klienta.'
     thank_you_shopping: 'Dziękujemy za zakupy w B2B Shop!'
-    
+
     # Admin notifications
     new_order_received: 'Otrzymano nowe zamówienie'
     new_order_description: 'W systemie zostało złożone nowe zamówienie wymagające realizacji.'
@@ -414,7 +431,7 @@ email:
     no_guest_order: 'Nie (zamówienie gościa)'
     customer_notes: 'Notatki klienta'
     order_requires_processing: 'Zamówienie wymaga realizacji. Prosimy o sprawdzenie dostępności produktów i aktualizację statusu zamówienia.'
-    
+
     # Email footer
     b2b_shop_name: 'B2B Shop'
     footer_description: 'Twój zaufany partner w zakresie dostaw biznesowych'
@@ -422,7 +439,7 @@ email:
     contact_support: 'W razie pytań prosimy o kontakt z naszym działem obsługi klienta.'
     best_regards: 'Pozdrawiamy,'
     team_signature: 'Zespół B2B Shop'
-    
+
     # Email table headers
     product_name: 'Produkt'
     product_sku: 'SKU'

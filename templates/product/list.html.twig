@@ -152,6 +152,14 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        // Translations for JavaScript
+        const translations = {
+            productAdded: '{{ 'cart.product_added_successfully'|trans }}',
+            addedButton: '{{ 'cart.added'|trans }}',
+            errorButton: '{{ 'cart.error'|trans }}',
+            errorAddingProduct: '{{ 'cart.error_adding_product_to_cart'|trans }}'
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
@@ -177,12 +185,12 @@
                     .then(data => {
                         if (data.success) {
                             // Show success state
-                            this.innerHTML = '<i class="bi bi-check"></i> Dodano!';
+                            this.innerHTML = `<i class="bi bi-check"></i> ${translations.addedButton}`;
                             this.classList.remove('btn-success');
                             this.classList.add('btn-outline-success');
 
                             // Show success message
-                            showMessage(data.message || 'Produkt został dodany do koszyka', 'success');
+                            showMessage(data.message || translations.productAdded, 'success');
 
                             // Update cart counter in navbar if exists
                             const cartCounter = document.querySelector('.cart-count');
@@ -199,11 +207,11 @@
                             }, 2000);
                         } else {
                             // Show error state
-                            this.innerHTML = '<i class="bi bi-x"></i> Błąd';
+                            this.innerHTML = `<i class="bi bi-x"></i> ${translations.errorButton}`;
                             this.classList.remove('btn-success');
                             this.classList.add('btn-danger');
 
-                            showMessage(data.message || 'Wystąpił błąd podczas dodawania produktu', 'danger');
+                            showMessage(data.message || translations.errorAddingProduct, 'danger');
 
                             // Reset button after 2 seconds
                             setTimeout(() => {
@@ -222,7 +230,7 @@
                         this.classList.remove('btn-success');
                         this.classList.add('btn-danger');
 
-                        showMessage('Wystąpił błąd podczas dodawania produktu', 'danger');
+                        showMessage(translations.errorAddingProduct, 'danger');
 
                         // Reset button after 2 seconds
                         setTimeout(() => {
@@ -235,26 +243,6 @@
                 });
             });
 
-            function showMessage(message, type) {
-                // Create alert element
-                const alert = document.createElement('div');
-                alert.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-                alert.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
-                alert.innerHTML = `
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-
-                // Add to page
-                document.body.appendChild(alert);
-
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.parentNode.removeChild(alert);
-                    }
-                }, 5000);
-            }
         });
     </script>
 {% endblock %}

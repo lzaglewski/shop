@@ -377,7 +377,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
-                        showMessage('{{ message|e('js') }}', '{{ label }}');
+                        showMessage('{{ message|trans|e('js') }}', '{{ label }}');
                     {% endfor %}
                 {% endfor %}
             });

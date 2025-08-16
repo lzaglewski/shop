@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/products')]
 class ProductController extends AbstractController
@@ -25,6 +26,7 @@ class ProductController extends AbstractController
     private ClientPriceService $clientPriceService;
     private ProductImageService $productImageService;
     private CartService $cartService;
+    private TranslatorInterface $translator;
     private int $productsPerPage;
     private int $newOrderProductsPerPage;
 
@@ -33,6 +35,7 @@ class ProductController extends AbstractController
         ClientPriceService $clientPriceService,
         ProductImageService $productImageService,
         CartService $cartService,
+        TranslatorInterface $translator,
         int $productsPerPage,
         int $newOrderProductsPerPage
     ) {
@@ -40,6 +43,7 @@ class ProductController extends AbstractController
         $this->clientPriceService = $clientPriceService;
         $this->productImageService = $productImageService;
         $this->cartService = $cartService;
+        $this->translator = $translator;
         $this->productsPerPage = $productsPerPage;
         $this->newOrderProductsPerPage = $newOrderProductsPerPage;
     }
@@ -171,7 +175,7 @@ class ProductController extends AbstractController
 
         if ($form->isSubmitted()) {
             if (!$form->isValid()) {
-                $this->addFlash('danger', 'Form has validation errors. Please check your input.');
+                $this->addFlash('danger', 'product.form_validation_errors');
                 return $this->render('product/new.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -186,10 +190,10 @@ class ProductController extends AbstractController
             // Save the product
             try {
                 $this->productApplicationService->saveProduct($product);
-                $this->addFlash('success', 'Product created successfully.');
+                $this->addFlash('success', 'product.created_successfully');
                 return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error creating product: ' . $e->getMessage());
+                $this->addFlash('danger', $this->translator->trans('product.error_creating_product', ['%message%' => $e->getMessage()]));
                 return $this->render('product/new.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -242,7 +246,7 @@ class ProductController extends AbstractController
 
         if ($form->isSubmitted()) {
             if (!$form->isValid()) {
-                $this->addFlash('danger', 'Form has validation errors. Please check your input.');
+                $this->addFlash('danger', 'product.form_validation_errors');
                 return $this->render('product/edit.html.twig', [
                     'form' => $form->createView(),
                     'product' => $product,
@@ -258,10 +262,10 @@ class ProductController extends AbstractController
             // Save the product
             try {
                 $this->productApplicationService->saveProduct($product);
-                $this->addFlash('success', 'Product updated successfully.');
+                $this->addFlash('success', 'product.updated_successfully');
                 return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error updating product: ' . $e->getMessage());
+                $this->addFlash('danger', $this->translator->trans('product.error_updating_product', ['%message%' => $e->getMessage()]));
                 return $this->render('product/edit.html.twig', [
                     'form' => $form->createView(),
                     'product' => $product,
@@ -288,12 +292,12 @@ class ProductController extends AbstractController
         // Validate CSRF token
         $submittedToken = $request->request->get('_token');
         if (!$this->isCsrfTokenValid('delete-product-'.$id, $submittedToken)) {
-            $this->addFlash('danger', 'Invalid CSRF token');
+            $this->addFlash('danger', 'common.invalid_csrf_token');
             return $this->redirectToRoute('product_list');
         }
 
         $this->productApplicationService->deleteProduct($product);
-        $this->addFlash('success', 'Product has been deactivated.');
+        $this->addFlash('success', 'product.has_been_deactivated');
 
         return $this->redirectToRoute('product_list');
     }
@@ -302,7 +306,7 @@ class ProductController extends AbstractController
     #[Route('/{id}/delete-image', name: 'product_delete_image', methods: ['POST'])]
     public function deleteImage(int $id, Request $request): Response
     {
-        $product = $this->productRepository->findById($id);
+        $product = $this->productApplicationService->getProductById($id);
 
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
@@ -311,7 +315,7 @@ class ProductController extends AbstractController
         // Validate CSRF token
         $submittedToken = $request->request->get('_token');
         if (!$this->isCsrfTokenValid('delete-image-'.$id, $submittedToken)) {
-            $this->addFlash('danger', 'Invalid CSRF token');
+            $this->addFlash('danger', 'common.invalid_csrf_token');
             return $this->redirectToRoute('product_edit', ['id' => $id]);
         }
 
@@ -321,13 +325,13 @@ class ProductController extends AbstractController
         if ($imageType === 'main' && $imageFilename === $product->getImageFilename()) {
             $this->productImageService->deleteImage($imageFilename);
             $product->setImageFilename(null);
-            $this->addFlash('success', 'Main image deleted successfully.');
+            $this->addFlash('success', 'product.main_image_deleted_successfully');
         } elseif ($imageType === 'additional') {
             $this->productImageService->deleteImage($imageFilename);
             $product->removeImage($imageFilename);
-            $this->addFlash('success', 'Additional image deleted successfully.');
+            $this->addFlash('success', 'product.additional_image_deleted_successfully');
         } else {
-            $this->addFlash('danger', 'Invalid image specified.');
+            $this->addFlash('danger', 'product.invalid_image_specified');
             return $this->redirectToRoute('product_edit', ['id' => $id]);
         }
 

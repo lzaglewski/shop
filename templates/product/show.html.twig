@@ -138,7 +138,7 @@
                             <i class="bi bi-pencil"></i> {{ 'buttons.edit'|trans }}
                         </a>
                         <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('{{ 'product.confirm_delete'|trans }}');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-product-' ~ product.id) }}">
                             <button class="btn btn-danger">
                                 <i class="bi bi-trash"></i> {{ 'buttons.delete'|trans }}
                             </button>

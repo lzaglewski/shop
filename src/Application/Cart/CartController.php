@@ -10,13 +10,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/cart', name: 'cart_')]
 class CartController extends AbstractController
 {
     public function __construct(
         private readonly CartService $cartService,
-        private readonly ProductRepositoryInterface $productRepository
+        private readonly ProductRepositoryInterface $productRepository,
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -37,7 +39,7 @@ class CartController extends AbstractController
         
         try {
             $this->cartService->addToCart($id, $quantity);
-            $this->addFlash('success', 'Product added to cart successfully.');
+            $this->addFlash('success', 'cart.product_added_successfully');
         } catch (\InvalidArgumentException $e) {
             $this->addFlash('error', $e->getMessage());
         }
@@ -53,7 +55,7 @@ class CartController extends AbstractController
         
         try {
             $this->cartService->updateQuantity($id, $quantity);
-            $this->addFlash('success', 'Cart updated successfully.');
+            $this->addFlash('success', 'cart.cart_updated_successfully');
         } catch (\InvalidArgumentException $e) {
             $this->addFlash('error', $e->getMessage());
         }
@@ -66,7 +68,7 @@ class CartController extends AbstractController
     {
         try {
             $this->cartService->removeItem($id);
-            $this->addFlash('success', 'Item removed from cart.');
+            $this->addFlash('success', 'cart.item_removed_from_cart');
         } catch (\InvalidArgumentException $e) {
             $this->addFlash('error', $e->getMessage());
         }
@@ -78,7 +80,7 @@ class CartController extends AbstractController
     public function clear(): Response
     {
         $this->cartService->clearCart();
-        $this->addFlash('success', 'Cart cleared successfully.');
+        $this->addFlash('success', 'cart.cart_cleared_successfully');
         
         return $this->redirectToRoute('cart_index');
     }
@@ -90,7 +92,7 @@ class CartController extends AbstractController
         $quantity = (int) $request->request->get('quantity', 1);
 
         if ($quantity <= 0) {
-            return new JsonResponse(['success' => false, 'message' => 'Invalid quantity']);
+            return new JsonResponse(['success' => false, 'message' => $this->translator->trans('cart.invalid_quantity')]);
         }
 
         try {
@@ -105,14 +107,14 @@ class CartController extends AbstractController
             
             return new JsonResponse([
                 'success' => true, 
-                'message' => 'Product added to cart successfully',
+                'message' => $this->translator->trans('cart.product_added_successfully'),
                 'cartProductIds' => $cartProductIds,
                 'itemCount' => $this->cartService->getItemCount()
             ]);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()]);
         } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'message' => 'Error adding product to cart']);
+            return new JsonResponse(['success' => false, 'message' => $this->translator->trans('cart.error_adding_product_to_cart')]);
         }
     }
     
