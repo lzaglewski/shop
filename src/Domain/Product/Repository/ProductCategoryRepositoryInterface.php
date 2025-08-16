@@ -19,4 +19,14 @@ interface ProductCategoryRepositoryInterface
     public function findRootCategories(): array;
 
     public function remove(ProductCategory $category): void;
+
+    /**
+     * Find category by ID with all children eagerly loaded
+     */
+    public function findByIdWithChildren(int $id): ?ProductCategory;
+
+    /**
+     * Find all categories with parent/children relations eagerly loaded
+     */
+    public function findAllWithRelations(): array;
 }

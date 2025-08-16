@@ -30,7 +30,7 @@ interface ProductRepositoryInterface
 
     public function createAllProductsQueryBuilder(): QueryBuilder;
 
-    public function addCategoryFilter(QueryBuilder $queryBuilder, string $categoryId): QueryBuilder;
+    public function addCategoryFilter(QueryBuilder $queryBuilder, array $categoryIds): QueryBuilder;
 
     public function addSearchFilter(QueryBuilder $queryBuilder, string $search): QueryBuilder;
 

@@ -7,7 +7,6 @@ namespace App\Domain\Product\Service;
 use App\Domain\Product\Repository\ProductRepositoryInterface;
 use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
 use App\Domain\User\Model\User;
-use App\Domain\User\Model\UserRole;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -16,7 +15,8 @@ class ProductQueryService
     public function __construct(
         private readonly ProductRepositoryInterface $productRepository,
         private readonly ProductCategoryRepositoryInterface $categoryRepository,
-        private readonly ProductVisibilityService $productVisibilityService
+        private readonly ProductVisibilityService $productVisibilityService,
+        private readonly CategoryTreeService $categoryTreeService
     ) {
     }
 
@@ -26,12 +26,13 @@ class ProductQueryService
         ?string $search = null,
         ?bool $activeOnly = true
     ): QueryBuilder {
-        $queryBuilder = $activeOnly 
+        $queryBuilder = $activeOnly
             ? $this->productRepository->createActiveProductsQueryBuilder()
             : $this->productRepository->createAllProductsQueryBuilder();
 
         if ($categoryId) {
-            $this->productRepository->addCategoryFilter($queryBuilder, $categoryId);
+            $categoryIds = $this->categoryTreeService->getAllSubcategoryIds((int)$categoryId);
+            $this->productRepository->addCategoryFilter($queryBuilder, $categoryIds);
         }
 
         if ($search) {
@@ -53,7 +54,8 @@ class ProductQueryService
         $queryBuilder = $this->productRepository->createAllProductsQueryBuilder();
 
         if ($categoryId) {
-            $this->productRepository->addCategoryFilter($queryBuilder, $categoryId);
+            $categoryIds = $this->categoryTreeService->getAllSubcategoryIds((int)$categoryId);
+            $this->productRepository->addCategoryFilter($queryBuilder, $categoryIds);
         }
 
         if ($search) {
