@@ -37,6 +37,7 @@ navigation:
     client_prices: 'Ceny klientów'
     my_orders: 'Historia zamówień'
     new_order: 'Nowe zamówienie'
+    back_to_shop: 'Powrót do sklepu'
 
 auth:
     login: 'Zaloguj się'

@@ -195,18 +195,8 @@
                                 <a class="nav-link me-4" href="{{ path('contact') }}">{{ 'navigation.contact'|trans }}</a>
                             </li>
                             {% if is_granted('ROLE_ADMIN') %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link me-4 dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ 'navigation.admin'|trans }}</a>
-                                    <ul class="dropdown-menu animate slide border">
-                                        <li><a class="dropdown-item" href="{{ path('admin_dashboard') }}">{{ 'navigation.dashboard'|trans }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('admin_statistics') }}">Statystyki</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('admin_order_list') }}">{{ 'navigation.orders'|trans }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('user_index') }}">{{ 'navigation.users'|trans }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('product_admin_list') }}">{{ 'navigation.products'|trans }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('category_list') }}">{{ 'navigation.categories'|trans }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('client_price_index') }}">{{ 'navigation.client_prices'|trans }}</a></li>
-                                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link me-4" href="{{ path('admin_dashboard') }}">{{ 'navigation.admin'|trans }}</a>
                                 </li>
                             {% endif %}
                         </ul>
