@@ -37,9 +37,35 @@
                     </div>
                     <div class="col-md-6">
                         <p><strong>{{ 'order_details.shipping_address'|trans }}:</strong></p>
-                        <p>{{ order.shippingAddress|nl2br }}</p>
+                        {% set shippingData = order.shippingAddressData %}
+                        {% if shippingData.street %}
+                            <address>
+                                {{ shippingData.street }}<br>
+                                {{ shippingData.postalCode }} {{ shippingData.city }}<br>
+                                {% if shippingData.contactNumber %}
+                                    {{ 'order_details.contact'|trans }}: {{ shippingData.contactNumber }}
+                                {% endif %}
+                            </address>
+                        {% else %}
+                            <p>{{ order.shippingAddress|nl2br }}</p>
+                        {% endif %}
+                        
                         <p><strong>{{ 'order_details.billing_address'|trans }}:</strong></p>
-                        <p>{{ order.billingAddress|nl2br }}</p>
+                        {% set billingData = order.billingAddressData %}
+                        {% if billingData.street %}
+                            <address>
+                                {% if billingData.companyName %}
+                                    {{ billingData.companyName }}<br>
+                                {% endif %}
+                                {{ billingData.street }}<br>
+                                {{ billingData.postalCode }} {{ billingData.city }}<br>
+                                {% if billingData.taxId %}
+                                    {{ 'order_details.tax_id'|trans }}: {{ billingData.taxId }}
+                                {% endif %}
+                            </address>
+                        {% else %}
+                            <p>{{ order.billingAddress|nl2br }}</p>
+                        {% endif %}
                     </div>
                 </div>
                 

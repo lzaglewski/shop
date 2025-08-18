@@ -152,6 +152,18 @@ class Order
         $this->billingAddress = $billingAddress;
     }
 
+    public function getShippingAddressData(): array
+    {
+        $data = json_decode($this->shippingAddress, true);
+        return is_array($data) ? $data : [];
+    }
+
+    public function getBillingAddressData(): array
+    {
+        $data = json_decode($this->billingAddress, true);
+        return is_array($data) ? $data : [];
+    }
+
     public function getNotes(): ?string
     {
         return $this->notes;

@@ -25,114 +25,107 @@
                         <h5 class="mb-0">{{ 'checkout.order_information'|trans }}</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ path('checkout_place_order') }}" method="post">
+                        {{ form_start(checkoutForm) }}
+                            <!-- Email i numer kontaktowy -->
                             <div class="mb-3">
-                                <label for="email" class="form-label">{{ 'checkout.email_address'|trans }} *</label>
-                                <input type="email" class="form-control" id="email" name="email" required
-                                       value="{{ user ? user.email : '' }}">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="company_name" class="form-label">{{ 'checkout.company_name'|trans }} *</label>
-                                <input type="text" class="form-control" id="company_name" name="company_name" required
-                                       value="{{ user ? user.companyName : '' }}">
+                                {{ form_label(checkoutForm.email) }}
+                                {{ form_widget(checkoutForm.email, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(checkoutForm.email) }}
                             </div>
                             
                             <div class="mb-3">
-                                <label for="tax_id" class="form-label">{{ 'checkout.tax_id'|trans }}</label>
-                                <input type="text" class="form-control" id="tax_id" name="tax_id"
-                                       value="{{ user ? user.taxId : '' }}">
+                                {{ form_label(checkoutForm.contactNumber) }}
+                                {{ form_widget(checkoutForm.contactNumber, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(checkoutForm.contactNumber) }}
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h6 class="mb-3">{{ 'checkout.delivery_address'|trans }}</h6>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="delivery_street" class="form-label">{{ 'checkout.street_address'|trans }} *</label>
-                                        <input type="text" class="form-control" id="delivery_street" name="delivery_street" required
-                                               value="{{ user and user.deliveryStreet ? user.deliveryStreet : '' }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="delivery_postal_code" class="form-label">{{ 'checkout.postal_code'|trans }} *</label>
-                                        <input type="text" class="form-control" id="delivery_postal_code" name="delivery_postal_code" required
-                                               value="{{ user and user.deliveryPostalCode ? user.deliveryPostalCode : '' }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label for="delivery_city" class="form-label">{{ 'checkout.city'|trans }} *</label>
-                                        <input type="text" class="form-control" id="delivery_city" name="delivery_city" required
-                                               value="{{ user and user.deliveryCity ? user.deliveryCity : '' }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="contact_number" class="form-label">{{ 'checkout.contact_number'|trans }}</label>
-                                        <input type="text" class="form-control" id="contact_number" name="contact_number"
-                                               value="{{ user and user.contactNumber ? user.contactNumber : '' }}">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="same_address" checked>
-                                    <label class="form-check-label" for="same_address">
-                                        {{ 'checkout.same_billing_address'|trans }}
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div id="billing_address_container" style="display: none;">
+                            <!-- Adres rozliczeniowy -->
+                            <div id="billing_address_container">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h6 class="mb-3">{{ 'checkout.billing_address'|trans }}</h6>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="billing_company_name" class="form-label">{{ 'checkout.billing_company_name'|trans }}</label>
-                                            <input type="text" class="form-control" id="billing_company_name" name="billing_company_name"
-                                                   value="{{ user and user.billingCompanyName ? user.billingCompanyName : '' }}">
+                                            {{ form_label(checkoutForm.billingCompanyName) }}
+                                            {{ form_widget(checkoutForm.billingCompanyName, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.billingCompanyName) }}
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="billing_street" class="form-label">{{ 'checkout.street_address'|trans }} *</label>
-                                            <input type="text" class="form-control" id="billing_street" name="billing_street" required
-                                                   value="{{ user and user.billingStreet ? user.billingStreet : '' }}">
+                                            {{ form_label(checkoutForm.billingStreet) }}
+                                            {{ form_widget(checkoutForm.billingStreet, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.billingStreet) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="billing_postal_code" class="form-label">{{ 'checkout.postal_code'|trans }} *</label>
-                                            <input type="text" class="form-control" id="billing_postal_code" name="billing_postal_code" required
-                                                   value="{{ user and user.billingPostalCode ? user.billingPostalCode : '' }}">
+                                            {{ form_label(checkoutForm.billingPostalCode) }}
+                                            {{ form_widget(checkoutForm.billingPostalCode, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.billingPostalCode) }}
                                         </div>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="mb-3">
-                                            <label for="billing_city" class="form-label">{{ 'checkout.city'|trans }} *</label>
-                                            <input type="text" class="form-control" id="billing_city" name="billing_city" required
-                                                   value="{{ user and user.billingCity ? user.billingCity : '' }}">
+                                            {{ form_label(checkoutForm.billingCity) }}
+                                            {{ form_widget(checkoutForm.billingCity, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.billingCity) }}
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="billing_tax_id" class="form-label">{{ 'checkout.billing_tax_id'|trans }}</label>
-                                            <input type="text" class="form-control" id="billing_tax_id" name="billing_tax_id"
-                                                   value="{{ user and user.billingTaxId ? user.billingTaxId : '' }}">
+                                            {{ form_label(checkoutForm.billingTaxId) }}
+                                            {{ form_widget(checkoutForm.billingTaxId, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.billingTaxId) }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
+                            <!-- Checkbox dla adresu dostawy -->
                             <div class="mb-3">
-                                <label for="notes" class="form-label">{{ 'checkout.order_notes'|trans }}</label>
-                                <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                <div class="form-check">
+                                    {{ form_widget(checkoutForm.sameAsBilling, {'attr': {'class': 'form-check-input'}}) }}
+                                    {{ form_label(checkoutForm.sameAsBilling, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                </div>
+                            </div>
+                            
+                            <!-- Adres dostawy -->
+                            <div id="delivery_address_container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6 class="mb-3">{{ 'checkout.delivery_address'|trans }}</h6>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            {{ form_label(checkoutForm.deliveryStreet) }}
+                                            {{ form_widget(checkoutForm.deliveryStreet, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.deliveryStreet) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            {{ form_label(checkoutForm.deliveryPostalCode) }}
+                                            {{ form_widget(checkoutForm.deliveryPostalCode, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.deliveryPostalCode) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            {{ form_label(checkoutForm.deliveryCity) }}
+                                            {{ form_widget(checkoutForm.deliveryCity, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(checkoutForm.deliveryCity) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Notatki -->
+                            <div class="mb-3">
+                                {{ form_label(checkoutForm.notes) }}
+                                {{ form_widget(checkoutForm.notes, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
+                                {{ form_errors(checkoutForm.notes) }}
                             </div>
                             
                             <div class="d-flex justify-content-between">
@@ -143,7 +136,7 @@
                                     <i class="bi bi-check-circle"></i> {{ 'checkout.place_order'|trans }}
                                 </button>
                             </div>
-                        </form>
+                        {{ form_end(checkoutForm) }}
                     </div>
                 </div>
             </div>
@@ -190,51 +183,74 @@
     {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sameAddressCheckbox = document.getElementById('same_address');
-            const billingAddressContainer = document.getElementById('billing_address_container');
+            console.log('Checkout JS loaded');
+            
+            const sameAddressCheckbox = document.querySelector('[name="checkout[sameAsBilling]"]');
+            const deliveryAddressContainer = document.getElementById('delivery_address_container');
+            
+            console.log('sameAddressCheckbox:', sameAddressCheckbox);
+            console.log('deliveryAddressContainer:', deliveryAddressContainer);
+            
+            if (!sameAddressCheckbox || !deliveryAddressContainer) {
+                console.error('Required elements not found');
+                console.log('All checkboxes:', document.querySelectorAll('input[type="checkbox"]'));
+                console.log('All containers:', document.querySelectorAll('[id*="container"]'));
+                return;
+            }
             
             // Delivery address fields
-            const deliveryStreet = document.getElementById('delivery_street');
-            const deliveryPostalCode = document.getElementById('delivery_postal_code');
-            const deliveryCity = document.getElementById('delivery_city');
-            const contactNumber = document.getElementById('contact_number');
-            const companyName = document.getElementById('company_name');
+            const deliveryStreet = document.querySelector('[name="checkout[deliveryStreet]"]');
+            const deliveryPostalCode = document.querySelector('[name="checkout[deliveryPostalCode]"]');
+            const deliveryCity = document.querySelector('[name="checkout[deliveryCity]"]');
             
             // Billing address fields  
-            const billingCompanyName = document.getElementById('billing_company_name');
-            const billingStreet = document.getElementById('billing_street');
-            const billingPostalCode = document.getElementById('billing_postal_code');
-            const billingCity = document.getElementById('billing_city');
-            const billingTaxId = document.getElementById('billing_tax_id');
+            const billingCompanyName = document.querySelector('[name="checkout[billingCompanyName]"]');
+            const billingStreet = document.querySelector('[name="checkout[billingStreet]"]');
+            const billingPostalCode = document.querySelector('[name="checkout[billingPostalCode]"]');
+            const billingCity = document.querySelector('[name="checkout[billingCity]"]');
             
-            function updateBillingAddressVisibility() {
+            console.log('Form fields found:', {
+                deliveryStreet: !!deliveryStreet,
+                deliveryPostalCode: !!deliveryPostalCode,
+                deliveryCity: !!deliveryCity,
+                billingCompanyName: !!billingCompanyName,
+                billingStreet: !!billingStreet,
+                billingPostalCode: !!billingPostalCode,
+                billingCity: !!billingCity
+            });
+            
+            function updateDeliveryAddressVisibility() {
+                console.log('updateDeliveryAddressVisibility called, checked:', sameAddressCheckbox.checked);
                 if (sameAddressCheckbox.checked) {
-                    billingAddressContainer.style.display = 'none';
-                    // Copy delivery address to billing address
-                    copyDeliveryToBilling();
+                    deliveryAddressContainer.style.display = 'none';
+                    // Copy billing address to delivery address
+                    copyBillingToDelivery();
                 } else {
-                    billingAddressContainer.style.display = 'block';
+                    deliveryAddressContainer.style.display = 'block';
                 }
             }
             
-            function copyDeliveryToBilling() {
-                if (sameAddressCheckbox.checked) {
-                    billingCompanyName.value = companyName.value;
-                    billingStreet.value = deliveryStreet.value;
-                    billingPostalCode.value = deliveryPostalCode.value;
-                    billingCity.value = deliveryCity.value;
+            function copyBillingToDelivery() {
+                if (sameAddressCheckbox.checked && deliveryStreet && deliveryPostalCode && deliveryCity) {
+                    deliveryStreet.value = billingStreet.value;
+                    deliveryPostalCode.value = billingPostalCode.value;
+                    deliveryCity.value = billingCity.value;
+                    console.log('Address copied from billing to delivery');
                 }
             }
             
             // Event listeners
-            sameAddressCheckbox.addEventListener('change', updateBillingAddressVisibility);
+            sameAddressCheckbox.addEventListener('change', updateDeliveryAddressVisibility);
             
-            // Auto-copy delivery address to billing when same address is checked
-            [deliveryStreet, deliveryPostalCode, deliveryCity, companyName].forEach(function(field) {
-                field.addEventListener('input', copyDeliveryToBilling);
+            // Auto-copy billing address to delivery when same address is checked
+            [billingStreet, billingPostalCode, billingCity].forEach(function(field) {
+                if (field) {
+                    field.addEventListener('input', copyBillingToDelivery);
+                }
             });
             
-            updateBillingAddressVisibility();
+            // Initial state
+            updateDeliveryAddressVisibility();
         });
     </script>
 {% endblock %}

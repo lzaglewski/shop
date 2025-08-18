@@ -32,7 +32,18 @@
 
     <div class="order-details">
         <h3>Adres dostawy</h3>
-        <p>{{ order.shippingAddress|nl2br }}</p>
+        {% set shippingData = order.shippingAddressData %}
+        {% if shippingData.street %}
+            <p>
+                {{ shippingData.street }}<br>
+                {{ shippingData.postalCode }} {{ shippingData.city }}<br>
+                {% if shippingData.contactNumber %}
+                    Tel: {{ shippingData.contactNumber }}
+                {% endif %}
+            </p>
+        {% else %}
+            <p>{{ order.shippingAddress|nl2br }}</p>
+        {% endif %}
     </div>
 
     <div class="order-details">

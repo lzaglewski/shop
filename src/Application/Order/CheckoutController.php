@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Order;
 
 use App\Application\Cart\CartService;
+use App\Application\Form\CheckoutType;
 use App\Domain\User\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +24,8 @@ class CheckoutController extends AbstractController
     {
     }
 
-    #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): Response
+    #[Route('', name: 'index', methods: ['GET', 'POST'])]
+    public function index(Request $request): Response
     {
         $cart = $this->cartService->getCart();
 
@@ -36,53 +37,84 @@ class CheckoutController extends AbstractController
         /** @var User|null $user */
         $user = $this->getUser();
 
+        // Tworzenie formularza
+        $form = $this->createForm(CheckoutType::class);
+
+        // Wypełnienie formularza danymi użytkownika jeśli jest zalogowany
+        if ($user) {
+            $form->setData([
+                'email' => $user->getEmail(),
+                'contactNumber' => $user->getContactNumber(),
+                'deliveryStreet' => $user->getDeliveryStreet(),
+                'deliveryPostalCode' => $user->getDeliveryPostalCode(),
+                'deliveryCity' => $user->getDeliveryCity(),
+                'billingCompanyName' => $user->getBillingCompanyName(),
+                'billingStreet' => $user->getBillingStreet(),
+                'billingPostalCode' => $user->getBillingPostalCode(),
+                'billingCity' => $user->getBillingCity(),
+                'billingTaxId' => $user->getBillingTaxId(),
+            ]);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            
+            $sameAsBilling = isset($data['sameAsBilling']) && $data['sameAsBilling'];
+            
+            // Jeśli checkbox "sameAsBilling" jest zaznaczony, kopiuj adres rozliczeniowy do dostawy
+            if ($sameAsBilling) {
+                $data['deliveryStreet'] = $data['billingStreet'];
+                $data['deliveryPostalCode'] = $data['billingPostalCode'];
+                $data['deliveryCity'] = $data['billingCity'];
+            } else {
+                // Walidacja pól delivery gdy checkbox nie jest zaznaczony
+                if (empty($data['deliveryStreet']) || empty($data['deliveryPostalCode']) || empty($data['deliveryCity'])) {
+                    $this->addFlash('error', 'Proszę wypełnić wszystkie wymagane pola adresu dostawy.');
+                    return $this->render('checkout/index.html.twig', [
+                        'cart' => $cart,
+                        'user' => $user,
+                        'checkoutForm' => $form->createView(),
+                    ]);
+                }
+            }
+
+            try {
+                $order = $this->orderService->createOrderFromCart(
+                    $data['email'],
+                    '', // companyName - nie używamy
+                    null, // taxId - nie używamy
+                    json_encode([
+                        'street' => $data['deliveryStreet'],
+                        'postalCode' => $data['deliveryPostalCode'],
+                        'city' => $data['deliveryCity'],
+                        'contactNumber' => $data['contactNumber'] ?? null,
+                    ]),
+                    json_encode([
+                        'companyName' => $data['billingCompanyName'] ?? '',
+                        'street' => $data['billingStreet'],
+                        'postalCode' => $data['billingPostalCode'],
+                        'city' => $data['billingCity'],
+                        'taxId' => $data['billingTaxId'] ?? '',
+                    ]),
+                    $data['notes'] ?? '',
+                    $user
+                );
+
+                return $this->redirectToRoute('checkout_success', ['orderNumber' => $order->getOrderNumber()]);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'An error occurred while processing your order: ' . $e->getMessage());
+            }
+        }
+
         return $this->render('checkout/index.html.twig', [
             'cart' => $cart,
             'user' => $user,
+            'checkoutForm' => $form->createView(),
         ]);
     }
 
-    #[Route('/place-order', name: 'place_order', methods: ['POST'])]
-    public function placeOrder(Request $request): Response
-    {
-        $cart = $this->cartService->getCart();
-
-        if ($cart->getItems()->isEmpty()) {
-            $this->addFlash('error', 'Your cart is empty. Please add some products before checkout.');
-            return $this->redirectToRoute('product_list');
-        }
-
-        // Get form data
-        $customerEmail = $request->request->get('email');
-        $customerCompanyName = $request->request->get('company_name');
-        $customerTaxId = $request->request->get('tax_id');
-        $shippingAddress = $request->request->get('shipping_address');
-        $billingAddress = $request->request->get('billing_address');
-        $notes = $request->request->get('notes');
-
-        // Validate required fields
-        if (!$customerEmail || !$customerCompanyName || !$shippingAddress || !$billingAddress) {
-            $this->addFlash('error', 'Please fill in all required fields.');
-            return $this->redirectToRoute('checkout_index');
-        }
-
-        try {
-            $order = $this->orderService->createOrderFromCart(
-                $customerEmail,
-                $customerCompanyName,
-                $customerTaxId,
-                $shippingAddress,
-                $billingAddress,
-                $notes,
-                $this->getUser()
-            );
-
-            return $this->redirectToRoute('checkout_success', ['orderNumber' => $order->getOrderNumber()]);
-        } catch (\Exception $e) {
-            $this->addFlash('error', 'An error occurred while processing your order: ' . $e->getMessage());
-            return $this->redirectToRoute('checkout_index');
-        }
-    }
 
     #[Route('/success/{orderNumber}', name: 'success', methods: ['GET'])]
     public function success(string $orderNumber): Response
