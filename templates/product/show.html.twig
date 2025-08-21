@@ -8,6 +8,21 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ path('homepage') }}">{{ 'navigation.home'|trans }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ path('product_list') }}">{{ 'navigation.products'|trans }}</a></li>
+                {% if product.category %}
+                    {% set categoryPath = [] %}
+                    {% set currentCategory = product.category %}
+                    {% set categoryPath = categoryPath|merge([currentCategory]) %}
+                    {% set parent = currentCategory.parent %}
+                    {% for i in 0..10 %}
+                        {% if parent %}
+                            {% set categoryPath = [parent]|merge(categoryPath) %}
+                            {% set parent = parent.parent %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for category in categoryPath %}
+                        <li class="breadcrumb-item"><a href="{{ path('product_list', {'category': category.id}) }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                {% endif %}
                 <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
             </ol>
         </nav>
