@@ -41,66 +41,6 @@
         </div>
     </section>
 
-
-    <section id="company-services" class="padding-large">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 pb-3">
-                    <div class="icon-box d-flex">
-                        <div class="icon-box-icon pe-3 pb-3">
-                            <svg class="price-tag">
-                                <use xlink:href="#price-tag"></use>
-                            </svg>
-                        </div>
-                        <div class="icon-box-content">
-                            <h4 class="card-title">{{ 'features.custom_pricing.title'|trans }}</h4>
-                            <p>{{ 'features.custom_pricing.description'|trans }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 pb-3">
-                    <div class="icon-box d-flex">
-                        <div class="icon-box-icon pe-3 pb-3">
-                            <svg class="shield-plus">
-                                <use xlink:href="#shield-plus"></use>
-                            </svg>
-                        </div>
-                        <div class="icon-box-content">
-                            <h4 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h4>
-                            <p>{{ 'features.fast_delivery.description'|trans }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 pb-3">
-                    <div class="icon-box d-flex">
-                        <div class="icon-box-icon pe-3 pb-3">
-                            <svg class="quality">
-                                <use xlink:href="#quality"></use>
-                            </svg>
-                        </div>
-                        <div class="icon-box-content">
-                            <h4 class="card-title">{{ 'features.support.title'|trans }}</h4>
-                            <p>{{ 'features.support.description'|trans }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 pb-3">
-                    <div class="icon-box d-flex">
-                        <div class="icon-box-icon pe-3 pb-3">
-                            <svg class="shield-plus">
-                                <use xlink:href="#shield-plus"></use>
-                            </svg>
-                        </div>
-                        <div class="icon-box-content">
-                            <h4 class="card-title">Bezpieczeństwo</h4>
-                            <p>Bezpieczne transakcje i ochrona danych klientów</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     {% if is_granted('ROLE_CLIENT') %}
         <section id="best-selling-items" class="position-relative padding-large">
             <div class="container">
@@ -184,4 +124,62 @@
         </section>
     {% endif %}
 
+    <section id="company-services" class="padding-large">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="price-tag">
+                                <use xlink:href="#price-tag"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.custom_pricing.title'|trans }}</h4>
+                            <p>{{ 'features.custom_pricing.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="shield-plus">
+                                <use xlink:href="#shield-plus"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h4>
+                            <p>{{ 'features.fast_delivery.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="quality">
+                                <use xlink:href="#quality"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">{{ 'features.support.title'|trans }}</h4>
+                            <p>{{ 'features.support.description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3">
+                    <div class="icon-box d-flex">
+                        <div class="icon-box-icon pe-3 pb-3">
+                            <svg class="shield-plus">
+                                <use xlink:href="#shield-plus"></use>
+                            </svg>
+                        </div>
+                        <div class="icon-box-content">
+                            <h4 class="card-title">Bezpieczeństwo</h4>
+                            <p>Bezpieczne transakcje i ochrona danych klientów</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
