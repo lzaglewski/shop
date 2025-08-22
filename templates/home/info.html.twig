@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'info.title'|trans }} - B2B Shop{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="mb-4">{{ 'info.contact_us'|trans }}</h1>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+
+                                <p>{{ 'info.description'|trans }}</p>
+
+                                <h3>{{ 'info.send_message'|trans }}</h3>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">{{ 'info.name_label'|trans }}</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="subject" class="form-label">{{ 'info.subject'|trans }}</label>
+                                        <input type="text" class="form-control" id="subject" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">{{ 'info.message'|trans }}</label>
+                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">{{ 'info.send_button'|trans }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
