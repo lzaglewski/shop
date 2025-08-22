@@ -39,6 +39,23 @@ class SettingsController extends AbstractController
         ]);
     }
 
+    #[Route('/general', name: 'admin_settings_general')]
+    public function generalSettings(Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            $currency = $request->request->get('currency');
+            if ($currency) {
+                $this->settingsService->setCurrency($currency);
+                $this->addFlash('success', 'Ustawienia ogólne zostały zapisane.');
+            }
+            return $this->redirectToRoute('admin_settings_general');
+        }
+
+        return $this->render('admin/settings/general.html.twig', [
+            'currency' => $this->settingsService->getCurrency(),
+        ]);
+    }
+
     #[Route('/email', name: 'admin_settings_email')]
     public function emailSettings(Request $request): Response
     {

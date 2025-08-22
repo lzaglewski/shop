@@ -188,8 +188,8 @@
                                             {% for clientPrice in user.clientPrices %}
                                                 <tr>
                                                     <td>{{ clientPrice.product.name }}</td>
-                                                    <td>{{ clientPrice.product.basePrice }}€</td>
-                                                    <td>{{ clientPrice.price }}€</td>
+                                                    <td>{{ clientPrice.product.basePrice }}{{ currency() }}</td>
+                                                    <td>{{ clientPrice.price }}{{ currency() }}</td>
                                                     <td>
                                                         {% if clientPrice.price < clientPrice.product.basePrice %}
                                                             <span class="text-success">

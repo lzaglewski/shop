@@ -96,6 +96,13 @@ common:
     stock: 'Zapas'
     date_added: 'Data dodania'
 
+settings:
+    general: 'Ustawienia ogólne'
+    homepage: 'Strona główna'
+    email: 'Email'
+    currency: 'Waluta'
+    currency_help: 'Symbol waluty używany w całym systemie (np. €, $, zł)'
+
 footer:
     description: 'Twój zaufany partner w zakresie dostaw biznesowych.'
     quick_links: 'Szybkie linki'

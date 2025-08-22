@@ -116,7 +116,7 @@
                                             <span class="text-muted">No category</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ product.basePrice }}€</td>
+                                    <td>{{ product.basePrice }}{{ currency() }}</td>
                                     <td>{{ product.stock }}</td>
                                     <td>
                                         <span class="badge {% if product.isActive %}bg-success{% else %}bg-secondary{% endif %}">

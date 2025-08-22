@@ -20,6 +20,7 @@ class SettingsService
     public const MAIL_FROM_NAME_KEY = 'mail_from_name';
     public const MAIL_ADMIN_EMAILS_KEY = 'mail_admin_emails';
     public const MAIL_NOTIFICATIONS_ENABLED_KEY = 'mail_notifications_enabled';
+    public const CURRENCY_KEY = 'currency';
 
     private SettingsRepositoryInterface $settingsRepository;
 
@@ -179,5 +180,15 @@ class SettingsService
         }
 
         return $dsn;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->getSetting(self::CURRENCY_KEY)?->getSettingValue() ?? '€';
+    }
+
+    public function setCurrency(string $currency): void
+    {
+        $this->setSetting(self::CURRENCY_KEY, $currency);
     }
 }

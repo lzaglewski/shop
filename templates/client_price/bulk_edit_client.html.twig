@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>{{ product.id }}</td>
                                         <td>{{ product.name }}</td>
-                                        <td>{{ product.basePrice }}€</td>
+                                        <td>{{ product.basePrice }}{{ currency() }}</td>
                                         <td>
                                             <div class="input-group">
                                                 <input type="number" 
@@ -55,7 +55,7 @@
                                                        min="0"
                                                        data-base-price="{{ product.basePrice }}"
                                                        data-product-id="{{ product.id }}">
-                                                <span class="input-group-text">€</span>
+                                                <span class="input-group-text">{{ currency() }}</span>
                                             </div>
                                         </td>
                                         <td>

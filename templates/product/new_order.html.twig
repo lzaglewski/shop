@@ -163,7 +163,7 @@
                                             <span class="text-muted">{{ 'product.no_category'|trans }}</span>
                                         {% endif %}
                                     </td>
-                                    <td class="product-price">{{ finalPrice }}€</td>
+                                    <td class="product-price">{{ finalPrice }}{{ currency() }}</td>
                                     <td>
                                         <input type="number"
                                                class="form-control quantity-input"
@@ -174,7 +174,7 @@
                                                data-product-id="{{ product.id }}">
                                         <small class="text-muted">Max: {{ product.stock }}</small>
                                     </td>
-                                    <td class="subtotal">0.00€</td>
+                                    <td class="subtotal">0.00{{ currency() }}</td>
                                     <td>
                                         {% if product.id in cartProductIds %}
                                             <button class="btn btn-secondary btn-sm" disabled>
@@ -220,7 +220,7 @@
                     const subtotal = price * quantity;
 
                     // Update subtotal
-                    row.querySelector('.subtotal').textContent = subtotal.toFixed(2) + '€';
+                    row.querySelector('.subtotal').textContent = subtotal.toFixed(2) + '{{ currency() }}';
 
                     // Enable/disable add to cart button (only for products not in cart)
                     const addBtn = row.querySelector('.add-to-cart-btn');
@@ -260,7 +260,7 @@
                         if (data.success) {
                             // Reset quantity to 0 and update subtotal
                             quantityInput.value = 0;
-                            row.querySelector('.subtotal').textContent = '0.00€';
+                            row.querySelector('.subtotal').textContent = '0.00{{ currency() }}';
 
                             // Change button to "In Cart" state
                             this.className = 'btn btn-secondary btn-sm';

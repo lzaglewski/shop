@@ -16,7 +16,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Client Prices</h5>
                     <div>
-                        <span class="badge bg-info me-2">Base Price: {{ basePrice }}€</span>
+                        <span class="badge bg-info me-2">Base Price: {{ basePrice }}{{ currency() }}</span>
                         <span class="badge bg-primary">{{ clients|length }} Clients</span>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                                                        min="0"
                                                        data-base-price="{{ basePrice }}"
                                                        data-client-id="{{ client.id }}">
-                                                <span class="input-group-text">€</span>
+                                                <span class="input-group-text">{{ currency() }}</span>
                                             </div>
                                         </td>
                                         <td>

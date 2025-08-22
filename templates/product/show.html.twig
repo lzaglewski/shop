@@ -100,15 +100,15 @@
                     <h2 class="h4">{{ 'common.price'|trans }}</h2>
                     <div class="d-flex align-items-center">
                         {% if app.user and clientPrice is defined and clientPrice %}
-                            <span class="fs-3 fw-bold me-3">{{ clientPrice.price }}€</span>
-                            <span class="text-muted text-decoration-line-through">{{ product.basePrice }}€</span>
+                            <span class="fs-3 fw-bold me-3">{{ clientPrice.price }}{{ currency() }}</span>
+                            <span class="text-muted text-decoration-line-through">{{ product.basePrice }}{{ currency() }}</span>
                             {% if clientPrice.price < product.basePrice %}
                                 <span class="badge bg-success ms-2">
                                     {{ ((1 - clientPrice.price / product.basePrice) * 100)|round }}% OFF
                                 </span>
                             {% endif %}
                         {% else %}
-                            <span class="fs-3 fw-bold">{{ product.basePrice }}€</span>
+                            <span class="fs-3 fw-bold">{{ product.basePrice }}{{ currency() }}</span>
                         {% endif %}
                     </div>
                 </div>

@@ -112,9 +112,9 @@
                                 </div>
                                 <span class="price text-primary fw-bold mb-2 fs-5">
                                     {% if clientPrices[product.id] is defined %}
-                                        {{ clientPrices[product.id] }}€
+                                        {{ clientPrices[product.id] }}{{ currency() }}
                                     {% else %}
-                                        {{ product.basePrice }}€
+                                        {{ product.basePrice }}{{ currency() }}
                                     {% endif %}
                                 </span>
                                 <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">

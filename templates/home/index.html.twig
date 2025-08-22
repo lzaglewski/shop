@@ -145,9 +145,9 @@
                                     </div>
                                     <span class="price text-primary fw-bold mb-2 fs-5">
                                         {% if app.user %}
-                                            {{ app.user.clientPrices.filter(p => p.product.id == product.id).first ? app.user.clientPrices.filter(p => p.product.id == product.id).first.price : product.basePrice }}€
+                                            {{ app.user.clientPrices.filter(p => p.product.id == product.id).first ? app.user.clientPrices.filter(p => p.product.id == product.id).first.price : product.basePrice }}{{ currency() }}
                                         {% else %}
-                                            {{ product.basePrice }}€
+                                            {{ product.basePrice }}{{ currency() }}
                                         {% endif %}
                                     </span>
                                     <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
