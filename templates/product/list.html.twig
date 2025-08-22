@@ -42,7 +42,7 @@
                                     {# Group options by root category #}
                                     {% for rootCategory in rootCategories %}
                                         <optgroup label="{{ rootCategory.name }}">
-                                            <option value="{{ rootCategory.id }}" {% if app.request.query.get('category') == rootCategory.id ~ '' %}selected{% endif %}>
+                                            <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
                                                 {{ rootCategory.name }}
                                             </option>
 
@@ -62,14 +62,30 @@
                                                 {% endfor %}
                                             {% endmacro %}
 
-                                            {{ _self.renderSubcategories(rootCategory, 1, app.request.query.get('category'), categories) }}
+                                            {{ _self.renderSubcategories(rootCategory, 1, selectedCategory, categories) }}
                                         </optgroup>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="search" class="form-label">{{ 'product.search'|trans }}</label>
-                                <input type="text" name="search" id="search" class="form-control" value="{{ app.request.query.get('search') }}">
+                                <input type="text" name="search" id="search" class="form-control" value="{{ searchTerm }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="sort_by" class="form-label">{{ 'common.sort_by'|trans }}</label>
+                                <select name="sort_by" id="sort_by" class="form-select">
+                                    <option value="date_added" {% if not sortBy or sortBy == 'date_added' %}selected{% endif %}>{{ 'common.date_added'|trans }}</option>
+                                    <option value="name" {% if sortBy == 'name' %}selected{% endif %}>{{ 'common.product_name'|trans }}</option>
+                                    <option value="price" {% if sortBy == 'price' %}selected{% endif %}>{{ 'common.price'|trans }}</option>
+                                    <option value="category" {% if sortBy == 'category' %}selected{% endif %}>{{ 'common.category'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sort_order" class="form-label">{{ 'common.order'|trans }}</label>
+                                <select name="sort_order" id="sort_order" class="form-select">
+                                    <option value="desc" {% if not sortOrder or sortOrder == 'desc' %}selected{% endif %}>{{ 'common.descending'|trans }}</option>
+                                    <option value="asc" {% if sortOrder == 'asc' %}selected{% endif %}>{{ 'common.ascending'|trans }}</option>
+                                </select>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">{{ 'product.apply_filters'|trans }}</button>
                         </form>

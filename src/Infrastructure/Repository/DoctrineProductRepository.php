@@ -82,7 +82,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
             ->leftJoin('p.category', 'c')
             ->where('p.isActive = :active')
             ->setParameter('active', true)
-            ->orderBy('p.name', 'ASC');
+            ->orderBy('p.id', 'DESC');
 
         return $queryBuilder;
     }
@@ -94,7 +94,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
             ->select('p', 'c')
             ->from(Product::class, 'p')
             ->leftJoin('p.category', 'c')
-            ->orderBy('p.name', 'ASC');
+            ->orderBy('p.id', 'DESC');
 
         return $queryBuilder;
     }
@@ -142,6 +142,34 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         return $queryBuilder;
     }
 
+    public function addSorting(QueryBuilder $queryBuilder, string $sortBy, string $sortOrder): QueryBuilder
+    {
+        // Remove existing order by clauses
+        $queryBuilder->resetDQLPart('orderBy');
+        
+        $validSortFields = [
+            'name' => 'p.name',
+            'price' => 'p.basePrice',
+            'category' => 'c.name',
+            'stock' => 'p.stock',
+            'sku' => 'p.sku',
+            'date_added' => 'p.id'
+        ];
+        
+        $validSortOrders = ['ASC', 'DESC'];
+        
+        // Handle empty sort_by as date_added
+        if (empty($sortBy) && !empty($sortOrder) && in_array(strtoupper($sortOrder), $validSortOrders)) {
+            $queryBuilder->orderBy('p.id', strtoupper($sortOrder));
+        } elseif (isset($validSortFields[$sortBy]) && in_array(strtoupper($sortOrder), $validSortOrders)) {
+            $queryBuilder->orderBy($validSortFields[$sortBy], strtoupper($sortOrder));
+        } else {
+            // Default fallback sorting by date added (ID DESC)
+            $queryBuilder->orderBy('p.id', 'DESC');
+        }
+        
+        return $queryBuilder;
+    }
 
     public function getPaginatedProducts(QueryBuilder $queryBuilder, int $page, int $limit): PaginationInterface
     {

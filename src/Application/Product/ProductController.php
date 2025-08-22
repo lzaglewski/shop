@@ -56,6 +56,8 @@ class ProductController extends AbstractController
         $user = $this->getUser();
         $categoryId = $request->query->get('category');
         $search = $request->query->get('search');
+        $sortBy = $request->query->get('sort_by');
+        $sortOrder = $request->query->get('sort_order');
 
         $pagination = $this->productApplicationService->getFilteredProducts(
             $user,
@@ -63,7 +65,9 @@ class ProductController extends AbstractController
             $search,
             $request->query->getInt('page', 1),
             $this->productsPerPage,
-            true
+            true,
+            $sortBy,
+            $sortOrder
         );
 
         $categories = $this->productApplicationService->getCategoriesWithVisibleProducts($user);
@@ -81,6 +85,10 @@ class ProductController extends AbstractController
             'products' => $pagination,
             'categories' => $categories,
             'clientPrices' => $clientPrices,
+            'selectedCategory' => $categoryId,
+            'searchTerm' => $search,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
         ]);
     }
 
@@ -118,6 +126,8 @@ class ProductController extends AbstractController
         $user = $this->getUser();
         $categoryId = $request->query->get('category');
         $search = $request->query->get('search');
+        $sortBy = $request->query->get('sort_by');
+        $sortOrder = $request->query->get('sort_order');
 
         $pagination = $this->productApplicationService->getFilteredProducts(
             $user,
@@ -125,7 +135,9 @@ class ProductController extends AbstractController
             $search,
             $request->query->getInt('page', 1),
             $this->newOrderProductsPerPage,
-            true
+            true,
+            $sortBy,
+            $sortOrder
         );
 
         $categories = $this->productApplicationService->getCategoriesWithVisibleProducts($user);
@@ -153,6 +165,8 @@ class ProductController extends AbstractController
             'searchTerm' => $search,
             'cartProductIds' => $cartProductIds,
             'clientPrices' => $clientPrices,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
         ]);
     }
 

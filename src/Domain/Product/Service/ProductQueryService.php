@@ -24,7 +24,9 @@ class ProductQueryService
         ?User $user = null,
         ?string $categoryId = null,
         ?string $search = null,
-        ?bool $activeOnly = true
+        ?bool $activeOnly = true,
+        ?string $sortBy = null,
+        ?string $sortOrder = null
     ): QueryBuilder {
         $queryBuilder = $activeOnly
             ? $this->productRepository->createActiveProductsQueryBuilder()
@@ -41,6 +43,10 @@ class ProductQueryService
 
         if ($user && $this->productVisibilityService->shouldFilterForClient($user)) {
             $this->productRepository->addClientVisibilityFilter($queryBuilder, $user);
+        }
+
+        if ($sortBy && $sortOrder) {
+            $this->productRepository->addSorting($queryBuilder, $sortBy, $sortOrder);
         }
 
         return $queryBuilder;

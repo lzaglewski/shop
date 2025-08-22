@@ -27,13 +27,17 @@ class ProductApplicationService
         ?string $search,
         int $page,
         int $limit,
-        bool $activeOnly = true
+        bool $activeOnly = true,
+        ?string $sortBy = null,
+        ?string $sortOrder = null
     ): PaginationInterface {
         $queryBuilder = $this->productQueryService->createFilteredProductQuery(
             $user,
             $categoryId,
             $search,
-            $activeOnly
+            $activeOnly,
+            $sortBy,
+            $sortOrder
         );
 
         return $this->productQueryService->getPaginatedProducts($queryBuilder, $page, $limit);

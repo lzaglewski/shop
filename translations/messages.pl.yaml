@@ -87,6 +87,14 @@ common:
     date: 'Data'
     product: 'Produkt'
     invalid_csrf_token: 'Nieprawidłowy token CSRF'
+    sort_by: 'Sortuj według'
+    order: 'Kolejność'
+    ascending: 'Rosnąco'
+    descending: 'Malejąco'
+    product_name: 'Nazwa produktu'
+    sku: 'SKU'
+    stock: 'Zapas'
+    date_added: 'Data dodania'
 
 footer:
     description: 'Twój zaufany partner w zakresie dostaw biznesowych.'
