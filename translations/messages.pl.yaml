@@ -182,7 +182,7 @@ cart:
     subtotal: 'Suma'
     remove: 'Usuń'
     clear_cart: 'Wyczyść koszyk'
-    proceed_to_checkout: 'Przejdź do kasy'
+    proceed_to_checkout: 'Przejdź do podsumowania'
     product_added_successfully: 'Produkt został dodany do koszyka'
     cart_updated_successfully: 'Koszyk został zaktualizowany.'
     item_removed_from_cart: 'Produkt został usunięty z koszyka.'
@@ -193,7 +193,6 @@ cart:
     error: 'Błąd'
 
 checkout:
-    checkout: 'Kasa'
     order_information: 'Informacje o zamówieniu'
     email_address: 'Adres email'
     company_name: 'Nazwa firmy'

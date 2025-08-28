@@ -1,23 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'checkout.checkout'|trans }}{% endblock %}
+{% block title %}{{ 'checkout.order_information'|trans }}{% endblock %}
 
 {% block body %}
     <div class="container my-4">
-        <h1>{{ 'checkout.checkout'|trans }}</h1>
-        
+
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ message|trans }}
             </div>
         {% endfor %}
-        
+
         {% for message in app.flashes('error') %}
             <div class="alert alert-danger">
                 {{ message|trans }}
             </div>
         {% endfor %}
-        
+
         <div class="row">
             <div class="col-md-8">
                 <div class="card mb-4">
@@ -32,13 +31,13 @@
                                 {{ form_widget(checkoutForm.email, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(checkoutForm.email) }}
                             </div>
-                            
+
                             <div class="mb-3">
                                 {{ form_label(checkoutForm.contactNumber) }}
                                 {{ form_widget(checkoutForm.contactNumber, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(checkoutForm.contactNumber) }}
                             </div>
-                            
+
                             <!-- Adres rozliczeniowy -->
                             <div id="billing_address_container">
                                 <div class="row">
@@ -82,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Checkbox dla adresu dostawy -->
                             <div class="mb-3">
                                 <div class="form-check">
@@ -90,7 +89,7 @@
                                     {{ form_label(checkoutForm.sameAsBilling, null, {'label_attr': {'class': 'form-check-label'}}) }}
                                 </div>
                             </div>
-                            
+
                             <!-- Adres dostawy -->
                             <div id="delivery_address_container">
                                 <div class="row">
@@ -120,14 +119,14 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Notatki -->
                             <div class="mb-3">
                                 {{ form_label(checkoutForm.notes) }}
                                 {{ form_widget(checkoutForm.notes, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
                                 {{ form_errors(checkoutForm.notes) }}
                             </div>
-                            
+
                             <div class="d-flex justify-content-between">
                                 <a href="{{ path('cart_index') }}" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-left"></i> {{ 'checkout.back_to_cart'|trans }}
@@ -140,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
@@ -184,31 +183,31 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Checkout JS loaded');
-            
+
             const sameAddressCheckbox = document.querySelector('[name="checkout[sameAsBilling]"]');
             const deliveryAddressContainer = document.getElementById('delivery_address_container');
-            
+
             console.log('sameAddressCheckbox:', sameAddressCheckbox);
             console.log('deliveryAddressContainer:', deliveryAddressContainer);
-            
+
             if (!sameAddressCheckbox || !deliveryAddressContainer) {
                 console.error('Required elements not found');
                 console.log('All checkboxes:', document.querySelectorAll('input[type="checkbox"]'));
                 console.log('All containers:', document.querySelectorAll('[id*="container"]'));
                 return;
             }
-            
+
             // Delivery address fields
             const deliveryStreet = document.querySelector('[name="checkout[deliveryStreet]"]');
             const deliveryPostalCode = document.querySelector('[name="checkout[deliveryPostalCode]"]');
             const deliveryCity = document.querySelector('[name="checkout[deliveryCity]"]');
-            
-            // Billing address fields  
+
+            // Billing address fields
             const billingCompanyName = document.querySelector('[name="checkout[billingCompanyName]"]');
             const billingStreet = document.querySelector('[name="checkout[billingStreet]"]');
             const billingPostalCode = document.querySelector('[name="checkout[billingPostalCode]"]');
             const billingCity = document.querySelector('[name="checkout[billingCity]"]');
-            
+
             console.log('Form fields found:', {
                 deliveryStreet: !!deliveryStreet,
                 deliveryPostalCode: !!deliveryPostalCode,
@@ -218,7 +217,7 @@
                 billingPostalCode: !!billingPostalCode,
                 billingCity: !!billingCity
             });
-            
+
             function updateDeliveryAddressVisibility() {
                 console.log('updateDeliveryAddressVisibility called, checked:', sameAddressCheckbox.checked);
                 if (sameAddressCheckbox.checked) {
@@ -229,7 +228,7 @@
                     deliveryAddressContainer.style.display = 'block';
                 }
             }
-            
+
             function copyBillingToDelivery() {
                 if (sameAddressCheckbox.checked && deliveryStreet && deliveryPostalCode && deliveryCity) {
                     deliveryStreet.value = billingStreet.value;
@@ -238,17 +237,17 @@
                     console.log('Address copied from billing to delivery');
                 }
             }
-            
+
             // Event listeners
             sameAddressCheckbox.addEventListener('change', updateDeliveryAddressVisibility);
-            
+
             // Auto-copy billing address to delivery when same address is checked
             [billingStreet, billingPostalCode, billingCity].forEach(function(field) {
                 if (field) {
                     field.addEventListener('input', copyBillingToDelivery);
                 }
             });
-            
+
             // Initial state
             updateDeliveryAddressVisibility();
         });
