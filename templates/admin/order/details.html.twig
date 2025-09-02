@@ -148,7 +148,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if item.product.imageFilename %}
-                                                <img src="{{ asset(product_image_path(item.product.imageFilename, item.product.id)) }}" 
+                                                <img src="{{ asset(product_thumbnail_or_image(item.product.imageFilename, 'thumb', item.product.id)) }}" 
                                                     alt="{{ item.product.name }}" class="img-thumbnail me-3" style="width: 50px;">
                                             {% endif %}
                                             <div>

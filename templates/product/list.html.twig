@@ -99,7 +99,7 @@
                             <div class="card position-relative p-4 border rounded-3 h-100" style="cursor: pointer;" onclick="window.location.href='{{ path('product_show', {'id': product.id}) }}'">
                                 {% if product.imageFilename %}
                                     <div class="product-image-container" style="height: 240px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                                        <img src="{{ asset(product_image_path(product.imageFilename, product.id)) }}"
+                                        <img src="{{ asset(product_thumbnail_or_image(product.imageFilename, 'small', product.id)) }}"
                                              class="img-fluid shadow-sm" alt="{{ product.name }}" style="max-height: 100%; width: auto; object-fit: contain;">
                                     </div>
                                 {% else %}

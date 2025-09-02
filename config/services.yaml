@@ -79,5 +79,9 @@ services:
         arguments:
             $productImagesDirectory: '%product_images_directory%'
 
+    # Thumbnail generation command configuration  
+    App\Application\Command\GenerateThumbnailsCommand:
+        arguments: []
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
