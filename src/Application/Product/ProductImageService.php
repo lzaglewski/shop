@@ -19,27 +19,30 @@ class ProductImageService
         $this->productImagesDirectory = $productImagesDirectory;
     }
 
-    public function handleImageUpload(UploadedFile $imageFile): string
+    public function handleImageUpload(UploadedFile $imageFile, int $productId): string
     {
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
         $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
+        $productDirectory = $this->getProductDirectory($productId);
+        $this->ensureDirectoryExists($productDirectory);
+
         try {
-            $imageFile->move($this->productImagesDirectory, $newFilename);
+            $imageFile->move($productDirectory, $newFilename);
             return $newFilename;
         } catch (FileException $e) {
             throw new FileException('There was an error uploading the image: ' . $e->getMessage());
         }
     }
 
-    public function handleMultipleImageUpload(array $imageFiles): array
+    public function handleMultipleImageUpload(array $imageFiles, int $productId): array
     {
         $uploadedFilenames = [];
         
         foreach ($imageFiles as $imageFile) {
             try {
-                $uploadedFilenames[] = $this->handleImageUpload($imageFile);
+                $uploadedFilenames[] = $this->handleImageUpload($imageFile, $productId);
             } catch (FileException $e) {
                 throw new FileException('There was an error uploading one of the images: ' . $e->getMessage());
             }
@@ -48,19 +51,38 @@ class ProductImageService
         return $uploadedFilenames;
     }
 
-    public function deleteImage(string $filename): void
+    public function deleteImage(string $filename, int $productId): void
     {
-        $imagePath = $this->productImagesDirectory . '/' . $filename;
+        $imagePath = $this->getProductDirectory($productId) . '/' . $filename;
         
         if (file_exists($imagePath)) {
             unlink($imagePath);
         }
     }
 
-    public function replaceMainImage(?string $oldFilename, string $newFilename): void
+    public function replaceMainImage(?string $oldFilename, int $productId): void
     {
         if ($oldFilename) {
-            $this->deleteImage($oldFilename);
+            $this->deleteImage($oldFilename, $productId);
+        }
+    }
+
+    public function getProductDirectory(int $productId): string
+    {
+        return $this->productImagesDirectory . '/' . $productId;
+    }
+
+    public function getImagePath(string $filename, int $productId): string
+    {
+        return '/uploads/products/' . $productId . '/' . $filename;
+    }
+
+    private function ensureDirectoryExists(string $directory): void
+    {
+        if (!is_dir($directory)) {
+            if (!mkdir($directory, 0755, true) && !is_dir($directory)) {
+                throw new FileException('Could not create directory: ' . $directory);
+            }
         }
     }
 }

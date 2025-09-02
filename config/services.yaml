@@ -74,5 +74,10 @@ services:
         arguments:
             $emailNotificationsEnabled: '%email.notifications_enabled%'
 
+    # Migration command configuration
+    App\Application\Command\MigrateProductImagesCommand:
+        arguments:
+            $productImagesDirectory: '%product_images_directory%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

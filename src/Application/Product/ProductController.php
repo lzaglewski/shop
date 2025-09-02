@@ -196,17 +196,23 @@ class ProductController extends AbstractController
                 ]);
             }
 
-            try {
-                $this->handleImageUploads($form, $product);
-            } catch (FileException $e) {
-                $this->addFlash('danger', $e->getMessage());
-            }
-
-            // Save the product
+            // Save the product first to get the ID
             try {
                 $this->productApplicationService->saveProduct($product);
+                
+                // Now handle image uploads with product ID
+                $this->handleImageUploads($form, $product);
+                
+                // Save again with image filenames
+                $this->productApplicationService->saveProduct($product);
+                
                 $this->addFlash('success', 'product.created_successfully');
                 return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+            } catch (FileException $e) {
+                $this->addFlash('danger', $e->getMessage());
+                return $this->render('product/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
             } catch (\Exception $e) {
                 $this->addFlash('danger', $this->translator->trans('product.error_creating_product', ['%message%' => $e->getMessage()]));
                 return $this->render('product/new.html.twig', [
@@ -345,11 +351,11 @@ class ProductController extends AbstractController
         $imageFilename = $request->request->get('image_filename');
 
         if ($imageType === 'main' && $imageFilename === $product->getImageFilename()) {
-            $this->productImageService->deleteImage($imageFilename);
+            $this->productImageService->deleteImage($imageFilename, $product->getId());
             $product->setImageFilename(null);
             $this->addFlash('success', 'product.main_image_deleted_successfully');
         } elseif ($imageType === 'additional') {
-            $this->productImageService->deleteImage($imageFilename);
+            $this->productImageService->deleteImage($imageFilename, $product->getId());
             $product->removeImage($imageFilename);
             $this->addFlash('success', 'product.additional_image_deleted_successfully');
         } else {
@@ -364,13 +370,15 @@ class ProductController extends AbstractController
 
     private function handleImageUploads($form, Product $product, bool $isEdit = false): void
     {
+        $productId = $product->getId();
+
         // Handle single image upload (for backward compatibility)
         $imageFile = $form->get('imageFile')->getData();
         if ($imageFile) {
-            $newFilename = $this->productImageService->handleImageUpload($imageFile);
+            $newFilename = $this->productImageService->handleImageUpload($imageFile, $productId);
 
             if ($isEdit) {
-                $this->productImageService->replaceMainImage($product->getImageFilename(), $newFilename);
+                $this->productImageService->replaceMainImage($product->getImageFilename(), $productId);
             }
 
             $product->setImageFilename($newFilename);
@@ -379,7 +387,7 @@ class ProductController extends AbstractController
         // Handle multiple images upload
         $imageFiles = $form->get('imageFiles')->getData();
         if ($imageFiles) {
-            $uploadedFilenames = $this->productImageService->handleMultipleImageUpload($imageFiles);
+            $uploadedFilenames = $this->productImageService->handleMultipleImageUpload($imageFiles, $productId);
 
             foreach ($uploadedFilenames as $filename) {
                 $product->addImage($filename);

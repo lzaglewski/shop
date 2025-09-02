@@ -40,7 +40,7 @@
 
                     {% if allImages|length > 0 %}
                         <div class="position-relative">
-                            <img src="{{ asset('uploads/products/' ~ allImages[0]) }}"
+                            <img src="{{ asset(product_image_path(allImages[0], product.id)) }}"
                                  class="card-img-top"
                                  alt="{{ product.name }}"
                                  style="cursor: pointer;"
@@ -59,7 +59,7 @@
                                 <div class="row g-2">
                                     {% for image in allImages|slice(1, 3) %}
                                         <div class="col-4">
-                                            <img src="{{ asset('uploads/products/' ~ image) }}"
+                                            <img src="{{ asset(product_image_path(image, product.id)) }}"
                                                  class="img-thumbnail w-100"
                                                  alt="{{ product.name }}"
                                                  style="cursor: pointer; height: 80px; object-fit: cover;"
@@ -179,7 +179,7 @@
                         <img id="galleryImage" src="" alt="{{ product.name }}" class="img-fluid mb-3">
                         <div id="galleryThumbnails" class="d-flex justify-content-center flex-wrap gap-2">
                             {% for image in allImages %}
-                                <img src="{{ asset('uploads/products/' ~ image) }}"
+                                <img src="{{ asset(product_image_path(image, product.id)) }}"
                                      class="img-thumbnail gallery-thumb"
                                      alt="{{ product.name }}"
                                      style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
@@ -204,7 +204,7 @@
     <script>
         const galleryImages = [
             {% for image in allImages %}
-                "{{ asset('uploads/products/' ~ image) }}"{% if not loop.last %},{% endif %}
+                "{{ asset(product_image_path(image, product.id)) }}"{% if not loop.last %},{% endif %}
             {% endfor %}
         ];
 

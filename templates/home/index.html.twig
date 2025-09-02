@@ -70,7 +70,7 @@
                                 <div class="card position-relative p-4 border rounded-3">
                                     {% if product.imageFilename %}
                                         <div class="product-image-container">
-                                            <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}"
+                                            <img src="{{ asset(product_image_path(product.imageFilename, product.id)) }}"
                                                  class="img-fluid shadow-sm" alt="{{ product.name }}">
                                         </div>
                                     {% else %}

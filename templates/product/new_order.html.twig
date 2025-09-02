@@ -137,7 +137,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if product.imageFilename %}
-                                                <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}"
+                                                <img src="{{ asset(product_image_path(product.imageFilename, product.id)) }}"
                                                      class="img-thumbnail me-3"
                                                      style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
                                                      alt="{{ product.name }}"
