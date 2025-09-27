@@ -453,36 +453,9 @@ th {
 /*--------------------------------------------------------------
 /** 3.4 Pagination
 --------------------------------------------------------------*/
-.page-link {
-    padding: 0;
-    font-size: 21px;
-    color: var(--black-color);
-    background: none;
-    border: none;
-}
-
-.page-link:focus {
-    color: var(--primary-color);
-    background: none;
-    box-shadow: none;
-}
-
-.page-link:hover {
-    color: var(--primary-color);
-    background: none;
-    border: none;
-}
-
-.active > .page-link, .page-link.active {
-    color: var(--primary-color);
-    background: none;
-    border: none;
-}
-
-.disabled > .page-link, .page-link.disabled {
-    color: var(--gray-color-500);
-    background: none;
-    border: none;
+/* Use Bootstrap 5 default pagination styles with minimal customization */
+.pagination {
+    margin: 2rem 0;
 }
 
 /* Animation */
