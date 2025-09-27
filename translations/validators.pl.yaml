@@ -1,0 +1,25 @@
+# Polish validation messages for contact and info forms
+
+info:
+    name_required: 'Imię lub nazwa firmy jest wymagana'
+    name_min_length: 'Imię lub nazwa firmy musi mieć co najmniej {{ limit }} znaki'
+    name_max_length: 'Imię lub nazwa firmy może mieć maksymalnie {{ limit }} znaków'
+    email_required: 'Email jest wymagany'
+    email_invalid: 'Wprowadź prawidłowy adres email'
+    subject_required: 'Temat jest wymagany'
+    subject_min_length: 'Temat musi mieć co najmniej {{ limit }} znaki'
+    subject_max_length: 'Temat może mieć maksymalnie {{ limit }} znaków'
+    message_required: 'Wiadomość jest wymagana'
+    message_min_length: 'Wiadomość musi mieć co najmniej {{ limit }} znaków'
+
+contact:
+    name_required: 'Imię jest wymagane'
+    name_min_length: 'Imię musi mieć co najmniej {{ limit }} znaki'
+    name_max_length: 'Imię może mieć maksymalnie {{ limit }} znaków'
+    email_required: 'Email jest wymagany'
+    email_invalid: 'Wprowadź prawidłowy adres email'
+    subject_required: 'Temat jest wymagany'
+    subject_min_length: 'Temat musi mieć co najmniej {{ limit }} znaki'
+    subject_max_length: 'Temat może mieć maksymalnie {{ limit }} znaków'
+    message_required: 'Wiadomość jest wymagana'
+    message_min_length: 'Wiadomość musi mieć co najmniej {{ limit }} znaków'

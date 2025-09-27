@@ -1,0 +1,230 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Szczegóły lead #{{ lead.id }} - {{ 'admin.admin_panel'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-envelope-heart"></i> Lead #{{ lead.id }}</h1>
+            <div>
+                <a href="{{ path('admin_lead_list') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Powrót do listy
+                </a>
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        onclick="confirmDelete({{ lead.id }}, '{{ lead.name|e('js') }}')"
+                        title="Usuń lead">
+                    <i class="bi bi-trash"></i> Usuń
+                </button>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message|trans }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <!-- Informacje podstawowe -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-circle"></i> Informacje o kontakcie
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Imię/Nazwa firmy</label>
+                                    <div class="fw-bold">{{ lead.name }}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Adres email</label>
+                                    <div>
+                                        <a href="mailto:{{ lead.email }}" class="text-decoration-none">
+                                            <i class="bi bi-envelope"></i> {{ lead.email }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Temat</label>
+                                    <div class="fw-medium">{{ lead.subject }}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Źródło</label>
+                                    <div>
+                                        {% if lead.source == 'contact' %}
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-telephone"></i> Formularz kontaktowy
+                                            </span>
+                                        {% elseif lead.source == 'info' %}
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-info-circle"></i> Strona "O NAS"
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ lead.source }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wiadomość -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-chat-text"></i> Wiadomość
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="border rounded p-3 bg-light">
+                            {{ lead.message|nl2br }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Akcje szybkie -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightning"></i> Akcje szybkie
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="mailto:{{ lead.email }}?subject=Re: {{ lead.subject|url_encode }}&body=Dzień dobry {{ lead.name|url_encode }},%0A%0ADziękujemy za kontakt..."
+                                   class="btn btn-primary btn-lg w-100 mb-2">
+                                    <i class="bi bi-reply"></i> Odpowiedz email
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-outline-secondary btn-lg w-100 mb-2" onclick="copyContactInfo()">
+                                    <i class="bi bi-clipboard"></i> Kopiuj dane kontaktowe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metadane -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-info-circle"></i> Metadane
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Data wpłynięcia</label>
+                            <div class="fw-bold">
+                                {{ lead.submittedAt|date('Y-m-d H:i:s') }}
+                            </div>
+                            <small class="text-muted">
+                                {{ lead.submittedAt|date('l, j F Y') }}
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">ID w systemie</label>
+                            <div><code>#{{ lead.id }}</code></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Status</label>
+                            <div>
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Nowy
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid">
+                            <button type="button"
+                                    class="btn btn-outline-danger"
+                                    onclick="confirmDelete({{ lead.id }}, '{{ lead.name|e('js') }}')"
+                                    title="Usuń lead">
+                                <i class="bi bi-trash"></i> Usuń lead
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for delete confirmation -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Potwierdź usunięcie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Czy na pewno chcesz usunąć lead od <strong id="leadName"></strong>?</p>
+                    <p class="text-muted">Ta operacja jest nieodwracalna.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <form id="deleteForm" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Usuń
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(leadId, leadName) {
+            document.getElementById('leadName').textContent = leadName;
+            document.getElementById('deleteForm').action = "{{ path('admin_lead_list') }}/" + leadId + "/delete";
+
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        function copyContactInfo() {
+            const contactInfo = `Imię/Nazwa: {{ lead.name }}
+Email: {{ lead.email }}
+Temat: {{ lead.subject }}
+Data: {{ lead.submittedAt|date('Y-m-d H:i') }}
+
+Wiadomość:
+{{ lead.message }}`;
+
+            navigator.clipboard.writeText(contactInfo).then(function() {
+                // Show a temporary success message
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check"></i> Skopiowano!';
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-success');
+
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-secondary');
+                }, 2000);
+            }, function(err) {
+                alert('Nie udało się skopiować danych do schowka');
+            });
+        }
+    </script>
+{% endblock %}

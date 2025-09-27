@@ -15,6 +15,9 @@ services:
   App\Domain\Settings\Repository\SettingsRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineSettingsRepository
 
+  App\Domain\Lead\Repository\LeadRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineLeadRepository
+
   # Repository implementations
   App\Infrastructure\Repository\DoctrineUserRepository:
     arguments:
@@ -31,3 +34,8 @@ services:
   App\Infrastructure\Repository\DoctrineSettingsRepository:
     arguments:
       - '@doctrine'
+
+  App\Infrastructure\Repository\DoctrineLeadRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@knp_paginator'

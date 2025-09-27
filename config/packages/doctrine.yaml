@@ -48,6 +48,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Domain/Settings/Model'
                 prefix: 'App\Domain\Settings\Model'
                 alias: Settings
+            Lead:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Lead/Model'
+                prefix: 'App\Domain\Lead\Model'
+                alias: Lead
 
 when@test:
     doctrine:

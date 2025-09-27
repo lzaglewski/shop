@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Common;
 
+use App\Application\Form\ContactFormType;
+use App\Application\Form\InfoFormType;
 use App\Application\Pricing\ClientPriceService;
 use App\Domain\Product\Repository\ProductRepositoryInterface;
 use App\Domain\User\Model\UserRole;
@@ -85,12 +87,24 @@ class HomeController extends AbstractController
     #[Route('/contact', name: 'contact')]
     public function contact(): Response
     {
-        return $this->render('home/contact.html.twig');
+        $form = $this->createForm(ContactFormType::class, null, [
+            'action' => $this->generateUrl('contact_submit'),
+        ]);
+
+        return $this->render('home/contact.html.twig', [
+            'contactForm' => $form->createView(),
+        ]);
     }
 
     #[Route('/info', name: 'info')]
     public function info(): Response
     {
-        return $this->render('home/info.html.twig');
+        $form = $this->createForm(InfoFormType::class, null, [
+            'action' => $this->generateUrl('info_submit'),
+        ]);
+
+        return $this->render('home/info.html.twig', [
+            'infoForm' => $form->createView(),
+        ]);
     }
 }

@@ -146,6 +146,11 @@
                             {{ 'navigation.client_prices'|trans }}
                         </a>
 
+                        <a href="{{ path('admin_lead_list') }}" class="nav-link {% if app.request.get('_route') starts with 'admin_lead_' %}active{% endif %}">
+                            <i class="bi bi-envelope-heart"></i>
+                            Leady
+                        </a>
+
                         <hr class="my-3">
 
                         <a href="{{ path('admin_settings') }}" class="nav-link {% if app.request.get('_route') starts with 'admin_settings' %}active{% endif %}">

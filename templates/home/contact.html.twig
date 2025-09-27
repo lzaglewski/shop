@@ -45,29 +45,48 @@
 
                             <div class="col-md-6">
                                 <h3>{{ 'contact.send_message'|trans }}</h3>
-                                <form>
+
+                                {% for message in app.flashes('success') %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ message|trans }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+
+                                {% for message in app.flashes('error') %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ message|trans }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+
+                                {{ form_start(contactForm) }}
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">{{ 'contact.name_label'|trans }}</label>
-                                        <input type="text" class="form-control" id="name" required>
+                                        {{ form_label(contactForm.name) }}
+                                        {{ form_widget(contactForm.name) }}
+                                        {{ form_errors(contactForm.name) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" required>
+                                        {{ form_label(contactForm.email) }}
+                                        {{ form_widget(contactForm.email) }}
+                                        {{ form_errors(contactForm.email) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="subject" class="form-label">{{ 'contact.subject'|trans }}</label>
-                                        <input type="text" class="form-control" id="subject" required>
+                                        {{ form_label(contactForm.subject) }}
+                                        {{ form_widget(contactForm.subject) }}
+                                        {{ form_errors(contactForm.subject) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="message" class="form-label">{{ 'contact.message'|trans }}</label>
-                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                        {{ form_label(contactForm.message) }}
+                                        {{ form_widget(contactForm.message) }}
+                                        {{ form_errors(contactForm.message) }}
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary">{{ 'contact.send_button'|trans }}</button>
-                                </form>
+                                    {{ form_widget(contactForm.submit) }}
+                                {{ form_end(contactForm) }}
                             </div>
                         </div>
                     </div>

@@ -18,29 +18,48 @@
                                 <p class="pb-3">{{ 'info.description2'|trans }}</p>
 
                                 <h3>{{ 'info.send_message'|trans }}</h3>
-                                <form>
+
+                                {% for message in app.flashes('success') %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ message|trans }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+
+                                {% for message in app.flashes('error') %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ message|trans }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+
+                                {{ form_start(infoForm) }}
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">{{ 'info.name_label'|trans }}</label>
-                                        <input type="text" class="form-control" id="name" required>
+                                        {{ form_label(infoForm.name) }}
+                                        {{ form_widget(infoForm.name) }}
+                                        {{ form_errors(infoForm.name) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" required>
+                                        {{ form_label(infoForm.email) }}
+                                        {{ form_widget(infoForm.email) }}
+                                        {{ form_errors(infoForm.email) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="subject" class="form-label">{{ 'info.subject'|trans }}</label>
-                                        <input type="text" class="form-control" id="subject" required>
+                                        {{ form_label(infoForm.subject) }}
+                                        {{ form_widget(infoForm.subject) }}
+                                        {{ form_errors(infoForm.subject) }}
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="message" class="form-label">{{ 'info.message'|trans }}</label>
-                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                        {{ form_label(infoForm.message) }}
+                                        {{ form_widget(infoForm.message) }}
+                                        {{ form_errors(infoForm.message) }}
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary">{{ 'info.send_button'|trans }}</button>
-                                </form>
+                                    {{ form_widget(infoForm.submit) }}
+                                {{ form_end(infoForm) }}
                             </div>
                         </div>
                     </div>
