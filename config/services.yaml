@@ -10,7 +10,7 @@ imports:
 parameters:
     product_images_directory: '%kernel.project_dir%/public/uploads/products'
     pagination.products_per_page: 9
-    pagination.new_order_products_per_page: 20
+    pagination.new_order_products_per_page: 25
     # Email configuration
     email.from_email: '%env(MAIL_FROM_EMAIL)%'
     email.from_name: '%env(MAIL_FROM_NAME)%'
@@ -48,7 +48,7 @@ services:
     App\Application\Product\ProductImageService:
         arguments:
             $productImagesDirectory: '%product_images_directory%'
-    
+
     App\Application\Product\ProductController:
         arguments:
             $productsPerPage: '%pagination.products_per_page%'
@@ -79,7 +79,7 @@ services:
         arguments:
             $productImagesDirectory: '%product_images_directory%'
 
-    # Thumbnail generation command configuration  
+    # Thumbnail generation command configuration
     App\Application\Command\GenerateThumbnailsCommand:
         arguments: []
 

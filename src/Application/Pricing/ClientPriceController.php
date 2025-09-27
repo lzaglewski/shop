@@ -185,7 +185,7 @@ class ClientPriceController extends AbstractController
         $pagination = $this->paginator->paginate(
             $queryBuilder->getQuery(),
             $page,
-            5
+            25
         );
 
         $categories = $this->categoryRepository->findAll();
