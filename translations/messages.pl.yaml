@@ -31,7 +31,7 @@ navigation:
     cart: 'Koszyk'
     about: 'O nas'
     contact: 'Kontakt'
-    info: 'Info'
+    info: 'O NAS'
     dashboard: 'Panel administratora'
     orders: 'Zamówienia'
     users: 'Użytkownicy'
@@ -503,10 +503,11 @@ email:
     total_amount: 'Razem'
 
 info:
-    title: 'Info'
+    title: 'O NAS'
     contact_us: 'Skontaktuj się z nami'
     get_in_touch: 'Skontaktuj się z nami'
-    description: 'Katalog produktów oraz system składania zamówień jest przeznaczony dla naszych stałych klientów. Jeśli są Państwo zainteresowani nawiązaniem stałej współpracy, zapraszamy do kontaktu.'
+    description: 'Tworzymy dekoracje, miejskie pamiątki oraz gadżety dla różnych instytucji i lokalnych organizacji. Wszystkie produkty powstają w naszej szczecińskiej pracowni, a w projektach wykorzystujemy  naszą autorską grafikę.'
+    description2: 'Katalog produktów oraz system składania zamówień jest przeznaczony dla naszych stałych klientów. Jeśli są Państwo zainteresowani nawiązaniem współpracy, zapraszamy do kontaktu.'
     address: 'Adres'
     phone: 'Telefon'
     business_hours: 'Godziny pracy'
