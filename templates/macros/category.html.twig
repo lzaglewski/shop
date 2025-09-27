@@ -1,0 +1,51 @@
+{# Category hierarchy macros #}
+
+{#
+    Renders category options in hierarchical tree structure with optgroups
+
+    @param categories - array of all categories
+    @param selectedCategory - currently selected category ID
+#}
+{% macro renderCategoryOptions(categories, selectedCategory) %}
+    {# First, find all root categories #}
+    {% set rootCategories = [] %}
+    {% for category in categories %}
+        {% if category.parent is null %}
+            {% set rootCategories = rootCategories|merge([category]) %}
+        {% endif %}
+    {% endfor %}
+
+    {# Group options by root category #}
+    {% for rootCategory in rootCategories %}
+        <optgroup label="{{ rootCategory.name }}">
+            <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
+                {{ rootCategory.name }}
+            </option>
+
+            {{ _self.renderSubcategories(rootCategory, 1, selectedCategory, categories) }}
+        </optgroup>
+    {% endfor %}
+{% endmacro %}
+
+{#
+    Recursively renders subcategories with visual indentation
+
+    @param category - parent category
+    @param level - nesting level for indentation
+    @param selectedCategory - currently selected category ID
+    @param allCategories - array of all categories
+#}
+{% macro renderSubcategories(category, level, selectedCategory, allCategories) %}
+    {% for subcategory in allCategories %}
+        {% if subcategory.parent and subcategory.parent.id == category.id %}
+            <option value="{{ subcategory.id }}" {% if selectedCategory == subcategory.id ~ '' %}selected{% endif %}>
+                {% set prefix = '' %}
+                {% for i in 1..level %}
+                    {% set prefix = prefix ~ '— ' %}
+                {% endfor %}
+                {{ prefix }}{{ subcategory.name }}
+            </option>
+            {{ _self.renderSubcategories(subcategory, level + 1, selectedCategory, allCategories) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

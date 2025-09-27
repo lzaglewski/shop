@@ -1,23 +1,48 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Bulk Edit Prices for {{ product.name }} - B2B Shop{% endblock %}
+{% block title %}{{ 'client_price.bulk_edit_for'|trans }} {{ product.name }} - B2B Shop{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Bulk Edit Prices for {{ product.name }}</h1>
+            <h1>{{ 'client_price.bulk_edit_for'|trans }} {{ product.name }}</h1>
             <a href="{{ path('client_price_index', {'product': product.id}) }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Client Prices
+                <i class="bi bi-arrow-left"></i> {{ 'client_price.back_to_client_prices'|trans }}
             </a>
         </div>
-        
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="search" class="form-label">{{ 'client_price.search_clients'|trans }}</label>
+                        <input type="text"
+                               class="form-control"
+                               id="search"
+                               name="search"
+                               value="{{ currentSearch }}"
+                               placeholder="{{ 'client_price.search_by_company_name'|trans }}">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-sm w-50 py-1 px-2">
+                            <i class="bi bi-search"></i> {{ 'client_price.filter'|trans }}
+                        </button>
+
+                        <a href="{{ path('client_price_bulk_edit_for_product', {'id': product.id}) }}" class="btn btn-outline-secondary btn w-50 py-1 px-2">
+                            <i class="bi bi-arrow-counterclockwise"></i> {{ 'client_price.reset'|trans }}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header bg-light">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Client Prices</h5>
+                    <h5 class="mb-0">{{ 'client_price.client_prices'|trans }}</h5>
                     <div>
-                        <span class="badge bg-info me-2">Base Price: {{ basePrice }}{{ currency() }}</span>
-                        <span class="badge bg-primary">{{ clients|length }} Clients</span>
+                        <span class="badge bg-info me-2">{{ 'client_price.base_price'|trans }}: {{ basePrice }}{{ currency() }}</span>
+                        <span class="badge bg-primary">{{ totalClients }} {{ 'client_price.clients'|trans }}</span>
                     </div>
                 </div>
             </div>
@@ -28,10 +53,10 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">#</th>
-                                    <th style="width: 30%">Client</th>
-                                    <th style="width: 20%">Client Price</th>
-                                    <th style="width: 15%">Discount</th>
-                                    <th style="width: 15%">Status</th>
+                                    <th style="width: 30%">{{ 'client_price.client'|trans }}</th>
+                                    <th style="width: 20%">{{ 'client_price.client_price'|trans }}</th>
+                                    <th style="width: 15%">{{ 'client_price.discount'|trans }}</th>
+                                    <th style="width: 15%">{{ 'client_price.status'|trans }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,20 +64,20 @@
                                     {% set hasPrice = priceMap[client.id] is defined %}
                                     {% set price = hasPrice ? priceMap[client.id].price : basePrice %}
                                     {% set isActive = hasPrice ? priceMap[client.id].isActive : false %}
-                                    {% set discount = price < basePrice 
-                                        ? ((1 - price / basePrice) * 100)|round 
+                                    {% set discount = price < basePrice
+                                        ? ((1 - price / basePrice) * 100)|round
                                         : (price > basePrice ? ((price / basePrice - 1) * 100)|round : 0) %}
-                                    
+
                                     <tr>
                                         <td>{{ client.id }}</td>
                                         <td>{{ client.companyName }}</td>
                                         <td>
                                             <div class="input-group">
-                                                <input type="number" 
-                                                       name="prices[{{ client.id }}]" 
-                                                       class="form-control price-input" 
-                                                       value="{{ price }}" 
-                                                       step="0.01" 
+                                                <input type="number"
+                                                       name="prices[{{ client.id }}]"
+                                                       class="form-control price-input"
+                                                       value="{{ price }}"
+                                                       step="0.01"
                                                        min="0"
                                                        data-base-price="{{ basePrice }}"
                                                        data-client-id="{{ client.id }}">
@@ -66,37 +91,69 @@
                                         </td>
                                         <td>
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" 
-                                                       type="checkbox" 
-                                                       name="active[{{ client.id }}]" 
-                                                       id="active-{{ client.id }}" 
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       name="active[{{ client.id }}]"
+                                                       id="active-{{ client.id }}"
                                                        {{ isActive ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="active-{{ client.id }}">
-                                                    Active
+                                                    {{ 'client_price.active'|trans }}
                                                 </label>
                                             </div>
                                         </td>
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="5" class="text-center">No clients available</td>
+                                        <td colspan="5" class="text-center">{{ 'client_price.no_clients_available'|trans }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    
+
+                    <div class="d-flex justify-content-center my-3">
+                        {% if totalPages > 1 %}
+                            <nav aria-label="Pagination">
+                                <ul class="pagination">
+                                    {% if currentPage > 1 %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('client_price_bulk_edit_for_product', {'id': product.id, 'page': currentPage - 1} | merge(currentSearch ? {'search': currentSearch} : {})) }}">‹</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for page in 1..totalPages %}
+                                        {% if page == currentPage %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page }}</span>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ path('client_price_bulk_edit_for_product', {'id': product.id, 'page': page} | merge(currentSearch ? {'search': currentSearch} : {})) }}">{{ page }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if currentPage < totalPages %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('client_price_bulk_edit_for_product', {'id': product.id, 'page': currentPage + 1} | merge(currentSearch ? {'search': currentSearch} : {})) }}">›</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+
                     <div class="d-flex justify-content-between mt-4">
                         <div class="btn-group">
                             <button type="button" class="btn btn-outline-secondary" id="apply-discount-btn">
-                                <i class="bi bi-percent"></i> Apply Discount
+                                <i class="bi bi-percent"></i> {{ 'client_price.apply_discount'|trans }}
                             </button>
                             <button type="button" class="btn btn-outline-secondary" id="reset-prices-btn">
-                                <i class="bi bi-arrow-counterclockwise"></i> Reset to Base Price
+                                <i class="bi bi-arrow-counterclockwise"></i> {{ 'client_price.reset_to_base_prices'|trans }}
                             </button>
                         </div>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Save All Prices
+                            <i class="bi bi-save"></i> {{ 'client_price.save_all_prices'|trans }}
                         </button>
                     </div>
                 </form>
@@ -111,15 +168,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Apply discount button
             document.getElementById('apply-discount-btn').addEventListener('click', function() {
-                const discountPercent = prompt('Enter discount percentage (1-100):', '10');
+                const discountPercent = prompt('{{ 'client_price.enter_discount_percentage'|trans }}', '10');
                 if (discountPercent !== null && !isNaN(discountPercent)) {
                     const discount = parseFloat(discountPercent) / 100;
-                    const basePrice = parseFloat(document.querySelector('.price-input').dataset.basePrice);
-                    
+
                     document.querySelectorAll('.price-input').forEach(input => {
+                        const basePrice = parseFloat(input.dataset.basePrice);
                         const newPrice = (basePrice * (1 - discount)).toFixed(2);
                         input.value = newPrice;
-                        
+
                         // Update discount display
                         const clientId = input.dataset.clientId;
                         const discountElement = document.getElementById('discount-' + clientId);
@@ -128,15 +185,14 @@
                     });
                 }
             });
-            
+
             // Reset to base prices
             document.getElementById('reset-prices-btn').addEventListener('click', function() {
-                if (confirm('Reset all prices to base product price?')) {
-                    const basePrice = parseFloat(document.querySelector('.price-input').dataset.basePrice);
-                    
+                if (confirm('{{ 'client_price.reset_all_prices_confirm'|trans }}')) {
                     document.querySelectorAll('.price-input').forEach(input => {
+                        const basePrice = parseFloat(input.dataset.basePrice);
                         input.value = basePrice.toFixed(2);
-                        
+
                         // Update discount display
                         const clientId = input.dataset.clientId;
                         const discountElement = document.getElementById('discount-' + clientId);
@@ -145,7 +201,7 @@
                     });
                 }
             });
-            
+
             // Update discount when price changes
             document.querySelectorAll('.price-input').forEach(input => {
                 input.addEventListener('change', function() {
@@ -153,7 +209,7 @@
                     const newPrice = parseFloat(this.value);
                     const clientId = this.dataset.clientId;
                     const discountElement = document.getElementById('discount-' + clientId);
-                    
+
                     if (newPrice < basePrice) {
                         const discount = Math.round((1 - newPrice / basePrice) * 100);
                         discountElement.textContent = discount + '%';

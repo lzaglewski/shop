@@ -8,6 +8,8 @@ use App\Application\Form\ClientPriceType;
 use App\Application\User\UserService;
 use App\Domain\Pricing\Model\ClientPrice;
 use App\Domain\Product\Repository\ProductRepositoryInterface;
+use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,15 +23,21 @@ class ClientPriceController extends AbstractController
     private ClientPriceService $clientPriceService;
     private UserService $userService;
     private ProductRepositoryInterface $productRepository;
+    private ProductCategoryRepositoryInterface $categoryRepository;
+    private PaginatorInterface $paginator;
 
     public function __construct(
         ClientPriceService $clientPriceService,
         UserService $userService,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        ProductCategoryRepositoryInterface $categoryRepository,
+        PaginatorInterface $paginator
     ) {
         $this->clientPriceService = $clientPriceService;
         $this->userService = $userService;
         $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->paginator = $paginator;
     }
 
     #[Route('', name: 'client_price_index', methods: ['GET'])]
@@ -160,7 +168,28 @@ class ClientPriceController extends AbstractController
             throw $this->createNotFoundException('Client not found');
         }
 
-        $products = $this->productRepository->findActive();
+        $page = $request->query->getInt('page', 1);
+        $search = $request->query->get('search', '');
+        $categoryId = $request->query->getInt('category', 0);
+
+        $queryBuilder = $this->productRepository->createActiveProductsQueryBuilder();
+
+        if (!empty($search)) {
+            $this->productRepository->addSearchFilter($queryBuilder, $search);
+        }
+
+        if ($categoryId > 0) {
+            $this->productRepository->addCategoryFilter($queryBuilder, [$categoryId]);
+        }
+
+        $pagination = $this->paginator->paginate(
+            $queryBuilder->getQuery(),
+            $page,
+            5
+        );
+
+        $categories = $this->categoryRepository->findAll();
+
         $clientPrices = $this->clientPriceService->getClientPricesForClient($client);
 
         // Create a map of product IDs to client prices
@@ -178,7 +207,7 @@ class ClientPriceController extends AbstractController
             $productStatus = $request->request->all('active');
             $updatedCount = 0;
 
-            foreach ($products as $product) {
+            foreach ($pagination->getItems() as $product) {
                 $productId = $product->getId();
                 $price = isset($productPrices[$productId]) ? (float)$productPrices[$productId] : null;
                 $isActive = isset($productStatus[$productId]);
@@ -208,15 +237,18 @@ class ClientPriceController extends AbstractController
 
         return $this->render('client_price/bulk_edit_client.html.twig', [
             'client' => $client,
-            'products' => $products,
-            'priceMap' => $priceMap
+            'pagination' => $pagination,
+            'priceMap' => $priceMap,
+            'categories' => $categories,
+            'currentSearch' => $search,
+            'currentCategory' => $categoryId
         ]);
     }
 
     /**
      * Bulk edit prices for a specific product
      */
-    #[Route('/bulk-edit/product/{id}', name: 'client_price_bulk_edit_for_product', methods: ['GET', 'POST'])]
+#[Route('/bulk-edit/product/{id}', name: 'client_price_bulk_edit_for_product', methods: ['GET', 'POST'])]
     public function bulkEditForProduct(int $id, Request $request): Response
     {
         $product = $this->productRepository->findById($id);
@@ -225,7 +257,25 @@ class ClientPriceController extends AbstractController
             throw $this->createNotFoundException('Product not found');
         }
 
+        $page = $request->query->getInt('page', 1);
+        $search = $request->query->get('search', '');
+
         $clients = $this->userService->getActiveClients();
+
+        // Filter clients by search if provided
+        if (!empty($search)) {
+            $clients = array_filter($clients, function($client) use ($search) {
+                return stripos($client->getCompanyName(), $search) !== false;
+            });
+        }
+
+        // Paginate the clients
+        $clientsArray = array_values($clients);
+        $totalClients = count($clientsArray);
+        $itemsPerPage = 5;
+        $offset = ($page - 1) * $itemsPerPage;
+        $paginatedClients = array_slice($clientsArray, $offset, $itemsPerPage);
+
         $clientPrices = $this->clientPriceService->getClientPricesForProduct($product);
 
         // Create a map of client IDs to client prices
@@ -243,7 +293,7 @@ class ClientPriceController extends AbstractController
             $clientStatus = $request->request->all('active');
             $updatedCount = 0;
 
-            foreach ($clients as $client) {
+            foreach ($paginatedClients as $client) {
                 $clientId = $client->getId();
                 $price = isset($clientPrices[$clientId]) ? (float)$clientPrices[$clientId] : null;
                 $isActive = isset($clientStatus[$clientId]);
@@ -273,9 +323,14 @@ class ClientPriceController extends AbstractController
 
         return $this->render('client_price/bulk_edit_product.html.twig', [
             'product' => $product,
-            'clients' => $clients,
+            'clients' => $paginatedClients,
             'priceMap' => $priceMap,
-            'basePrice' => $product->getBasePrice()
+            'basePrice' => $product->getBasePrice(),
+            'currentSearch' => $search,
+            'currentPage' => $page,
+            'totalClients' => $totalClients,
+            'itemsPerPage' => $itemsPerPage,
+            'totalPages' => ceil($totalClients / $itemsPerPage)
         ]);
     }
 }
