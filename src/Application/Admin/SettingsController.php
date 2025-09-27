@@ -32,13 +32,15 @@ class SettingsController extends AbstractController
     {
         $categories = $this->categoryRepository->findAll();
         $currentCategory = $this->settingsService->getHomepageCategory();
+        $currentBanner = $this->settingsService->getHomepageBanner();
 
         return $this->render('admin/settings/index.html.twig', [
             'categories' => $categories,
             'currentCategory' => $currentCategory,
+            'currentBanner' => $currentBanner,
         ]);
     }
-
+    //Used
     #[Route('/general', name: 'admin_settings_general')]
     public function generalSettings(Request $request): Response
     {
@@ -55,7 +57,7 @@ class SettingsController extends AbstractController
             'currency' => $this->settingsService->getCurrency(),
         ]);
     }
-
+    //Used
     #[Route('/email', name: 'admin_settings_email')]
     public function emailSettings(Request $request): Response
     {
@@ -77,23 +79,23 @@ class SettingsController extends AbstractController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            
+
             // Test connection button was clicked
             if ($form->get('test_connection')->isClicked()) {
                 // Use current password if no new password provided
-                $password = !empty($data['smtp_password']) 
-                    ? $data['smtp_password'] 
+                $password = !empty($data['smtp_password'])
+                    ? $data['smtp_password']
                     : $this->settingsService->getSmtpPassword();
-                
+
                 // Debug: Check if we're using database values or form values
                 $host = $data['smtp_host'] ?? $this->settingsService->getSmtpHost();
                 $port = $data['smtp_port'] ?? $this->settingsService->getSmtpPort();
                 $username = $data['smtp_username'] ?? $this->settingsService->getSmtpUsername();
                 $encryption = $data['smtp_encryption'] ?? $this->settingsService->getSmtpEncryption();
-                
-                $this->addFlash('info', sprintf('Debug: Testuję z Host=%s, Port=%d, User=%s, HasPassword=%s, Encryption=%s', 
+
+                $this->addFlash('info', sprintf('Debug: Testuję z Host=%s, Port=%d, User=%s, HasPassword=%s, Encryption=%s',
                     $host, $port, $username, $password ? 'Yes' : 'No', $encryption ?? 'none'));
-                
+
                 $testResult = $this->smtpTestService->testConnection(
                     $host,
                     $port,
@@ -109,8 +111,8 @@ class SettingsController extends AbstractController
                     $errorMessage = $testResult['message'];
                     if (isset($testResult['debug'])) {
                         $debug = $testResult['debug'];
-                        $errorMessage .= sprintf(' [Debug: Host=%s, Port=%d, User=%s, Encryption=%s, DSN=%s]', 
-                            $debug['host'], $debug['port'], $debug['username'], 
+                        $errorMessage .= sprintf(' [Debug: Host=%s, Port=%d, User=%s, Encryption=%s, DSN=%s]',
+                            $debug['host'], $debug['port'], $debug['username'],
                             $debug['encryption'] ?? 'none', $debug['dsn'] ?? 'N/A');
                     }
                     $this->addFlash('error', $errorMessage);
@@ -122,25 +124,25 @@ class SettingsController extends AbstractController
                 $this->settingsService->setSmtpHost($data['smtp_host']);
                 $this->settingsService->setSmtpPort($data['smtp_port']);
                 $this->settingsService->setSmtpUsername($data['smtp_username']);
-                
+
                 // Only update password if provided
                 if (!empty($data['smtp_password'])) {
                     $this->settingsService->setSmtpPassword($data['smtp_password']);
                 }
-                
+
                 $this->settingsService->setSmtpEncryption($data['smtp_encryption']);
                 $this->settingsService->setMailFromEmail($data['mail_from_email']);
                 $this->settingsService->setMailFromName($data['mail_from_name']);
-                
+
                 // Parse admin emails
                 $adminEmails = array_map('trim', explode(',', $data['mail_admin_emails']));
                 $adminEmails = array_filter($adminEmails); // Remove empty strings
                 $this->settingsService->setMailAdminEmails($adminEmails);
-                
+
                 $this->settingsService->setMailNotificationsEnabled($data['mail_notifications_enabled']);
 
                 $this->addFlash('success', 'Ustawienia email zostały zapisane.');
-                
+
                 return $this->redirectToRoute('admin_settings_email');
             }
         }
@@ -149,7 +151,7 @@ class SettingsController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
+    //Used
     #[Route('/homepage-category', name: 'admin_settings_homepage_category', methods: ['POST'])]
     public function updateHomepageCategory(Request $request): Response
     {
@@ -166,7 +168,7 @@ class SettingsController extends AbstractController
 
         return $this->redirectToRoute('admin_settings');
     }
-
+    //Used
     #[Route('/test-ovh-smtp', name: 'admin_settings_test_ovh_smtp', methods: ['POST'])]
     public function testOvhSmtp(Request $request): Response
     {
@@ -190,5 +192,42 @@ class SettingsController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_settings_email');
+    }
+
+    //Used
+    #[Route('/homepage-banner', name: 'admin_settings_homepage_banner', methods: ['POST'])]
+    public function updateHomepageBanner(Request $request): Response
+    {
+        $uploadedFile = $request->files->get('banner_image');
+
+        if ($uploadedFile && $uploadedFile->isValid()) {
+            $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/banners';
+
+            if (!is_dir($uploadsDirectory)) {
+                mkdir($uploadsDirectory, 0755, true);
+            }
+
+            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+
+            try {
+                $uploadedFile->move($uploadsDirectory, $newFilename);
+
+                $oldBanner = $this->settingsService->getHomepageBanner();
+                if ($oldBanner && file_exists($uploadsDirectory . '/' . $oldBanner)) {
+                    unlink($uploadsDirectory . '/' . $oldBanner);
+                }
+
+                $this->settingsService->setHomepageBanner($newFilename);
+                $this->addFlash('success', 'Banner został wgrany pomyślnie.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Błąd podczas wgrywania banera: ' . $e->getMessage());
+            }
+        } else {
+            $this->addFlash('error', 'Proszę wybrać prawidłowy plik obrazu.');
+        }
+
+        return $this->redirectToRoute('admin_settings');
     }
 }

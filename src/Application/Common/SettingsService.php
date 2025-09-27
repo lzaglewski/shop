@@ -21,6 +21,7 @@ class SettingsService
     public const MAIL_ADMIN_EMAILS_KEY = 'mail_admin_emails';
     public const MAIL_NOTIFICATIONS_ENABLED_KEY = 'mail_notifications_enabled';
     public const CURRENCY_KEY = 'currency';
+    public const HOMEPAGE_BANNER_KEY = 'homepage_banner';
 
     private SettingsRepositoryInterface $settingsRepository;
 
@@ -190,5 +191,15 @@ class SettingsService
     public function setCurrency(string $currency): void
     {
         $this->setSetting(self::CURRENCY_KEY, $currency);
+    }
+
+    public function getHomepageBanner(): ?string
+    {
+        return $this->getSetting(self::HOMEPAGE_BANNER_KEY)?->getSettingValue();
+    }
+
+    public function setHomepageBanner(string $bannerFilename): void
+    {
+        $this->setSetting(self::HOMEPAGE_BANNER_KEY, $bannerFilename);
     }
 }

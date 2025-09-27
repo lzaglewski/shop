@@ -50,6 +50,39 @@
                     </form>
                 </div>
             </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Banner strony głównej</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ path('admin_settings_homepage_banner') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="banner_image" class="form-label">Plik banera</label>
+                            <input type="file" class="form-control" id="banner_image" name="banner_image" accept="image/*">
+                            <div class="form-text">
+                                Wybierz plik obrazu dla banera strony głównej. Obsługiwane formaty: JPG, PNG, WebP.
+                            </div>
+                        </div>
+
+                        {% if currentBanner %}
+                            <div class="mb-3">
+                                <label class="form-label">Aktualny banner</label>
+                                <div class="border p-2 rounded">
+                                    <img src="{{ asset('uploads/banners/' ~ currentBanner) }}"
+                                         alt="Aktualny banner"
+                                         style="max-width: 200px; max-height: 100px; object-fit: cover;">
+                                    <div class="small text-muted mt-1">{{ currentBanner }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload"></i> Wgraj banner
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
         
         <div class="col-lg-4">

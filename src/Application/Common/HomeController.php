@@ -67,8 +67,12 @@ class HomeController extends AbstractController
             $featuredProducts = array_slice($featuredProducts, 0, 8);
         }
 
+        // Get banner from settings
+        $bannerImage = $this->settingsService->getHomepageBanner();
+
         return $this->render('home/index.html.twig', [
             'featuredProducts' => $featuredProducts,
+            'bannerImage' => $bannerImage,
         ]);
     }
 
