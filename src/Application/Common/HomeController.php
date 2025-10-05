@@ -107,4 +107,16 @@ class HomeController extends AbstractController
             'infoForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/privacy-policy', name: 'privacy_policy')]
+    public function privacyPolicy(): Response
+    {
+        return $this->render('home/privacy_policy.html.twig');
+    }
+
+    #[Route('/terms', name: 'terms')]
+    public function terms(): Response
+    {
+        return $this->render('home/terms.html.twig');
+    }
 }
