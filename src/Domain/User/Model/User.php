@@ -19,8 +19,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
     private int $id;
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    #[ORM\Column(type: 'string', length: 180, unique: true, nullable: true)]
+    private ?string $email = null;
+    #[ORM\Column(type: 'string', length: 50, unique: true, nullable: true)]
+    private ?string $login = null;
     #[ORM\Column(type: 'string')]
     private string $password;
     #[ORM\Column(type: 'string', length: 255)]
@@ -53,17 +55,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $clientPrices;
 
     public function __construct(
-        string $email,
+        ?string $email,
         string $password,
         string $companyName,
         ?string $taxId = null,
-        UserRole $role = UserRole::CLIENT
+        UserRole $role = UserRole::CLIENT,
+        ?string $login = null
     ) {
+        // Ensure at least email or login is provided
+        if (empty($email) && empty($login)) {
+            throw new \InvalidArgumentException('Either email or login must be provided');
+        }
+
         $this->email = $email;
         $this->password = $password;
         $this->companyName = $companyName;
         $this->taxId = $taxId;
         $this->role = $role;
+        $this->login = $login ? strtolower(trim($login)) : null;
         $this->isActive = true;
         $this->clientPrices = new ArrayCollection();
     }
@@ -73,13 +82,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
+        // Ensure at least email or login remains
+        if (empty($email) && empty($this->login)) {
+            throw new \InvalidArgumentException('Cannot remove email when login is not set');
+        }
         $this->email = $email;
     }
 
@@ -175,7 +188,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        if (!empty($this->login)) {
+            return $this->login;
+        }
+        if (!empty($this->email)) {
+            return $this->email;
+        }
+        throw new \LogicException('User must have either login or email');
+    }
+
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(?string $login): void
+    {
+        // Ensure at least email or login remains
+        if (empty($login) && empty($this->email)) {
+            throw new \InvalidArgumentException('Cannot remove login when email is not set');
+        }
+        $this->login = $login ? strtolower(trim($login)) : null;
     }
 
     public function getContactNumber(): ?string

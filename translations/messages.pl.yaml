@@ -45,6 +45,8 @@ auth:
     register: 'Zarejestruj się'
     logout: 'Wyloguj się'
     email: 'Email'
+    login_or_email: 'Login lub Email'
+    login_or_email_placeholder: 'Wpisz login lub adres email'
     password: 'Hasło'
     remember_me: 'Zapamiętaj mnie'
     forgot_password: 'Zapomniałeś hasła?'
@@ -359,6 +361,7 @@ form:
     name: 'Nazwa'
     description: 'Opis'
     email: 'Email'
+    login: 'Login'
     company_name: 'Nazwa firmy'
     tax_id: 'NIP'
     role: 'Rola'
@@ -375,6 +378,7 @@ form:
 
     # Form help texts
     email_help: 'Adres email będzie używany do logowania.'
+    login_help: 'Unikalny login użytkownika (opcjonalny). Login może być użyty zamiast email do logowania.'
     company_name_help: 'Nazwa firmy do identyfikacji biznesowej.'
     tax_id_help: 'Numer identyfikacji podatkowej do celów rozliczeniowych.'
     role_help: 'Rola użytkownika określa uprawnienia w systemie.'
@@ -396,6 +400,10 @@ form:
     # User fields
     email_required: 'Wprowadź adres email'
     email_invalid: 'Wprowadź prawidłowy adres email'
+    email_or_login_required: 'Wprowadź adres email lub login'
+    email_or_login_info: 'Musisz podać przynajmniej email lub login. Oba pola mogą być wypełnione.'
+    login_min_length: 'Login musi mieć co najmniej {{ limit }} znaki'
+    login_max_length: 'Login może mieć maksymalnie {{ limit }} znaków'
     company_name_required: 'Wprowadź nazwę firmy'
     tax_id_required: 'Wprowadź NIP'
     role_required: 'Wybierz rolę'

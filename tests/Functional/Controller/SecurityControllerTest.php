@@ -20,7 +20,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         // Sprawdzamy tylko czy strona się załadowała poprawnie
         $this->assertSelectorExists('form');
-        $this->assertSelectorExists('input[type="email"]');
+        $this->assertSelectorExists('input[name="identifier"]'); // Changed to identifier (login or email)
         $this->assertSelectorExists('input[type="password"]');
         $this->assertSelectorExists('button[type="submit"]');
     }

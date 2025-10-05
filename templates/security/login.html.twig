@@ -23,10 +23,10 @@
                             {% endif %}
 
                             <div class="mb-3">
-                                <label for="inputEmail" class="form-label">{{ 'auth.email'|trans }}</label>
+                                <label for="inputIdentifier" class="form-label">{{ 'auth.login_or_email'|trans }}</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" value="{{ last_username }}" name="identifier" id="inputIdentifier" class="form-control" autocomplete="username" required autofocus placeholder="{{ 'auth.login_or_email_placeholder'|trans }}">
                                 </div>
                             </div>
 

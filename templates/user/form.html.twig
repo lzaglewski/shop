@@ -2,14 +2,21 @@
     {# Basic Information Section #}
     <fieldset class="mb-4">
         <legend class="h5 mb-3 text-primary border-bottom pb-2">{{ 'profile.account_info'|trans }}</legend>
+        <div class="alert alert-info">{{ 'form.email_or_login_info'|trans }}</div>
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 {{ form_label(form.email) }}
                 {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid ? '' : ' is-invalid')}}) }}
                 {{ form_errors(form.email) }}
                 <div class="form-text">{{ 'form.email_help'|trans }}</div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.login) }}
+                {{ form_widget(form.login, {'attr': {'class': 'form-control' ~ (form.login.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.login) }}
+                <div class="form-text">{{ 'form.login_help'|trans }}</div>
+            </div>
+            <div class="col-md-4 mb-3">
                 {{ form_label(form.companyName) }}
                 {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
                 {{ form_errors(form.companyName) }}

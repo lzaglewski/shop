@@ -8,30 +8,41 @@ use App\Domain\User\Model\User;
 use App\Domain\User\Model\UserRole;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
+            ->add('email', TextType::class, [
                 'label' => 'form.email',
+                'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'form.email_required',
-                    ]),
                     new Email([
                         'message' => 'form.email_invalid',
+                    ]),
+                ],
+            ])
+            ->add('login', TextType::class, [
+                'label' => 'form.login',
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'min' => 3,
+                        'max' => 50,
+                        'minMessage' => 'form.login_min_length',
+                        'maxMessage' => 'form.login_max_length',
                     ]),
                 ],
             ])
@@ -131,8 +142,20 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'require_password' => true,
+            'constraints' => [
+                new Callback([$this, 'validateEmailOrLogin']),
+            ],
         ]);
 
         $resolver->setAllowedTypes('require_password', 'bool');
+    }
+
+    public function validateEmailOrLogin(User $user, ExecutionContextInterface $context): void
+    {
+        if (empty($user->getEmail()) && empty($user->getLogin())) {
+            $context->buildViolation('form.email_or_login_required')
+                ->atPath('email')
+                ->addViolation();
+        }
     }
 }

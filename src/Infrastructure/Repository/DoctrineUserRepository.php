@@ -40,6 +40,11 @@ class DoctrineUserRepository implements UserRepositoryInterface
         return $this->repository->findOneBy(['email' => $email]);
     }
 
+    public function findByLogin(string $login): ?User
+    {
+        return $this->repository->findOneBy(['login' => strtolower(trim($login))]);
+    }
+
     public function findAll(): array
     {
         return $this->repository->findAll();

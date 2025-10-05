@@ -6,9 +6,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
-            entity:
-                class: App\Domain\User\Model\User
-                property: email
+            id: App\Infrastructure\Security\UserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -21,7 +19,7 @@ security:
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: homepage
-                username_parameter: email
+                username_parameter: identifier
                 password_parameter: password
             logout:
                 path: app_logout

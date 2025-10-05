@@ -24,7 +24,12 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->userRepository->findByEmail($identifier);
+        // Check if identifier is an email (contains @)
+        if (str_contains($identifier, '@')) {
+            $user = $this->userRepository->findByEmail($identifier);
+        } else {
+            $user = $this->userRepository->findByLogin($identifier);
+        }
 
         if (!$user) {
             throw new UserNotFoundException(sprintf('User "%s" not found.', $identifier));

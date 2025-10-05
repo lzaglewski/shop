@@ -23,18 +23,20 @@ class UserService
     }
 
     public function createUser(
-        string $email,
+        ?string $email,
         string $plainPassword,
         string $companyName,
         ?string $taxId = null,
-        UserRole $role = UserRole::CLIENT
+        UserRole $role = UserRole::CLIENT,
+        ?string $login = null
     ): User {
         $user = new User(
             $email,
             $this->hashPassword($plainPassword),
             $companyName,
             $taxId,
-            $role
+            $role,
+            $login
         );
 
         $this->userRepository->save($user);
@@ -44,7 +46,7 @@ class UserService
 
     public function updateUser(
         User $user,
-        string $email,
+        ?string $email,
         string $companyName,
         ?string $taxId = null
     ): User {
@@ -80,9 +82,27 @@ class UserService
         return $this->userRepository->findById($id);
     }
 
-    public function getUserByEmail(string $email): ?User
+    public function getUserByEmail(?string $email): ?User
     {
+        if (empty($email)) {
+            return null;
+        }
         return $this->userRepository->findByEmail($email);
+    }
+
+    public function getUserByLogin(string $login): ?User
+    {
+        return $this->userRepository->findByLogin($login);
+    }
+
+    public function findByLoginOrEmail(string $identifier): ?User
+    {
+        // Simple email validation
+        if (str_contains($identifier, '@')) {
+            return $this->getUserByEmail($identifier);
+        }
+
+        return $this->getUserByLogin($identifier);
     }
 
     public function getAllUsers(): array
