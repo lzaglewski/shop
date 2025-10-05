@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -89,10 +90,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmail(?string $email): void
     {
-        // Ensure at least email or login remains
-        if (empty($email) && empty($this->login)) {
-            throw new \InvalidArgumentException('Cannot remove email when login is not set');
-        }
         $this->email = $email;
     }
 
@@ -204,10 +201,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setLogin(?string $login): void
     {
-        // Ensure at least email or login remains
-        if (empty($login) && empty($this->email)) {
-            throw new \InvalidArgumentException('Cannot remove login when email is not set');
-        }
         $this->login = $login ? strtolower(trim($login)) : null;
     }
 
@@ -299,5 +292,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBillingTaxId(?string $billingTaxId): void
     {
         $this->billingTaxId = $billingTaxId;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function validateIdentifier(): void
+    {
+        if (empty($this->email) && empty($this->login)) {
+            throw new \InvalidArgumentException('Either email or login must be provided');
+        }
     }
 }
