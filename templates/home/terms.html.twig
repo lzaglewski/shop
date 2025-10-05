@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Regulamin korzystania z platformy{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h1 class="mb-4">Regulamin korzystania z platformy zamówień</h1>
+
+            <section class="mb-5">
+                <h2>1. Postanowienia ogólne</h2>
+                <p>
+                    1.1. Niniejszy Regulamin określa zasady korzystania z platformy internetowej (dalej: "Platforma") służącej do składania zamówień.
+                </p>
+                <p>
+                    1.2. Właścicielem i administratorem Platformy jest Bellumi Katarzyna Piechocka, prowadząca działalność przy ul. Reduty Ordona 89b/U1 w Szczecinie.
+                </p>
+                <p>
+                    1.3. Platforma działa na zasadzie systemu zamówieniowego, a nie standardowego sklepu internetowego. Składanie zamówień jest możliwe wyłącznie przez Klientów, którym Administrator założył konto.
+                </p>
+                <p>
+                    1.4. Korzystanie z Platformy oznacza akceptację postanowień niniejszego Regulaminu.
+                </p>
+            </section>
+
+            <section class="mb-5">
+                <h2>2. Konto Klienta i dostęp do Platformy</h2>
+                <p>
+                    2.1. Rejestracja i założenie konta nie są możliwe dla osób fizycznych. Dostęp do Platformy mają wyłącznie Klienci, z którymi ustalono warunki współpracy.
+                </p>
+                <p>
+                    2.2. Konta Klientów są tworzone i aktywowane przez Administratora Platformy. Klient otrzymuje dane dostępowe (login i hasło) drogą mailową.
+                </p>
+                <p>
+                    2.3. Klient jest zobowiązany do utrzymania poufności swoich danych dostępowych.
+                </p>
+                <p>
+                    2.4. Po pierwszym zalogowaniu Klient ma możliwość zmiany hasła. Zaleca się regularną zmianę hasła w celu zwiększenia bezpieczeństwa.
+                </p>
+            </section>
+
+            <section class="mb-5">
+                <h2>3. Składanie i realizacja zamówień</h2>
+                <p>
+                    3.1. Klient po zalogowaniu ma dostęp do indywidualnego katalogu produktów oraz przypisanych do niego cen. Ceny te mają charakter wiążący w momencie składania zamówienia, chyba że ustalono inaczej.
+                </p>
+                <p>
+                    3.2. Wszystkie ceny produktów podane na Platformie są cenami końcowymi, które stanowią jednocześnie ceny netto i brutto. Sprzedawca, czyli Bellumi Katarzyna Piechocka, jest podmiotowo zwolniony z podatku od towarów i usług (VAT) na podstawie art. 113 ust. 1 i 9 ustawy o VAT. Z tego powodu do podanych cen nie dolicza się podatku VAT.
+                </p>
+                <p>
+                    3.3. Klient ma możliwość złożenia zamówienia poprzez dodanie wybranych produktów do koszyka i potwierdzenie zamówienia.
+                </p>
+                <p>
+                    3.4. Po złożeniu zamówienia, Klient otrzyma informację o rozpoczęciu realizacji zamówienia oraz o szacowanym czasie realizacji.
+                </p>
+                <p>
+                    3.5. Klient ma możliwość śledzenia historii swoich zamówień oraz sprawdzania bieżącego statusu każdego z nich w panelu Klienta.
+                </p>
+                <p>
+                    3.6. Klient zostanie powiadomiony drogą mailową, gdy zamówienie zostanie skompletowane i wysłane. Wiadomość będzie zawierać numer przesyłki (jeśli dotyczy) oraz przewidywany termin dostawy.
+                </p>
+            </section>
+
+            <section class="mb-5">
+                <h2>4. Płatności i faktury</h2>
+                <p>
+                    4.1. Platforma nie obsługuje płatności online. Płatność za zamówione towary odbywa się na podstawie faktury.
+                </p>
+                <p>
+                    4.2. Faktura zostanie dołączona do zamówienia. Dodatkowo, Klient ma możliwość pobrania swoich faktur bezpośrednio z panelu Klienta.
+                </p>
+            </section>
+
+            <section class="mb-5">
+                <h2>5. Ochrona danych osobowych</h2>
+                <p>
+                    5.1. Administratorem danych osobowych Klientów jest Bellumi Katarzyna Piechocka.
+                </p>
+                <p>
+                    5.2. Dane osobowe Klientów są przetwarzane w celu realizacji zamówień, wystawiania faktur, prowadzenia komunikacji handlowej oraz w celach archiwalnych i statystycznych.
+                </p>
+                <p>
+                    5.3. Szczegółowe informacje dotyczące przetwarzania danych osobowych znajdują się w <a href="{{ path('privacy_policy') }}">Polityce Prywatności</a>.
+                </p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
