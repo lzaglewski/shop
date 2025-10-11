@@ -1,5 +1,27 @@
 # Polish validation messages for contact and info forms
 
+form:
+    # User form validation messages
+    email_invalid: 'Wprowadź prawidłowy adres email'
+    email_or_login_required: 'Wprowadź adres email lub login'
+    login_min_length: 'Login musi mieć co najmniej {{ limit }} znaki'
+    login_max_length: 'Login może mieć maksymalnie {{ limit }} znaków'
+    company_name_required: 'Wprowadź nazwę firmy'
+    tax_id_required: 'Wprowadź NIP'
+    role_required: 'Wybierz rolę'
+    password_required: 'Wprowadź hasło'
+    password_min_length: 'Hasło powinno mieć co najmniej {{ limit }} znaków'
+    password_mismatch: 'Pola hasła muszą się zgadzać.'
+
+    # Product form validation messages
+    product_name_required: 'Wprowadź nazwę produktu'
+    sku_required: 'Wprowadź SKU'
+    base_price_required: 'Wprowadź cenę bazową'
+    price_positive: 'Cena musi być dodatnia'
+    stock_required: 'Wprowadź ilość w magazynie'
+    invalid_image_format: 'Wgraj prawidłowy obraz (JPEG, PNG, GIF)'
+    invalid_images_format: 'Wgraj prawidłowe obrazy (JPEG, PNG, GIF)'
+
 info:
     name_required: 'Imię lub nazwa firmy jest wymagana'
     name_min_length: 'Imię lub nazwa firmy musi mieć co najmniej {{ limit }} znaki'

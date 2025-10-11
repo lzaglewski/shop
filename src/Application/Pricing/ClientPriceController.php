@@ -190,7 +190,7 @@ class ClientPriceController extends AbstractController
 
         $categories = $this->categoryRepository->findAll();
 
-        $clientPrices = $this->clientPriceService->getClientPricesForClient($client);
+        $clientPrices = $this->clientPriceService->getAllClientPricesForClient($client);
 
         // Create a map of product IDs to client prices
         $priceMap = [];
@@ -232,7 +232,7 @@ class ClientPriceController extends AbstractController
             }
 
             $this->addFlash('success', sprintf('Successfully updated %d prices for %s', $updatedCount, $client->getCompanyName()));
-            return $this->redirectToRoute('client_price_index', ['client' => $client->getId()]);
+            return $this->redirectToRoute('client_price_bulk_edit_for_client', ['id' => $client->getId()]);
         }
 
         return $this->render('client_price/bulk_edit_client.html.twig', [

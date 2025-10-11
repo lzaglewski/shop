@@ -28,6 +28,7 @@ class ProductType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'form.name',
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.product_name_required',
@@ -36,6 +37,7 @@ class ProductType extends AbstractType
             ])
             ->add('sku', TextType::class, [
                 'label' => 'form.sku',
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.sku_required',
@@ -45,6 +47,7 @@ class ProductType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'form.description',
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('basePrice', MoneyType::class, [
                 'label' => 'form.base_price',

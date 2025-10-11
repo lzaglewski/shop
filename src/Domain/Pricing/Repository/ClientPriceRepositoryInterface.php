@@ -18,6 +18,8 @@ interface ClientPriceRepositoryInterface
 
     public function findByClient(User $client): array;
 
+    public function findAllByClient(User $client): array;
+
     public function findByProduct(Product $product): array;
 
     public function findAll(): array;

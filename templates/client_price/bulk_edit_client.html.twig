@@ -70,9 +70,11 @@
                                     {% set hasPrice = priceMap[product.id] is defined %}
                                     {% set price = hasPrice ? priceMap[product.id].price : product.basePrice %}
                                     {% set isActive = hasPrice ? priceMap[product.id].isActive : false %}
-                                    {% set discount = price < product.basePrice
+                                    {% set isDiscount = price < product.basePrice %}
+                                    {% set isIncrease = price > product.basePrice %}
+                                    {% set percentValue = isDiscount
                                         ? ((1 - price / product.basePrice) * 100)|round
-                                        : (price > product.basePrice ? ((price / product.basePrice - 1) * 100)|round : 0) %}
+                                        : (isIncrease ? ((price / product.basePrice - 1) * 100)|round : 0) %}
 
                                     <tr>
                                         <td>{{ product.id }}</td>
@@ -92,8 +94,8 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span id="discount-{{ product.id }}" class="{{ discount < 0 ? 'text-danger' : (discount > 0 ? 'text-success' : '') }}">
-                                                {{ discount > 0 ? discount ~ '%' : (discount < 0 ? '+' ~ (discount * -1) ~ '%' : '0%') }}
+                                            <span id="discount-{{ product.id }}" class="{{ isDiscount ? 'text-success' : (isIncrease ? 'text-danger' : '') }}">
+                                                {{ isDiscount ? percentValue ~ '%' : (isIncrease ? '+' ~ percentValue ~ '%' : '0%') }}
                                             </span>
                                         </td>
                                         <td>

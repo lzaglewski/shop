@@ -50,6 +50,13 @@ class DoctrineClientPriceRepository implements ClientPriceRepositoryInterface
         ]);
     }
 
+    public function findAllByClient(User $client): array
+    {
+        return $this->repository->findBy([
+            'client' => $client
+        ]);
+    }
+
     public function findByProduct(Product $product): array
     {
         return $this->repository->findBy([

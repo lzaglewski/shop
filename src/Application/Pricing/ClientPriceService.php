@@ -48,6 +48,11 @@ class ClientPriceService
         return $this->clientPriceRepository->findByClient($client);
     }
 
+    public function getAllClientPricesForClient(User $client): array
+    {
+        return $this->clientPriceRepository->findAllByClient($client);
+    }
+
     public function bulkSetClientPrices(User $client, array $productPrices): void
     {
         foreach ($productPrices as $productId => $data) {
