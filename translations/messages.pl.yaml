@@ -107,7 +107,6 @@ settings:
     currency_help: 'Symbol waluty używany w całym systemie (np. €, $, zł)'
 
 footer:
-    description: 'Twój zaufany partner w zakresie dostaw biznesowych.'
     quick_links: 'Szybkie linki'
     contact: 'Kontakt'
     all_rights_reserved: 'Wszystkie prawa zastrzeżone.'
