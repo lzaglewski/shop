@@ -21,8 +21,8 @@ class OrderItem
     private ?Order $order = null;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
-    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false)]
-    private Product $product;
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Product $product;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $productName;
@@ -60,7 +60,7 @@ class OrderItem
         $this->order = $order;
     }
 
-    public function getProduct(): Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }

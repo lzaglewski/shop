@@ -171,6 +171,7 @@ product:
     error_updating_product: 'Błąd podczas aktualizacji produktu: %message%'
     has_been_deactivated: 'Produkt został dezaktywowany.'
     has_been_deleted: 'Produkt został usunięty.'
+    deleted: 'Produkt usunięty'
     main_image_deleted_successfully: 'Główne zdjęcie zostało usunięte pomyślnie.'
     additional_image_deleted_successfully: 'Dodatkowe zdjęcie zostało usunięte pomyślnie.'
     invalid_image_specified: 'Podano nieprawidłowe zdjęcie.'
