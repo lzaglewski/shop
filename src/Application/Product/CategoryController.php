@@ -81,6 +81,12 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Check if category is trying to set itself as parent
+            if ($category->getParent() && $category->getParent()->getId() === $category->getId()) {
+                $this->addFlash('danger', 'Category cannot be its own parent.');
+                return $this->redirectToRoute('category_list');
+            }
+
             $this->categoryRepository->save($category);
             $this->addFlash('success', 'Category updated successfully.');
 
