@@ -71,7 +71,7 @@ class DoctrineClientPriceRepository implements ClientPriceRepositoryInterface
             'isActive' => true
         ]);
     }
-    
+
     public function findOneBy(array $criteria): ?ClientPrice
     {
         return $this->repository->findOneBy($criteria);

@@ -91,8 +91,10 @@ class DoctrineProductCategoryRepository implements ProductCategoryRepositoryInte
             ->join('p.clientPrices', 'cp')
             ->where('p.isActive = :isActive')
             ->andWhere('cp.client = :client')
-            ->setParameter('isActive', true)
-            ->setParameter('client', $user);
+            ->andWhere('cp.isActive = :cpActive')
+            ->setParameter('isActive', 1)
+            ->setParameter('client', $user)
+            ->setParameter('cpActive', true);
 
         $categoriesWithProducts = $queryBuilder->getQuery()->getResult();
 
