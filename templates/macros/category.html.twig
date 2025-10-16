@@ -15,15 +15,12 @@
         {% endif %}
     {% endfor %}
 
-    {# Group options by root category #}
+    {# Render all categories as flat list with visual indentation #}
     {% for rootCategory in rootCategories %}
-        <optgroup label="{{ rootCategory.name }}">
-            <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
-                {{ rootCategory.name }}
-            </option>
-
-            {{ _self.renderSubcategories(rootCategory, 1, selectedCategory, categories) }}
-        </optgroup>
+        <option value="{{ rootCategory.id }}" {% if selectedCategory == rootCategory.id ~ '' %}selected{% endif %}>
+            {{ rootCategory.name }}
+        </option>
+        {{ _self.renderSubcategories(rootCategory, 1, selectedCategory, categories) }}
     {% endfor %}
 {% endmacro %}
 
