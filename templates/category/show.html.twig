@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_admin.html.twig' %}
 
 {% block title %}{{ category.name }} - B2B Shop{% endblock %}
 
@@ -25,7 +25,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
-        
+
         {% for message in app.flashes('danger') %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ message|trans }}
@@ -43,12 +43,12 @@
                         <dl class="row">
                             <dt class="col-sm-3">Name</dt>
                             <dd class="col-sm-9">{{ category.name }}</dd>
-                            
+
                             {% if category.description %}
                                 <dt class="col-sm-3">Description</dt>
                                 <dd class="col-sm-9">{{ category.description }}</dd>
                             {% endif %}
-                            
+
                             <dt class="col-sm-3">Parent Category</dt>
                             <dd class="col-sm-9">
                                 {% if category.parent %}
@@ -59,16 +59,16 @@
                                     <span class="text-muted">None (Root Category)</span>
                                 {% endif %}
                             </dd>
-                            
+
                             <dt class="col-sm-3">Products</dt>
                             <dd class="col-sm-9">{{ category.products|length }}</dd>
-                            
+
                             <dt class="col-sm-3">Subcategories</dt>
                             <dd class="col-sm-9">{{ category.children|length }}</dd>
                         </dl>
                     </div>
                 </div>
-                
+
                 {% if category.children|length > 0 %}
                     <div class="card mb-4">
                         <div class="card-header">
@@ -92,7 +92,7 @@
                     </div>
                 {% endif %}
             </div>
-            
+
             <div class="col-md-4">
                 {% if category.products|length > 0 %}
                     <div class="card">
@@ -118,14 +118,14 @@
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="mt-4">
             <a href="{{ path('category_list') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Back to Category List
             </a>
         </div>
     </div>
-    
+
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -137,7 +137,7 @@
                 <div class="modal-body">
                     <p>Are you sure you want to delete the category <strong>{{ category.name }}</strong>?</p>
                     <p class="text-danger">
-                        <i class="bi bi-exclamation-triangle"></i> 
+                        <i class="bi bi-exclamation-triangle"></i>
                         This action cannot be undone. Categories with products or subcategories cannot be deleted.
                     </p>
                 </div>

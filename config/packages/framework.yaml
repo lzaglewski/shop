@@ -8,6 +8,10 @@ framework:
     #esi: true
     #fragments: true
 
+    # Suppress file:// protocol links in dev toolbar to avoid browser warnings
+    # You can configure an IDE handler like phpstorm://open?file=%%f&line=%%l if needed
+    ide: null
+
 when@test:
     framework:
         test: true
