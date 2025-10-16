@@ -9,8 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ChangePasswordType extends AbstractType
 {
@@ -35,9 +35,9 @@ class ChangePasswordType extends AbstractType
                         new NotBlank([
                             'message' => 'form.new_password_required',
                         ]),
-                        new Length([
-                            'min' => 8,
-                            'minMessage' => 'form.password_min_length',
+                        new Regex([
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/',
+                            'message' => 'form.password_requirements',
                         ]),
                     ],
                 ],

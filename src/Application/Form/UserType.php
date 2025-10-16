@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class UserType extends AbstractType
@@ -123,9 +124,9 @@ class UserType extends AbstractType
                         new NotBlank([
                             'message' => 'form.password_required',
                         ]),
-                        new Length([
-                            'min' => 8,
-                            'minMessage' => 'form.password_min_length',
+                        new Regex([
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/',
+                            'message' => 'form.password_requirements',
                         ]),
                     ],
                 ],

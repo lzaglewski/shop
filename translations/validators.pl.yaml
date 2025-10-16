@@ -12,6 +12,7 @@ form:
     password_required: 'Wprowadź hasło'
     password_min_length: 'Hasło powinno mieć co najmniej {{ limit }} znaków'
     password_mismatch: 'Pola hasła muszą się zgadzać.'
+    password_requirements: 'Hasło powinno zawierać co najmniej 8 znaków, małe i duże litery oraz cyfry. '
 
     # Product form validation messages
     product_name_required: 'Wprowadź nazwę produktu'

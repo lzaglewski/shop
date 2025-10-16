@@ -59,7 +59,7 @@ auth:
     register_now: 'Zarejestruj się teraz'
     create_account: 'Utwórz swoje konto B2B'
     tax_id_help: 'Wprowadź numer identyfikacji podatkowej swojej firmy.'
-    password_help: 'Hasło powinno zawierać co najmniej 8 znaków i zawierać litery i cyfry.'
+    password_help: 'Hasło powinno zawierać co najmniej 8 znaków, małe i duże litery oraz cyfry.'
     already_have_account: 'Masz już konto?'
     login_here: 'Zaloguj się tutaj'
 
@@ -398,6 +398,7 @@ form:
     password_required: 'Wprowadź hasło'
     repeat_password: 'Powtórz hasło'
     password_min_length: 'Hasło powinno mieć co najmniej {{ limit }} znaków'
+    password_requirements: 'Hasło powinno zawierać co najmniej 8 znaków, małe i duże litery oraz cyfry.'
     password_mismatch: 'Pola hasła muszą się zgadzać.'
 
     # User fields
