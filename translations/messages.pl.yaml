@@ -11,13 +11,16 @@ featured_products:
 features:
     custom_pricing:
         title: 'Indywidualna wycena'
-        description: 'Każdy klient otrzymuje swoją spersonalizowaną wycenę dla każdego produktu.'
-    fast_delivery:
-        title: 'Szybka dostawa'
-        description: 'Szybka i niezawodna wysyłka dla wszystkich Twoich potrzeb biznesowych.'
-    support:
-        title: 'Wsparcie 24/7'
-        description: 'Nasz zespół obsługi klienta jest zawsze gotowy do pomocy.'
+        description: 'Przy stałej współpracy proponujemy rabaty'
+    delivery:
+        title: 'Darmowa dostawa'
+        description: 'Przy cyklicznych zamówieniach pokrywamy koszty wysyłki'
+    projects:
+        title: 'Dedykowane projekty'
+        description: 'Proponujemy i tworzymy indywidualne projekty'
+    order:
+        title: 'Dowolna wielkość zamówienia'
+        description: 'Nie wymagamy zamówień w ilościach hurtowych'
 
 navigation:
     home: 'Strona główna'

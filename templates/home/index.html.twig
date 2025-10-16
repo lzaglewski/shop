@@ -102,7 +102,7 @@
                                            class="btn btn-primary-big  btn-dark">
                                             <span>
                                                 <svg class="wishlist">
-                                                    <use xlink:href="#heart"></use>
+                                                    <use xlink:href="{{ asset('fontawesome-free-7.1.0-web/sprites/solid.svg') }}#eye"></use>
                                                 </svg>
                                             </span>
                                         </a>
@@ -144,8 +144,8 @@
                             <img src="{{ asset('images/delivery icon.png') }}" alt="Delivery">
                         </div>
                         <div class="icon-box-content">
-                            <h4 class="card-title">{{ 'features.fast_delivery.title'|trans }}</h4>
-                            <p>{{ 'features.fast_delivery.description'|trans }}</p>
+                            <h4 class="card-title">{{ 'features.delivery.title'|trans }}</h4>
+                            <p>{{ 'features.delivery.description'|trans }}</p>
                         </div>
                     </div>
                 </div>
@@ -155,8 +155,8 @@
                             <img src="{{ asset('images/project icon.png') }}" alt="Support">
                         </div>
                         <div class="icon-box-content">
-                            <h4 class="card-title">{{ 'features.support.title'|trans }}</h4>
-                            <p>{{ 'features.support.description'|trans }}</p>
+                            <h4 class="card-title">{{ 'features.projects.title'|trans }}</h4>
+                            <p>{{ 'features.projects.description'|trans }}</p>
                         </div>
                     </div>
                 </div>
@@ -166,12 +166,17 @@
                             <img src="{{ asset('images/shipping icon.png') }}" alt="Shipping">
                         </div>
                         <div class="icon-box-content">
-                            <h4 class="card-title">Bezpieczeństwo</h4>
-                            <p>Bezpieczne transakcje i ochrona danych klientów</p>
+                            <h4 class="card-title">{{ 'features.order.title'|trans }}</h4>
+                            <p>{{ 'features.order.description'|trans }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
+
+
+
 {% endblock %}
