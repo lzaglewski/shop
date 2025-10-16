@@ -16,4 +16,4 @@
 ###< phpunit/phpunit ###
 .aider*
 .env
-/.idea
+.idea/
