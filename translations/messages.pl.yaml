@@ -571,3 +571,25 @@ contact:
     subject_max_length: 'Temat może mieć maksymalnie {{ limit }} znaków'
     message_required: 'Wiadomość jest wymagana'
     message_min_length: 'Wiadomość musi mieć co najmniej {{ limit }} znaków'
+
+consent:
+    banner:
+        title: 'Dbamy o Twoją prywatność'
+        text: 'Korzystamy z plików cookie, aby ulepszać korzystanie z serwisu i analizować ruch. W każdej chwili możesz wycofać swoją zgodę.'
+    buttons:
+        settings: 'Ustawienia'
+        reject: 'Odrzuć wszystkie'
+        accept: 'Akceptuj wszystkie'
+    modal:
+        title: 'Ustawienia plików cookie'
+        description: 'Zarządzaj kategoriami plików cookie, które chcesz włączyć.'
+        labels:
+            necessary: 'Niezbędne (zawsze aktywne)'
+            analytics: 'Analityczne'
+            marketing: 'Marketingowe'
+            personalization: 'Personalizacyjne'
+        actions:
+            cancel: 'Anuluj'
+            save: 'Zapisz preferencje'
+    footer:
+        change_link: 'Zmień ustawienia plików cookie'

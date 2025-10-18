@@ -53,6 +53,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Domain/Lead/Model'
                 prefix: 'App\Domain\Lead\Model'
                 alias: Lead
+            CookieConsent:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/CookieConsent/Model'
+                prefix: 'App\Domain\CookieConsent\Model'
+                alias: CookieConsent
 
 when@test:
     doctrine:

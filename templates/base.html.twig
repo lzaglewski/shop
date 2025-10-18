@@ -20,6 +20,7 @@
               integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ asset('style.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/vendor.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/consent/consent.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -271,6 +272,7 @@
                                     {% endif %}
                                     <li class="menu-item pb-2"><a href="{{ path('terms') }}">Regulamin</a></li>
                                     <li class="menu-item pb-2"><a href="{{ path('privacy_policy') }}">Polityka prywatności</a></li>
+                                    <li class="menu-item pb-2"><a href="#" onclick="document.querySelector('#cc-modal')?.classList.remove('hidden'); return false;">{{ 'consent.footer.change_link'|trans }}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -291,6 +293,13 @@
             </div>
         </div>
     </footer>
+
+    {% include '_consent/banner.html.twig' %}
+    {% include '_consent/settings_modal.html.twig' %}
+    <script>
+        window.__USER_ID__ = {{ app.user ? app.user.id : 'null' }};
+    </script>
+    <script src="{{ asset('js/consent.js') }}" defer></script>
 
     {% block javascripts %}
         <script src="{{ asset('js/jquery-1.11.0.min.js') }}"></script>

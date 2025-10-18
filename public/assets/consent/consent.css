@@ -1,0 +1,27 @@
+.cc-banner { position: fixed; left: 16px; bottom: 16px; z-index: 9999; }
+.cc-banner.hidden { display: none; }
+.cc-box {
+  width: 455px; max-width: 90vw; background: #fff; color: #222;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12); border-radius: 12px; padding: 16px;
+  border: 1px solid #eee; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.cc-title { font-weight: 700; margin-bottom: 8px; font-size: 18px; }
+.cc-text { font-size: 14px; line-height: 1.4; margin-bottom: 12px; }
+.cc-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.cc-btn { padding: 8px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; font-weight: 600; font-size: 14px; }
+.cc-btn-outline { background: #fff; border-color: #222; color: #222; }
+.cc-btn-dark { background: #444; color: #fff; }
+.cc-btn-accept { background: #f6c453; color: #222; }
+.cc-btn:focus-visible { outline: 2px solid #222; outline-offset: 2px; }
+
+.cc-modal { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 16px; }
+.cc-modal.hidden { display: none; }
+.cc-modal-content { background: #fff; width: 520px; max-width: 95vw; border-radius: 12px; padding: 16px; box-shadow: 0 12px 30px rgba(0,0,0,.16); }
+.cc-row { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; gap: 16px; }
+.cc-row span { flex: 1; }
+.cc-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+
+@media (max-width: 480px) {
+  .cc-box { width: 100%; }
+  .cc-actions { justify-content: center; }
+}

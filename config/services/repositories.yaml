@@ -18,6 +18,12 @@ services:
   App\Domain\Lead\Repository\LeadRepositoryInterface:
     alias: App\Infrastructure\Repository\DoctrineLeadRepository
 
+  App\Domain\CookieConsent\Repository\CookieConsentRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineCookieConsentRepository
+
+  App\Domain\CookieConsent\Repository\CookieConsentLogRepositoryInterface:
+    alias: App\Infrastructure\Repository\DoctrineCookieConsentLogRepository
+
   # Repository implementations
   App\Infrastructure\Repository\DoctrineUserRepository:
     arguments:
@@ -39,3 +45,11 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - '@knp_paginator'
+
+  App\Infrastructure\Repository\DoctrineCookieConsentRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  App\Infrastructure\Repository\DoctrineCookieConsentLogRepository:
+    arguments:
+      - '@doctrine.orm.entity_manager'
