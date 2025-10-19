@@ -6,9 +6,9 @@
 
 {% block content %}
     <h2>Status Państwa zamówienia został zaktualizowany</h2>
-    
-    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>
-    
+
+{#    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>#}
+
     <p>
         Informujemy, że status Państwa zamówienia został zmieniony.
     </p>
@@ -17,32 +17,32 @@
         <h3>Szczegóły zamówienia</h3>
         <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
         <p><strong>Data zamówienia:</strong> {{ order.createdAt|date('d.m.Y H:i') }}</p>
-        <p><strong>Poprzedni status:</strong> 
+        <p><strong>Poprzedni status:</strong>
             <span class="status-badge">{{ oldStatus }}</span>
         </p>
-        <p><strong>Nowy status:</strong> 
+        <p><strong>Nowy status:</strong>
             <span class="status-badge status-{{ order.statusKey }}">{{ newStatus }}</span>
         </p>
     </div>
 
     {% if order.statusKey == 'processing' %}
         <p>
-            <strong>Zamówienie jest obecnie w trakcie realizacji.</strong> 
+            <strong>Zamówienie jest obecnie w trakcie realizacji.</strong>
             Przygotowujemy Państwa produkty do wysyłki.
         </p>
     {% elseif order.statusKey == 'shipped' %}
         <p>
-            <strong>Zamówienie zostało wysłane!</strong> 
+            <strong>Zamówienie zostało wysłane!</strong>
             Paczka jest w drodze do Państwa. Wkrótce otrzymają Państwo dodatkowe informacje o wysyłce.
         </p>
     {% elseif order.statusKey == 'delivered' %}
         <p>
-            <strong>Zamówienie zostało dostarczone.</strong> 
+            <strong>Zamówienie zostało dostarczone.</strong>
             Dziękujemy za skorzystanie z naszych usług!
         </p>
     {% elseif order.statusKey == 'cancelled' %}
         <p>
-            <strong>Zamówienie zostało anulowane.</strong> 
+            <strong>Zamówienie zostało anulowane.</strong>
             W razie pytań prosimy o kontakt z naszym działem obsługi klienta.
         </p>
     {% endif %}
@@ -81,7 +81,7 @@
     </p>
 
     <p>
-        Pozdrawiamy,<br>
-        <strong>Zespół B2B Shop</strong>
+        Pozdrawiam,<br>
+        <strong>Kasia z bluble.pl</strong>
     </p>
 {% endblock %}

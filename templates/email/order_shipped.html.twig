@@ -6,11 +6,11 @@
 
 {% block content %}
     <h2>Państwa zamówienie jest w drodze!</h2>
-    
-    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>
-    
+
+{#    <p>Szanowni Państwo <strong>{{ customerName }}</strong>,</p>#}
+
     <p>
-        Z przyjemnością informujemy, że Państwa zamówienie zostało wysłane 
+        Z przyjemnością informujemy, że Państwa zamówienie zostało wysłane
         i jest już w drodze do Państwa.
     </p>
 
@@ -18,10 +18,10 @@
         <h3>Szczegóły wysyłki</h3>
         <p><strong>Numer zamówienia:</strong> {{ orderNumber }}</p>
         <p><strong>Data wysyłki:</strong> {{ order.updatedAt|date('d.m.Y H:i') }}</p>
-        <p><strong>Status:</strong> 
+        <p><strong>Status:</strong>
             <span class="status-badge status-shipped">Wysłane</span>
         </p>
-        
+
         {% if trackingNumber %}
             <p><strong>Numer śledzenia:</strong> {{ trackingNumber }}</p>
             <p>
@@ -88,7 +88,7 @@
     </p>
 
     <p>
-        Dziękujemy za zakupy w B2B Shop!<br>
-        <strong>Zespół B2B Shop</strong>
+        Dziękuję za zakupy w B2B Shop!<br>
+        <strong>Kasia z bluble.pl</strong>
     </p>
 {% endblock %}
