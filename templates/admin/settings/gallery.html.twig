@@ -1,0 +1,153 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Galeria - Admin{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Galeria strony głównej</h1>
+
+        <!-- Navigation tabs -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('admin_settings') }}">Strona główna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('admin_settings_general') }}">{{ 'settings.general'|trans }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('admin_settings_email') }}">Ustawienia email</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path('admin_settings_gallery') }}">Galeria</a>
+            </li>
+        </ul>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Upload Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Dodaj zdjęcia do galerii</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{{ path('admin_settings_gallery_upload') }}" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="gallery_images" class="form-label">Pliki obrazów</label>
+                                <input type="file" class="form-control" id="gallery_images" name="gallery_images[]"
+                                       accept="image/*" multiple required>
+                                <div class="form-text">
+                                    Obsługiwane formaty: JPG, PNG, WebP. Możesz wybrać wiele zdjęć naraz.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-cloud-arrow-up"></i> Wgraj zdjęcia
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Gallery Images Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            Zdjęcia galerii
+                            {% if galleryImages %}
+                                <span class="badge bg-primary float-end">{{ galleryImages|length }}</span>
+                            {% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if galleryImages|length > 0 %}
+                            <div class="gallery-list" id="galleryList">
+                                {% for image in galleryImages %}
+                                    <div class="gallery-item card mb-3" data-id="{{ image.id }}" data-position="{{ image.position }}">
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-auto">
+                                                <div class="drag-handle" title="Przeciągnij aby zmienić kolejność" style="cursor: grab; color: #999; font-size: 1.5rem;">
+                                                    <i class="bi bi-grip-vertical"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <img src="{{ asset('uploads/gallery/' ~ image.filename) }}"
+                                                     alt="Gallery image"
+                                                     class="img-fluid rounded"
+                                                     style="max-width: 100%; max-height: 100px; object-fit: cover;">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <small class="text-muted d-block mb-1">
+                                                    <strong>Plik:</strong> {{ image.filename }}
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    <strong>Kolejność:</strong>
+                                                    <span class="position-badge">{{ image.position }}</span>
+                                                </small>
+                                            </div>
+                                            <div class="col-auto">
+                                                <form method="post" action="{{ path('admin_settings_gallery_delete', {id: image.id}) }}"
+                                                      class="d-inline" onsubmit="return confirm('Czy na pewno chcesz usunąć to zdjęcie?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_gallery_' ~ image.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-trash"></i> Usuń
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="alert alert-info mt-4" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                <strong>Wskazówka:</strong> Przeciągnij zdjęcia aby zmienić ich kolejność.
+                                Kolejność jest automatycznie zapisywana.
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Brak zdjęć w galerii. Dodaj zdjęcia używając formularza powyżej.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Informacje</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="small text-muted mb-3">
+                            <strong>Galeria</strong> to zbiór zdjęć wyświetlanych na stronie głównej poniżej sekcji "Nowe propozycje".
+                        </p>
+                        <p class="small text-muted mb-3">
+                            Możesz dodawać, usuwać oraz zmieniać kolejność zdjęć. Zmiana kolejności odbywa się poprzez przeciągnięcie zdjęcia.
+                        </p>
+                        <p class="small text-muted mb-3">
+                            Obsługiwane formaty: <strong>JPG, PNG, WebP</strong>
+                        </p>
+                        <p class="small text-muted">
+                            Rekomendowana rozdzielczość: <strong>1200x800px</strong> lub większa.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Statystyka</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Zdjęcia w galerii:</span>
+                            <strong>{{ galleryImages|length }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/gallery-reorder.js') }}"></script>
+{% endblock %}

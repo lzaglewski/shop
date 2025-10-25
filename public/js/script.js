@@ -126,7 +126,7 @@
       });
 
       var productSwiper = new Swiper(".product-swiper", {
-        spaceBetween: 20,        
+        spaceBetween: 20,
         navigation: {
           nextEl: ".product-slider-button-next",
           prevEl: ".product-slider-button-prev",
@@ -145,7 +145,7 @@
             slidesPerView: 5,
           }
         },
-      });      
+      });
 
       var testimonialSwiper = new Swiper(".testimonial-swiper", {
         slidesPerView: 1,

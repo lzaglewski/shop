@@ -6,6 +6,7 @@ namespace App\Application\Common;
 
 use App\Application\Form\ContactFormType;
 use App\Application\Form\InfoFormType;
+use App\Application\Gallery\GalleryService;
 use App\Application\Pricing\ClientPriceService;
 use App\Domain\Product\Repository\ProductRepositoryInterface;
 use App\Domain\User\Model\UserRole;
@@ -18,15 +19,18 @@ class HomeController extends AbstractController
     private ProductRepositoryInterface $productRepository;
     private ClientPriceService $clientPriceService;
     private SettingsService $settingsService;
+    private GalleryService $galleryService;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
         ClientPriceService $clientPriceService,
-        SettingsService $settingsService
+        SettingsService $settingsService,
+        GalleryService $galleryService
     ) {
         $this->productRepository = $productRepository;
         $this->clientPriceService = $clientPriceService;
         $this->settingsService = $settingsService;
+        $this->galleryService = $galleryService;
     }
 
     #[Route('/', name: 'homepage')]
@@ -72,9 +76,13 @@ class HomeController extends AbstractController
         // Get banner from settings
         $bannerImage = $this->settingsService->getHomepageBanner();
 
+        // Get gallery images
+        $galleryImages = $this->galleryService->getAllOrdered();
+
         return $this->render('home/index.html.twig', [
             'featuredProducts' => $featuredProducts,
             'bannerImage' => $bannerImage,
+            'galleryImages' => $galleryImages,
         ]);
     }
 

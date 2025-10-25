@@ -9,6 +9,7 @@ imports:
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     product_images_directory: '%kernel.project_dir%/public/uploads/products'
+    gallery_images_directory: '%kernel.project_dir%/public/uploads/gallery'
     pagination.products_per_page: 9
     pagination.new_order_products_per_page: 25
     # Email configuration
@@ -45,11 +46,17 @@ services:
             tags: ['app.repository']
         App\Domain\Lead\Repository\LeadRepositoryInterface:
             tags: ['app.repository']
+        App\Domain\Gallery\Repository\GalleryImageRepositoryInterface:
+            tags: ['app.repository']
 
     # Service configurations for new services
     App\Application\Product\ProductImageService:
         arguments:
             $productImagesDirectory: '%product_images_directory%'
+
+    App\Application\Gallery\GalleryImageUploadService:
+        arguments:
+            $galleryImagesDirectory: '%gallery_images_directory%'
 
     App\Application\Product\ProductController:
         arguments:

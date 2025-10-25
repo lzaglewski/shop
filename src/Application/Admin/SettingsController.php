@@ -8,8 +8,11 @@ use App\Application\Common\SettingsService;
 use App\Application\Email\SmtpTestService;
 use App\Application\Email\OvhSmtpTestService;
 use App\Application\Form\SmtpSettingsType;
+use App\Application\Gallery\GalleryImageUploadService;
+use App\Application\Gallery\GalleryService;
 use App\Domain\Product\Repository\ProductCategoryRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,7 +26,9 @@ class SettingsController extends AbstractController
         private readonly SettingsService $settingsService,
         private readonly ProductCategoryRepositoryInterface $categoryRepository,
         private readonly SmtpTestService $smtpTestService,
-        private readonly OvhSmtpTestService $ovhSmtpTestService
+        private readonly OvhSmtpTestService $ovhSmtpTestService,
+        private readonly GalleryService $galleryService,
+        private readonly GalleryImageUploadService $galleryImageUploadService
     ) {
     }
 
@@ -229,5 +234,78 @@ class SettingsController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_settings');
+    }
+
+    #[Route('/gallery', name: 'admin_settings_gallery')]
+    public function gallerySettings(): Response
+    {
+        $galleryImages = $this->galleryService->getAllOrdered();
+
+        return $this->render('admin/settings/gallery.html.twig', [
+            'galleryImages' => $galleryImages,
+        ]);
+    }
+
+    #[Route('/gallery/upload', name: 'admin_settings_gallery_upload', methods: ['POST'])]
+    public function uploadGalleryImage(Request $request): Response
+    {
+        $uploadedFiles = $request->files->get('gallery_images');
+
+        if ($uploadedFiles) {
+            if (!is_array($uploadedFiles)) {
+                $uploadedFiles = [$uploadedFiles];
+            }
+
+            try {
+                foreach ($uploadedFiles as $uploadedFile) {
+                    if ($uploadedFile && $uploadedFile->isValid()) {
+                        $filename = $this->galleryImageUploadService->uploadImage($uploadedFile);
+                        $this->galleryService->addImage($filename);
+                    }
+                }
+                $this->addFlash('success', 'Zdjęcia galerii zostały wgrane pomyślnie.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Błąd podczas wgrywania zdjęć: ' . $e->getMessage());
+            }
+        } else {
+            $this->addFlash('error', 'Proszę wybrać przynajmniej jedno zdjęcie.');
+        }
+
+        return $this->redirectToRoute('admin_settings_gallery');
+    }
+
+    #[Route('/gallery/delete/{id}', name: 'admin_settings_gallery_delete', methods: ['POST'])]
+    public function deleteGalleryImage(int $id, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_gallery_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Błąd autoryzacji.');
+            return $this->redirectToRoute('admin_settings_gallery');
+        }
+
+        $galleryImage = $this->galleryService->findById($id);
+        if ($galleryImage) {
+            try {
+                $this->galleryImageUploadService->deleteImage($galleryImage->getFilename());
+                $this->galleryService->removeImage($id);
+                $this->addFlash('success', 'Zdjęcie zostało usunięte.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Błąd podczas usuwania zdjęcia: ' . $e->getMessage());
+            }
+        }
+
+        return $this->redirectToRoute('admin_settings_gallery');
+    }
+
+    #[Route('/gallery/reorder', name: 'admin_settings_gallery_reorder', methods: ['POST'])]
+    public function reorderGalleryImages(Request $request): JsonResponse
+    {
+        $positions = $request->getPayload()->all();
+
+        try {
+            $this->galleryService->reorderImages($positions);
+            return new JsonResponse(['success' => true, 'message' => 'Galeria została zmieniona.']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 400);
+        }
     }
 }

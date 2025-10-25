@@ -58,6 +58,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Domain/CookieConsent/Model'
                 prefix: 'App\Domain\CookieConsent\Model'
                 alias: CookieConsent
+            Gallery:
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/Gallery/Model'
+                prefix: 'App\Domain\Gallery\Model'
+                alias: Gallery
 
 when@test:
     doctrine:
