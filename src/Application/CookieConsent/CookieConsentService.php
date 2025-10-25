@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CookieConsentService
 {
-    public const CATEGORIES = ['necessary', 'analytics', 'marketing', 'personalization'];
+    public const CATEGORIES = ['necessary', 'analytics', 'personalization'];
 
     public function __construct(
         private CookieConsentRepositoryInterface $consentRepository,
@@ -48,7 +48,6 @@ class CookieConsentService
             $consent = new CookieConsent(
                 $user,
                 $normalized['analytics'],
-                $normalized['marketing'],
                 $normalized['personalization'],
             );
         } else {
@@ -71,21 +70,20 @@ class CookieConsentService
     }
 
     /**
-     * @return array{necessary: bool, analytics: bool, marketing: bool, personalization: bool}
+     * @return array{necessary: bool, analytics: bool, personalization: bool}
      */
     public function getDefaultPreferences(): array
     {
         return [
             'necessary' => true,
             'analytics' => false,
-            'marketing' => false,
             'personalization' => false,
         ];
     }
 
     /**
      * @param array<string, mixed> $preferences
-     * @return array{necessary: bool, analytics: bool, marketing: bool, personalization: bool}
+     * @return array{necessary: bool, analytics: bool, personalization: bool}
      */
     private function normalizePreferences(array $preferences): array
     {

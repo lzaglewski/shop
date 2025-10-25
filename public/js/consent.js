@@ -7,10 +7,9 @@
   const DEFAULT_PREFERENCES = Object.freeze({
     necessary: true,
     analytics: false,
-    marketing: false,
     personalization: false
   });
-  const CONSENT_CATEGORIES = ['necessary', 'analytics', 'marketing', 'personalization'];
+  const CONSENT_CATEGORIES = ['necessary', 'analytics', 'personalization'];
   const ALWAYS_KEEP_COOKIES = new Set([
     'PHPSESSID',
     'REMEMBERME',
@@ -68,7 +67,6 @@
         handleConsentChange({
           necessary: true,
           analytics: true,
-          marketing: true,
           personalization: true
         });
       });
@@ -77,7 +75,6 @@
         handleConsentChange({
           necessary: true,
           analytics: false,
-          marketing: false,
           personalization: false
         });
       });
@@ -102,7 +99,6 @@
         handleConsentChange({
           necessary: true,
           analytics: data.has('analytics'),
-          marketing: data.has('marketing'),
           personalization: data.has('personalization')
         });
         closeModal();
@@ -164,14 +160,10 @@
 
     function applyPreferencesToForm(preferences) {
       const analytics = elements.form.querySelector('input[name="analytics"]');
-      const marketing = elements.form.querySelector('input[name="marketing"]');
       const personalization = elements.form.querySelector('input[name="personalization"]');
 
       if (analytics instanceof HTMLInputElement) {
         analytics.checked = Boolean(preferences.analytics);
-      }
-      if (marketing instanceof HTMLInputElement) {
-        marketing.checked = Boolean(preferences.marketing);
       }
       if (personalization instanceof HTMLInputElement) {
         personalization.checked = Boolean(preferences.personalization);

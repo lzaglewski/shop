@@ -586,8 +586,7 @@ consent:
         labels:
             necessary: 'Niezbędne (zawsze aktywne)'
             analytics: 'Analityczne'
-            marketing: 'Marketingowe'
-            personalization: 'Personalizacyjne'
+            personalization: 'Funkcjonalne'
         actions:
             cancel: 'Anuluj'
             save: 'Zapisz preferencje'

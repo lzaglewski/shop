@@ -41,7 +41,6 @@ class CookieConsentControllerTest extends WebTestCase
                 [
                     'necessary' => true,
                     'analytics' => false,
-                    'marketing' => false,
                     'personalization' => false,
                 ],
                 $payload['data']
@@ -63,7 +62,6 @@ class CookieConsentControllerTest extends WebTestCase
         try {
             $client->jsonRequest('PATCH', '/api/consents', [
                 'analytics' => true,
-                'marketing' => false,
                 'personalization' => true,
             ]);
 
@@ -72,7 +70,6 @@ class CookieConsentControllerTest extends WebTestCase
             $payload = $this->decodeResponse($client);
 
             $this->assertTrue($payload['data']['analytics']);
-            $this->assertFalse($payload['data']['marketing']);
             $this->assertTrue($payload['data']['personalization']);
 
             /** @var CookieConsentRepositoryInterface $consentRepository */
@@ -81,7 +78,6 @@ class CookieConsentControllerTest extends WebTestCase
 
             $this->assertInstanceOf(CookieConsent::class, $consent);
             $this->assertTrue($consent->getAnalytics());
-            $this->assertFalse($consent->getMarketing());
             $this->assertTrue($consent->getPersonalization());
 
             /** @var EntityManagerInterface $entityManager */
@@ -101,7 +97,6 @@ class CookieConsentControllerTest extends WebTestCase
         try {
             $client->jsonRequest('POST', '/api/consents/migrate', [
                 'analytics' => true,
-                'marketing' => true,
                 'personalization' => false,
             ]);
 
@@ -110,7 +105,6 @@ class CookieConsentControllerTest extends WebTestCase
             $payload = $this->decodeResponse($client);
 
             $this->assertTrue($payload['data']['analytics']);
-            $this->assertTrue($payload['data']['marketing']);
             $this->assertFalse($payload['data']['personalization']);
 
             /** @var CookieConsentRepositoryInterface $consentRepository */
@@ -119,7 +113,6 @@ class CookieConsentControllerTest extends WebTestCase
 
             $this->assertInstanceOf(CookieConsent::class, $consent);
             $this->assertTrue($consent->getAnalytics());
-            $this->assertTrue($consent->getMarketing());
         } finally {
             $this->cleanup($client, $user);
         }
